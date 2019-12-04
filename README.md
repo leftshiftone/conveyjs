@@ -1,7 +1,7 @@
 # Convey
 
-[![CircleCI branch](https://img.shields.io/circleci/project/github/leftshiftone/gaia-js-sdk-convey/master.svg?style=flat-square)](https://circleci.com/gh/leftshiftone/gaia-js-sdk-convey)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/leftshiftone/gaia-js-sdk-convey.svg?style=flat-square)](https://github.com/leftshiftone/gaia-js-sdk-convey/tags)
+[![CircleCI branch](https://img.shields.io/circleci/project/github/leftshiftone/gaia-js-sdk-convey/master.svg?style=flat-square)](https://circleci.com/gh/leftshiftone/conveyjs)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/leftshiftone/gaia-js-sdk-convey.svg?style=flat-square)](https://github.com/leftshiftone/conveyjs)
 
 Convey is a JavaScript Framework for connecting to processes created with [G.A.I.A.](https://www.leftshift.one/produkt/gaia-services/).
 
@@ -17,7 +17,7 @@ In order to integrate with G.A.I.A. two things are required:
 2. Identifier of the so called *Identity* to connect to.
 
 ### Add Convey
-`npm i gaia-js-sdk-convey`
+`npm i @gaia/conveyjs`
 
 ### Create HTML page
 ```html
