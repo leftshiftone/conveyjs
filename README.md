@@ -17,7 +17,7 @@ In order to integrate with G.A.I.A. two things are required:
 2. Identifier of the so called *Identity* to connect to.
 
 ### Add Convey
-`npm i @gaia/conveyjs`
+`npm i @leftshiftone/conveyjs`
 
 ### Create HTML page
 ```html
