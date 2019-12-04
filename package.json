@@ -98,7 +98,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leftshiftone/gaia-js-sdk-convey.git"
+    "url": "git+https://github.com/leftshiftone/conveyjs.git"
   },
   "keywords": [
     "digital",
@@ -109,9 +109,9 @@
     "leftshiftone"
   ],
   "bugs": {
-    "url": "https://github.com/leftshiftone/gaia-js-sdk-convey/issues"
+    "url": "https://github.com/leftshiftone/conveyjs/issues"
   },
-  "homepage": "https://github.com/leftshiftone/gaia-js-sdk-convey",
+  "homepage": "https://github.com/leftshiftone/conveyjs",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

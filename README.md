@@ -56,7 +56,7 @@ Add the following before the `</head>` tag in the HTML file.
 
 ### Integrate Convey as NPM package
 ```javascript
-import {Gaia, ContentCentricRenderer, OffSwitchListener, ChannelType} from "gaia-js-sdk-convey";
+import {Gaia, ContentCentricRenderer, OffSwitchListener, ChannelType} from "@gaia/conveyjs";
 ...
 new Gaia(new ContentCentricRenderer(), new OffSwitchListener())
     .connect('wss://DOMAIN_NAME/mqtt', 'IDENTITY_ID')
