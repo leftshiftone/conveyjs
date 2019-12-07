@@ -1,8 +1,8 @@
 {
-  "name": "@leftshiftone/conveyjs",
-  "version": "1.0.1",
+  "name": "@leftshiftone/convey",
+  "version": "0.97.0",
   "description": "JavaScript connector to the G.A.I.A. ecosystem.",
-  "main": "./dist/gaia-js-sdk-convey-std.js",
+  "main": "./dist/convey-std.js",
   "module": "./dist/esm5/all.js",
   "typings": "./dist/esm5/all.d.ts",
   "es5": "./dist/esm5/all.js",

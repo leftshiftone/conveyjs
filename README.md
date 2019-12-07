@@ -1,7 +1,7 @@
 # Convey
 
-[![CircleCI branch](https://img.shields.io/circleci/project/github/leftshiftone/gaia-js-sdk-convey/master.svg?style=flat-square)](https://circleci.com/gh/leftshiftone/conveyjs)
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/leftshiftone/gaia-js-sdk-convey.svg?style=flat-square)](https://github.com/leftshiftone/conveyjs)
+[![CircleCI branch](https://img.shields.io/circleci/project/github/leftshiftone/conveyjs/master.svg?style=flat-square)](https://circleci.com/gh/leftshiftone/conveyjs)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/leftshiftone/conveyjs.svg?style=flat-square)](https://github.com/leftshiftone/conveyjs)
 
 Convey is a JavaScript Framework for connecting to processes created with [G.A.I.A.](https://www.leftshift.one/produkt/gaia-services/).
 
@@ -17,15 +17,15 @@ In order to integrate with G.A.I.A. two things are required:
 2. Identifier of the so called *Identity* to connect to.
 
 ### Add Convey
-`npm i @leftshiftone/conveyjs`
+`npm i @leftshiftone/convey`
 
 ### Create HTML page
 ```html
 <html>
     <head>
         <meta charset="UTF-8"/>
-        <link rel="stylesheet" href="gaia-js-sdk-convey-std.css"/>
-        <script src="gaia-js-sdk-convey-std.js"></script>
+        <link rel="stylesheet" href="convey-std.css"/>
+        <script src="convey-std.js"></script>
     </head>
     <body>
         <div class="lto-gaia">
@@ -56,7 +56,7 @@ Add the following before the `</head>` tag in the HTML file.
 
 ### Integrate Convey as NPM package
 ```javascript
-import {Gaia, ContentCentricRenderer, OffSwitchListener, ChannelType} from "@leftshiftone/conveyjs";
+import {Gaia, ContentCentricRenderer, OffSwitchListener, ChannelType} from "@leftshiftone/convey";
 ...
 new Gaia(new ContentCentricRenderer(), new OffSwitchListener())
     .connect('wss://DOMAIN_NAME/mqtt', 'IDENTITY_ID')
