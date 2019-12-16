@@ -2,12 +2,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = (env, argv) => ({
     entry: {
-        'gaia-js-sdk-convey-std': './src/std.wpk.ts',
-        'gaia-js-sdk-convey-all': './src/all.wpk.ts',
-        'gaia-js-sdk-convey-map': './src/map.wpk.ts',
-        'gaia-js-sdk-convey-vis': './src/vis.wpk.ts',
-        'gaia-js-sdk-convey-aud': './src/aud.wpk.ts',
-        'gaia-js-sdk-convey-cod': './src/cod.wpk.ts',
+        'convey-std': './src/std.wpk.ts',
+        'convey-all': './src/all.wpk.ts',
+        'convey-map': './src/map.wpk.ts',
+        'convey-vis': './src/vis.wpk.ts',
+        'convey-aud': './src/aud.wpk.ts',
+        'convey-cod': './src/cod.wpk.ts',
     },
     module: {
         rules: [

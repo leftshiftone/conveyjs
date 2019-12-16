@@ -34,7 +34,7 @@
         "publishPath": ".",
         "tag": "latest",
         "private": false,
-        "access": null,
+        "access": "public",
         "otp": null
     },
     "github": {
