@@ -26,12 +26,17 @@ module.exports = (env, argv) => ({
             },
             {
                 test: /\.(css|scss)$/,
-                exclude: /node_modules/,
                 use: [
                     argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
                     'css-loader',
                     'sass-loader',
                     'import-glob-loader'
+                ],
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                use: [
+                    'file-loader',
                 ],
             },
         ],
@@ -51,7 +56,7 @@ module.exports = (env, argv) => ({
         // see: https://github.com/webpack/webpack/issues/6784
         globalObject: 'typeof self !== \'undefined\' ? self : this'
     },
-    externals: ['leaflet', '@zxing/library', 'reveal.js', 'browser-image-compression'],
+    externals: ['@zxing/library', 'reveal.js', 'browser-image-compression'],
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'dist/[name].css',
