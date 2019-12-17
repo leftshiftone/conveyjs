@@ -1,6 +1,6 @@
 {
   "name": "@leftshiftone/convey",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "JavaScript connector to the G.A.I.A. ecosystem.",
   "main": "./dist/convey-std.js",
   "module": "./dist/esm5/all.js",
