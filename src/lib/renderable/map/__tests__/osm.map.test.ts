@@ -1,16 +1,15 @@
+import {OpenStreetMap} from "../osm";
 
-import {GoogleMap} from "../google";
+describe("OSMTest", () => {
 
-describe("MapTest", () => {
-
-    let googleMap : GoogleMap;
+    let osm : OpenStreetMap;
 
     it("beforeAll", () => {
-        googleMap = new GoogleMap({required:true, centerLng:1, centerLat:1, name:"map", type:"map"})
+        osm = new OpenStreetMap({required:true, centerLng:1, centerLat:1, name:"map", type:"map"})
     });
 
-    it("google map render", () => {
-        const element = googleMap.render();
+    it("osm render", () => {
+        const element = osm.render();
         expect(element.classList.contains("lto-map")).toBeTruthy();
         expect(element.dataset.required).toBe("true");
         expect(element.tagName).toBe("DIV");
