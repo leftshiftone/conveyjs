@@ -19,8 +19,6 @@ export abstract class AbstractMap {
         this.spec = spec;
     }
 
-    abstract render(): HTMLElement;
-
     abstract setMarkersToValue(wrapper: INode): void;
 
     abstract resetAllMarkers(): void;

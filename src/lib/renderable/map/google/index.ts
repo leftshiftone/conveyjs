@@ -23,7 +23,7 @@ export class GoogleMap extends AbstractMap {
         super(spec);
     }
 
-    render() {
+    public render() {
         const wrapper = this.getDefaultMapWrapper("lto-map-google");
         this.includeAPI().then(() => this.init(wrapper));
         return wrapper.unwrap();
@@ -108,23 +108,9 @@ export class GoogleMap extends AbstractMap {
             script.src = this.API;
             document.head.appendChild(script);
         } else resolve();
-    })
+    });
 
-    resetAllMarkers() {
-        this.markers.forEach(marker => this.deactivateMarker(marker));
-    }
-
-    setMarkersToValue(wrapper: INode) {
-        const selectedMarkers: Array<{ position: google.maps.LatLng, meta: Map<string, any> }> = [];
-        this.markers.forEach(marker => {
-            if (marker.get("context").active)
-                selectedMarkers.push({position: marker.getPosition()!, meta: marker.get("context").meta});
-        });
-
-        this.addMarkersToForm(wrapper, selectedMarkers);
-    }
-
-    initMarkerIcons() {
+    public initMarkerIcons() {
         const markerSize = new google.maps.Size(
             Properties.resolve("GOOGLE_MAPS_MARKER_WIDTH") || 32,
             Properties.resolve("GOOGLE_MAPS_MARKER_HEIGHT") || 32);
@@ -134,5 +120,17 @@ export class GoogleMap extends AbstractMap {
 
         this.markerIcon = new MarkerIcon(this.getMarkerIcon(), markerSize, markerSize);
         this.selectedMarkerIcon = new MarkerIcon(this.getSelectedMarkerIcon(), selectedMarkerSize, selectedMarkerSize);
+    }
+
+    resetAllMarkers = () => this.markers.forEach(marker => this.deactivateMarker(marker));
+
+    setMarkersToValue(wrapper: INode) {
+        const selectedMarkers: Array<{ position: google.maps.LatLng, meta: Map<string, any> }> = [];
+        this.markers.forEach(marker => {
+            if (marker.get("context").active)
+                selectedMarkers.push({position: marker.getPosition()!, meta: marker.get("context").meta});
+        });
+
+        this.addMarkersToForm(wrapper, selectedMarkers);
     }
 }

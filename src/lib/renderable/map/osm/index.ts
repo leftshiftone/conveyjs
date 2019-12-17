@@ -21,7 +21,7 @@ export class OpenStreetMap extends AbstractMap {
         super(spec);
     }
 
-    render = () => this.init(this.getDefaultMapWrapper("lto-map-osm")).unwrap();
+    public render = () => this.init(this.getDefaultMapWrapper("lto-map-osm")).unwrap();
 
     public init(wrapper: INode): INode {
         const map = this.initMap(wrapper);
@@ -66,8 +66,7 @@ export class OpenStreetMap extends AbstractMap {
             if (!markers) return;
 
             markers.forEach((m: IMarker) => {
-                const current = marker(m.position);
-                current.addTo(map);
+                const current = marker(m.position).addTo(map);
 
                 current.getElement()!.setAttribute("data-label", m.label || "");
                 current.getElement()!.setAttribute("data-meta", JSON.stringify(m.meta) || "");
@@ -75,13 +74,12 @@ export class OpenStreetMap extends AbstractMap {
 
                 this.markers.push(current);
 
-                m.active ?
-                    this.activateMarker(current) :
-                    this.deactivateMarker(current);
+                m.active ? this.activateMarker(current) : this.deactivateMarker(current);
 
                 current.on("click", () => {
                     if (maxSelections === 1) {
-                        if (activeMarker) this.deactivateMarker(activeMarker);
+                        if (activeMarker)
+                            this.deactivateMarker(activeMarker);
                         this.activateMarker(current);
                         this.setLabel(current.getElement()!.getAttribute("data-label") || "", wrapper);
                         activeMarker = current;
@@ -110,6 +108,18 @@ export class OpenStreetMap extends AbstractMap {
         marker.setIcon(this.selectedMarkerIcon!);
     }
 
+    public initMarkerIcons() {
+        const markerSize: [number, number] =
+            [Properties.resolve("OSM_MARKER_WIDTH") as number || 32,
+                Properties.resolve("OSM_MARKER_HEIGHT") as number || 32];
+        const selectedMarkerSize: [number, number] =
+            [Properties.resolve("OSM_SELECTED_MARKER_WIDTH") as number || 32,
+                Properties.resolve("OSM_SELECTED_MARKER_HEIGHT") as number || 32];
+
+        this.markerIcon = icon({iconUrl: this.getMarkerIcon(), iconSize: markerSize});
+        this.selectedMarkerIcon = icon({iconUrl: this.getSelectedMarkerIcon(), iconSize: selectedMarkerSize});
+    }
+
     setMarkersToValue(wrapper: INode) {
         const selectedMarkers: Array<{ position: LatLngLiteral, meta: Map<string, any> }> = [];
         this.markers.forEach(marker => {
@@ -124,19 +134,6 @@ export class OpenStreetMap extends AbstractMap {
         this.addMarkersToForm(wrapper, selectedMarkers);
     }
 
-    resetAllMarkers() {
-        this.markers.forEach(marker => this.deactivateMarker(marker));
-    }
+    resetAllMarkers = () => this.markers.forEach(marker => this.deactivateMarker(marker));
 
-    initMarkerIcons() {
-        const markerSize: [number, number] =
-            [Properties.resolve("OSM_MARKER_WIDTH") as number || 32,
-            Properties.resolve("OSM_MARKER_HEIGHT") as number || 32];
-        const selectedMarkerSize: [number, number] =
-            [Properties.resolve("OSM_SELECTED_MARKER_WIDTH") as number || 32,
-            Properties.resolve("OSM_SELECTED_MARKER_HEIGHT") as number || 32];
-
-        this.markerIcon = icon({iconUrl: this.getMarkerIcon(), iconSize: markerSize});
-        this.selectedMarkerIcon = icon({iconUrl: this.getSelectedMarkerIcon(), iconSize: selectedMarkerSize});
-    }
 }

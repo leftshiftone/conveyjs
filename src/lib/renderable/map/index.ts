@@ -12,6 +12,13 @@ import {GoogleMap} from "./google";
  * If the mapType is 'google' the user needs to add the
  * GOOGLE_MAPS_API_KEY to the {@link Properties} registry.
  *
+ * Available properties:
+ * OSM_ROUTING_LINE_OPTIONS to the {@link Properties} registry
+ * OSM_SELECTED_MARKER_HEIGHT to the {@link Properties} registry
+ * OSM_SELECTED_MARKER_HEIGHT to the {@link Properties} registry
+ * GOOGLE_MAPS_MARKER_HEIGHT to the {@link Properties} registry
+ * GOOGLE_MAPS_SELECTED_MARKER_HEIGHT to the {@link Properties} registry
+ *
  * @see {@link IRenderable}
  */
 export class Map implements IRenderable {
@@ -26,8 +33,9 @@ export class Map implements IRenderable {
         switch (this.spec.mapType) {
             case "osm": return (new OpenStreetMap(this.spec)).render();
             case "google": return (new GoogleMap(this.spec)).render();
+            default: console.error(`'${this.spec.mapType}' is not supported - try to use 'google' or 'osm' instead`);
         }
-        return document.createElement("div")
+        return document.createElement("div");
     }
 }
 
