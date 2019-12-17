@@ -49,8 +49,6 @@ import Renderables from "./lib/renderable/Renderables";
 import Properties from "./lib/renderable/Properties";
 import EventStream from "./lib/event/EventStream";
 import {Transition} from "./lib/renderable/transition";
-import {SmallDevice} from "./lib/renderable/smallDevice";
-
 
 export * from './lib/api';
 export {
@@ -108,5 +106,4 @@ export {
     Overlay,
     Trigger,
     Transition,
-    SmallDevice
 };
