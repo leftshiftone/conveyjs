@@ -1,87 +1,87 @@
 import {ISpecification} from "../../../api";
-import node, {INode} from "../../../support/node";
+import {INode} from "../../../support/node";
 import {AbstractMap} from "../AbstractMap";
 import {IMarker} from "../IMarker";
-import {Icon, LatLngLiteral, Marker,
-    icon as createIcon,
-    map as createMap,
-    tileLayer as createTileLayer,
-    marker as createMarker,
-    Map as Osm} from "leaflet";
+import {Icon, icon, LatLng, latLng, LatLngLiteral, Map as OSM, map, Marker, marker, Routing, tileLayer} from "leaflet";
+import 'leaflet-routing-machine';
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet/dist/leaflet.css";
+import Properties from "../../Properties";
 
 export class OpenStreetMap extends AbstractMap {
 
     private markerIcon: Icon | null = null;
     private selectedMarkerIcon: Icon | null = null;
     private markers: Array<Marker> = [];
+    readonly maxZoom = 18;
+    readonly minZoom = 0;
+    readonly defaultZoom = 8;
 
     constructor(spec: ISpecification) {
         super(spec);
     }
 
-    public render(): HTMLElement {
-        const wrapper = this.getDefaultWrapper("lto-map-osm");
-        this.initMap(wrapper);
-        return wrapper.unwrap();
+    render = () => this.init(this.getDefaultMapWrapper("lto-map-osm")).unwrap();
+
+    public init(wrapper: INode): INode {
+        const map = this.initMap(wrapper);
+        this.initMarkers(wrapper, map);
+        this.initRoute(map);
+        this.setMarkersToValue(wrapper);
+        return wrapper;
+    }
+
+    public initRoute(map: OSM) {
+        if (!this.spec.route) return;
+        const waypoints: Array<LatLng> = [];
+
+        this.spec.route.forEach(waypoint => {
+            waypoints.push(latLng(waypoint.lat, waypoint.lng));
+        });
+
+        Routing.control({
+            lineOptions: JSON.parse(Properties.resolve("OSM_ROUTING_LINE_OPTIONS") || "{}"),
+            routeWhileDragging: true,
+            waypoints,
+        }).addTo(map);
     }
 
     public initMap(wrapper: INode) {
-        const mapContainer = node("div");
-        mapContainer.addClasses("lto-map-container");
-        wrapper.appendChild(mapContainer);
-
-        const leafletSettings = {minZoom: this.minZoom, maxZoom: this.maxZoom};
-
-        const osmUrl = 'https://cartodb-basemaps-{s}.globaleaflet.ssleaflet.fastly.net/dark_all/{z}/{x}/{y}.png';
-        const osmAttrib = 'OpenStreetMap data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-
-        const map = createMap(mapContainer.unwrap(), leafletSettings).setView(this.getCenter(), this.getZoom());
-        map.addLayer(createTileLayer(osmUrl, {subdomains: ['a', 'b', 'c'], attribution: osmAttrib}));
-
-        this.setMarkerIcons();
-        this.addMarkersToMap(wrapper, map);
-        this.setMarkersToValue(wrapper);
+        const mapContainer = wrapper.find(".lto-map-container");
+        return map(mapContainer.unwrap(), {minZoom: this.minZoom, maxZoom: this.maxZoom})
+            .addLayer(tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}))
+            .setView(this.getCenter(), this.getZoom());
     }
 
-    public setMarkerIcons() {
-        this.markerIcon = createIcon({iconUrl: this.spec.markerIcon ? this.spec.markerIcon : OpenStreetMap.DEFAULT_MARKER_ICON});
-        this.markerIcon = createIcon({iconUrl: this.spec.selectedMarkerIcon ? this.spec.selectedMarkerIcon : OpenStreetMap.DEFAULT_SELECTED_MARKER_ICON});
-    }
+    public initMarkers(wrapper: INode, map: OSM) {
+        this.initMarkerIcons();
 
-    public addMarkersToMap(wrapper: INode, map: Osm) {
-        if (!this.spec.src) {
-            return;
-        }
+        if (!this.spec.src) return;
 
         let countSelections = 0;
         const maxSelections = this.spec.maxSelections || 1;
         let activeMarker: Marker;
 
         OpenStreetMap.getMarkersFromSrc(this.spec.src).then((markers: Array<IMarker> | null) => {
-            if (!markers) {
-                return;
-            }
+            if (!markers) return;
 
-            markers.forEach((marker: IMarker) => {
-                const current = createMarker(marker.position);
+            markers.forEach((m: IMarker) => {
+                const current = marker(m.position);
                 current.addTo(map);
 
-                current.getElement()!.setAttribute("data-label", marker.label || "");
-                current.getElement()!.setAttribute("data-meta", JSON.stringify(marker.meta) || "");
-                current.getElement()!.setAttribute("data-active", JSON.stringify(marker.active || true));
+                current.getElement()!.setAttribute("data-label", m.label || "");
+                current.getElement()!.setAttribute("data-meta", JSON.stringify(m.meta) || "");
+                current.getElement()!.setAttribute("data-active", JSON.stringify(m.active || true));
 
                 this.markers.push(current);
 
-                marker.active ?
+                m.active ?
                     this.activateMarker(current) :
                     this.deactivateMarker(current);
 
                 current.on("click", () => {
                     if (maxSelections === 1) {
-                        if (activeMarker) {
-                            this.deactivateMarker(activeMarker);
-                        }
+                        if (activeMarker) this.deactivateMarker(activeMarker);
                         this.activateMarker(current);
                         this.setLabel(current.getElement()!.getAttribute("data-label") || "", wrapper);
                         activeMarker = current;
@@ -116,10 +116,8 @@ export class OpenStreetMap extends AbstractMap {
             if (marker.getElement()) {
                 const active = JSON.parse(marker.getElement()!.getAttribute("data-active")!);
                 const meta = JSON.parse(marker.getElement()!.getAttribute("data-meta")!);
-                if (active) {
-                    // tslint:disable-next-line:object-shorthand-properties-first
+                if (active)
                     selectedMarkers.push({position: marker.getLatLng()!, meta});
-                }
             }
         });
 
@@ -127,9 +125,18 @@ export class OpenStreetMap extends AbstractMap {
     }
 
     resetAllMarkers() {
-        this.markers.forEach(marker => {
-            this.deactivateMarker(marker);
-        });
+        this.markers.forEach(marker => this.deactivateMarker(marker));
     }
 
+    initMarkerIcons() {
+        const markerSize: [number, number] =
+            [Properties.resolve("OSM_MARKER_WIDTH") as number || 32,
+            Properties.resolve("OSM_MARKER_HEIGHT") as number || 32];
+        const selectedMarkerSize: [number, number] =
+            [Properties.resolve("OSM_SELECTED_MARKER_WIDTH") as number || 32,
+            Properties.resolve("OSM_SELECTED_MARKER_HEIGHT") as number || 32];
+
+        this.markerIcon = icon({iconUrl: this.getMarkerIcon(), iconSize: markerSize});
+        this.selectedMarkerIcon = icon({iconUrl: this.getSelectedMarkerIcon(), iconSize: selectedMarkerSize});
+    }
 }
