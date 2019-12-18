@@ -31,8 +31,8 @@ export class Map implements IRenderable {
 
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         switch (this.spec.mapType) {
-            case "osm": return (new OpenStreetMap(this.spec)).render("lto-map-osm");
-            case "google": return (new GoogleMap(this.spec)).render("lto-map-google");
+            case "osm": return new OpenStreetMap(this.spec).render("lto-map-osm");
+            case "google": return new GoogleMap(this.spec).render("lto-map-google");
             default: console.error(`'${this.spec.mapType}' is not supported - try to use 'google' or 'osm' instead`);
         }
         return document.createElement("div");
