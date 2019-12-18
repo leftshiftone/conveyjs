@@ -1,7 +1,7 @@
 import {ISpecification} from "../../../api";
 import {INode} from "../../../support/node";
 import {AbstractMap} from "../AbstractMap";
-import {IMarker} from "../IMarker";
+import {IMarker, WayPoint} from "../IMarker";
 import {Icon, icon, LatLng, latLng, LatLngLiteral, Map as OSM, map, Marker, marker, Routing, tileLayer} from "leaflet";
 import 'leaflet-routing-machine';
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
@@ -33,12 +33,9 @@ export class OpenStreetMap extends AbstractMap {
 
     public initRoute(map: OSM) {
         if (!this.spec.route) return;
+        const route = JSON.parse(this.spec.route);
         const waypoints: Array<LatLng> = [];
-
-        this.spec.route.forEach(waypoint => {
-            waypoints.push(latLng(waypoint.lat, waypoint.lng));
-        });
-
+        route.forEach((e: WayPoint) => waypoints.push(latLng(e.lat, e.lng)));
         Routing.control({
             lineOptions: JSON.parse(Properties.resolve("OSM_ROUTING_LINE_OPTIONS") || "{}"),
             routeWhileDragging: true,

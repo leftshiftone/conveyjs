@@ -1,7 +1,6 @@
 /**
  * This interface is used to specify an incoming message
  */
-import {WayPoint} from "../renderable/map/IMarker";
 
 export interface ISpecification {
     type: string;
@@ -51,5 +50,5 @@ export interface ISpecification {
     ordered?: boolean;
     maxSelections?: number;
     zoom?: number;
-    route?: Array<WayPoint>;
+    route?: string;
 }
