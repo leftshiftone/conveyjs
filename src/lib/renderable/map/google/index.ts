@@ -23,17 +23,14 @@ export class GoogleMap extends AbstractMap {
         super(spec);
     }
 
-    public render() {
-        const wrapper = this.getDefaultMapWrapper("lto-map-google");
-        this.includeAPI().then(() => this.init(wrapper));
+    init(wrapper: INode): HTMLElement {
+        this.includeAPI().then(() => {
+            console.debug("init google maps");
+            const map = this.initMap(wrapper);
+            this.initMarkers(map, wrapper);
+            this.setMarkersToValue(wrapper);
+        });
         return wrapper.unwrap();
-    }
-
-    private init(wrapper: INode) {
-        console.debug("init google maps");
-        const map = this.initMap(wrapper);
-        this.initMarkers(map, wrapper);
-        this.setMarkersToValue(wrapper);
     }
 
     public initMarkers(map: google.maps.Map, wrapper: INode) {

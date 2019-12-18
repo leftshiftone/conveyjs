@@ -21,14 +21,12 @@ export class OpenStreetMap extends AbstractMap {
         super(spec);
     }
 
-    public render = () => this.init(this.getDefaultMapWrapper("lto-map-osm")).unwrap();
-
-    public init(wrapper: INode): INode {
+    init(wrapper: INode): HTMLElement {
         const map = this.initMap(wrapper);
         this.initMarkers(wrapper, map);
         this.initRoute(map);
         this.setMarkersToValue(wrapper);
-        return wrapper;
+        return wrapper.unwrap();
     }
 
     public initRoute(map: OSM) {

@@ -3,6 +3,7 @@ import node, {INode} from "../../support/node";
 import {InputContainer} from "../../support/InputContainer";
 import {closestByClass} from "../../support/Elements";
 import EventStream from "../../event/EventStream";
+import {WayPoint} from "./IMarker";
 
 export abstract class AbstractMap {
 
@@ -23,6 +24,10 @@ export abstract class AbstractMap {
 
     abstract resetAllMarkers(): void;
 
+    abstract init(wrapper: INode): HTMLElement;
+
+    public render = (className: string) => this.init(this.wrapper(className));
+
     public getMarkerIcon = () => this.spec.markerIcon ? this.spec.markerIcon : AbstractMap.DEFAULT_MARKER_ICON;
     public getSelectedMarkerIcon = () => this.spec.selectedMarkerIcon ? this.spec.selectedMarkerIcon : AbstractMap.DEFAULT_SELECTED_MARKER_ICON;
 
@@ -33,7 +38,7 @@ export abstract class AbstractMap {
         return this.defaultZoom;
     }
 
-    public getCenter(): { lat: number, lng: number } {
+    public getCenter(): WayPoint {
         if (this.spec.centerBrowserLocation && navigator.geolocation)
             navigator.geolocation.getCurrentPosition(position => {
                     return {lat: position.coords.latitude, lng: position.coords.longitude};
@@ -53,7 +58,7 @@ export abstract class AbstractMap {
 
     static getMarkersFromSrc = (src: string) => fetch(src).then(data => data.json()).then(json => json.markers ? json.markers : null);
 
-    public getDefaultMapWrapper(className: string): INode {
+    public wrapper(className: string): INode {
         const wrapper = node("div");
         wrapper.addClasses(className, "lto-map", "lto-left");
         wrapper.setId(this.spec.id);
