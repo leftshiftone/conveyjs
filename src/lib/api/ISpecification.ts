@@ -50,5 +50,5 @@ export interface ISpecification {
     ordered?: boolean;
     maxSelections?: number;
     zoom?: number;
-    route?: string;
+    routePoints?: string;
 }
