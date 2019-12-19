@@ -31,7 +31,6 @@ export abstract class ChoiceContainer implements IStackeable {
         InputContainer.setRequiredAttribute(container.unwrap(), this.spec.required);
 
         const children = this.spec.elements || [];
-
         ChoiceMutator.mutate(children, this.mutatedChoiceType());
 
         children

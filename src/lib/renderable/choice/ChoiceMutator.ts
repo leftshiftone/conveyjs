@@ -35,7 +35,7 @@ export class ChoiceMutator {
      */
     private static leafElements(specs: ISpecification[], accumulator: ISpecification[]): ISpecification[] {
         return specs.reduce((acc, val) => {
-            if (val.elements === undefined) {
+            if (val.elements === undefined || val.type === 'choice') {
                 acc.push(val);
                 return acc;
             }

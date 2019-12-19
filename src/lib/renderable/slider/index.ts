@@ -118,10 +118,6 @@ export class Slider implements IRenderable {
 
         this.slider.classList.add("lto-slider", "lto-" + position);
 
-        if (!this.spec.horizontal) {
-            this.slider.style.transform = "rotate(90deg)";
-        }
-
         if (isNested) {
             this.slider.classList.add("lto-nested");
         }
