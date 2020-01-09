@@ -35,7 +35,7 @@ export class HereMap extends AbstractMap {
     }
 
     // @ts-ignore
-    createPlatform = () => new H.service.Platform({apikey: Properties.resolve("HERE_MAPS_API_KEY") || "9yhWXBCZPPKuYQRHSpvuJFr1oRrQUFXHnYV-6OdBJno"})
+    createPlatform = () => new H.service.Platform({apikey: Properties.resolve("HERE_MAPS_API_KEY")})
 
     initMap(wrapper: INode, platform: H.service.Platform) {
         const layers = platform.createDefaultLayers();
@@ -156,9 +156,7 @@ export class HereMap extends AbstractMap {
         });
 
         const polylineOptions = Properties.resolve("HERE_MAPS_ROUTING_LINE_OPTIONS") ||
-            {style: {
-                lineWidth: 4,
-                 strokeColor: 'rgba(0, 128, 255, 0.7)'}};
+            {style: {lineWidth: 4, strokeColor: 'rgba(0, 128, 255, 0.7)'}};
 
         this.map.addObject(new H.map.Polyline(lineString, polylineOptions));
     }
