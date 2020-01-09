@@ -20,7 +20,6 @@ export interface ISpecification {
     size?: string;
     step?: string;
     src?: string;
-    horizontal?: string;
     exact?: boolean;
     checked?: string;
     mapType?: "google" | "osm" | "here";
