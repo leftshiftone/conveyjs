@@ -23,7 +23,7 @@ export interface ISpecification {
     horizontal?: string;
     exact?: boolean;
     checked?: string;
-    mapType?: "google" | "osm";
+    mapType?: "google" | "osm" | "here";
     valueType?: string;
     centerLat?: number;
     centerLng?: number;

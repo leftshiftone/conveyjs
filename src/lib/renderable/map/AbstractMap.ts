@@ -7,14 +7,14 @@ import {WayPoint} from "./IMarker";
 
 export abstract class AbstractMap {
 
-    protected spec: ISpecification;
+    spec: ISpecification;
 
     abstract readonly minZoom: number;
     abstract readonly maxZoom: number;
     abstract readonly defaultZoom: number;
 
-    static DEFAULT_MARKER_ICON = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
-    static DEFAULT_SELECTED_MARKER_ICON = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+    defaultMarkerIcon = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
+    defaultSelectedMarkerIcon = "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
     protected constructor(spec: ISpecification) {
         this.spec = spec;
@@ -28,8 +28,8 @@ export abstract class AbstractMap {
 
     public render = (className: string) => this.init(this.wrapper(className));
 
-    public getMarkerIcon = () => this.spec.markerIcon ? this.spec.markerIcon : AbstractMap.DEFAULT_MARKER_ICON;
-    public getSelectedMarkerIcon = () => this.spec.selectedMarkerIcon ? this.spec.selectedMarkerIcon : AbstractMap.DEFAULT_SELECTED_MARKER_ICON;
+    public getMarkerIconSrc = () => this.spec.markerIcon ? this.spec.markerIcon : this.defaultMarkerIcon;
+    public getSelectedMarkerIconSrc = () => this.spec.selectedMarkerIcon ? this.spec.selectedMarkerIcon : this.defaultSelectedMarkerIcon;
 
     public getZoom(): number {
         if (this.spec.zoom && this.spec.zoom >= this.minZoom && this.spec.zoom <= this.maxZoom) return this.spec.zoom;
@@ -77,7 +77,6 @@ export abstract class AbstractMap {
                 this.setLabel("", wrapper);
             }
         );
-
         return wrapper;
     }
 
@@ -89,4 +88,19 @@ export abstract class AbstractMap {
             wrapper.addDataAttributes({value: JSON.stringify(selectedMarkers)});
         } else wrapper.removeAttributes("data-value");
     }
+
+    public includeScripts = (scripts: Array<string>) => new Promise(resolve => {
+        let countScripts = 0;
+        let loaded = 0;
+        scripts.forEach(script => {
+            if (!document.head.querySelectorAll(`[src="${script}"]`).length) {
+                countScripts++;
+                const element = document.createElement('script') as HTMLScriptElement;
+                element.onload = () => { if (++loaded === countScripts) resolve(); };
+                element.type = 'text/javascript';
+                element.src = script;
+                document.head.appendChild(element);
+            }
+        });
+    })
 }
