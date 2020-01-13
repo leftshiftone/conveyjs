@@ -1,9 +1,11 @@
 export interface IMarker {
-    position: {
-        lat: number
-        lng: number
-    }
-    meta?: Map<string, any>
-    label?: string
-    active: boolean
+    position: WayPoint;
+    meta?: Map<string, any>;
+    label?: string;
+    active: boolean;
+}
+
+export interface WayPoint {
+    lat: number;
+    lng: number;
 }

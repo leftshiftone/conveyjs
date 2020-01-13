@@ -32,5 +32,4 @@
         "./src/cod.ts"
     ],
     "compileOnSave": false,
-    "buildOnSave": false
 }

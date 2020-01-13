@@ -1,6 +1,7 @@
 /**
  * This interface is used to specify an incoming message
  */
+
 export interface ISpecification {
     type: string;
     elements?: ISpecification[];
@@ -21,7 +22,7 @@ export interface ISpecification {
     src?: string;
     exact?: boolean;
     checked?: string;
-    mapType?: string;
+    mapType?: "google" | "osm" | "here";
     valueType?: string;
     centerLat?: number;
     centerLng?: number;
@@ -48,4 +49,5 @@ export interface ISpecification {
     ordered?: boolean;
     maxSelections?: number;
     zoom?: number;
+    routePoints?: string;
 }

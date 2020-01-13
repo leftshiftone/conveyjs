@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>@leftshiftone/convey</title>
-    <link rel="stylesheet" href="dist/convey-std.css">
-    <script src="dist/convey-std.js"></script>
+    <link rel="stylesheet" href="dist/convey-all.css">
+    <script src="dist/convey-all.js"></script>
 </head>
 <body>
 
@@ -23,7 +23,7 @@
         const renderer = new GaiaConvey.ContentCentricRenderer();
         const listener = new GaiaConvey.OffSwitchListener();
         let gaia = new GaiaConvey.Gaia(renderer, listener);
-        gaia.connect('ws://localhost:61616/mqtt', 'e198738a-5042-47a0-93f7-19329fc48a88')
+        gaia.connect('wss://beta.gaia.leftshift.one/mqtt', 'e198738a-5042-47a0-93f7-19329fc48a88')
             .then(connection => {
             connection.subscribe(GaiaConvey.ChannelType.CONTEXT, (payload) => console.log(`Context: ${JSON.stringify(payload)}`));
             connection.subscribe(GaiaConvey.ChannelType.NOTIFICATION, (payload) => console.log(`Notification: ${JSON.stringify(payload)}`));
