@@ -38,16 +38,21 @@ export abstract class AbstractMap {
         return this.defaultZoom;
     }
 
-    public getCenter(): WayPoint {
-        if (this.spec.centerBrowserLocation && navigator.geolocation)
+    public getCenter(): WayPoint{
+        if (this.spec.centerBrowserLocation && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
                     return {lat: position.coords.latitude, lng: position.coords.longitude};
                 }, () => {
-                    console.debug("Unable to init the map with current position");
-                    return {lat: this.spec.centerLat || 0, lng: this.spec.centerLng || 0};
+                    console.debug("Unable to init the " + this.spec.mapType + " map with current position");
+                    return this.spec.centerLat && this.spec.centerLng ?
+                        {lat: this.spec.centerLat, lng: this.spec.centerLng} :
+                        {lat: 0, lng: 0};
                 }
             );
-        return {lat: this.spec.centerLat || 0, lng: this.spec.centerLng || 0};
+        }
+        return this.spec.centerLat && this.spec.centerLng ?
+            {lat: this.spec.centerLat, lng: this.spec.centerLng} :
+            {lat: 0, lng: 0};
     }
 
     public setLabel(text: string, wrapper: INode) {
@@ -96,7 +101,9 @@ export abstract class AbstractMap {
             if (!document.head.querySelectorAll(`[src="${script}"]`).length) {
                 countScripts++;
                 const element = document.createElement('script') as HTMLScriptElement;
-                element.onload = () => { if (++loaded === countScripts) resolve(); };
+                element.onload = () => {
+                    if (++loaded === countScripts) resolve();
+                };
                 element.type = 'text/javascript';
                 element.src = script;
                 document.head.appendChild(element);

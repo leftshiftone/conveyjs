@@ -26,17 +26,12 @@ module.exports = (env, argv) => ({
             },
             {
                 test: /\.(css|scss)$/,
+                exclude: /node_modules/,
                 use: [
                     argv.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
                     'css-loader',
                     'sass-loader',
                     'import-glob-loader'
-                ],
-            },
-            {
-                test: /\.(png|jpe?g|gif)$/i,
-                use: [
-                    'file-loader',
                 ],
             },
         ],
