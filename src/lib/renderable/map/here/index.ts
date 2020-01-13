@@ -6,15 +6,15 @@ import {IMarker} from "../IMarker";
 
 export class HereMap extends AbstractMap {
 
-    API_CORE = "https://js.api.here.com/v3/3.1/mapsjs-core.js";
-    API_SERVICE = "https://js.api.here.com/v3/3.1/mapsjs-service.js";
-    API_UI = "https://js.api.here.com/v3/3.1/mapsjs-ui.js";
-    API_EVENTS = "https://js.api.here.com/v3/3.1/mapsjs-mapevents.js";
+    private API_CORE = "https://js.api.here.com/v3/3.1/mapsjs-core.js";
+    private API_SERVICE = "https://js.api.here.com/v3/3.1/mapsjs-service.js";
+    private API_UI = "https://js.api.here.com/v3/3.1/mapsjs-ui.js";
+    private API_EVENTS = "https://js.api.here.com/v3/3.1/mapsjs-mapevents.js";
 
-    markers: Array<H.map.Marker> = [];
-    map!: H.Map;
-    markerIcon!: H.map.DomIcon;
-    selectedMarkerIcon!: H.map.DomIcon;
+    private markers: Array<H.map.Marker> = [];
+    private map!: H.Map;
+    private markerIcon!: H.map.DomIcon;
+    private selectedMarkerIcon!: H.map.DomIcon;
 
     readonly defaultZoom = 8;
     readonly maxZoom = 20;
@@ -35,7 +35,7 @@ export class HereMap extends AbstractMap {
     }
 
     // @ts-ignore
-    createPlatform = () => new H.service.Platform({apikey: Properties.resolve("HERE_MAPS_API_KEY")})
+    createPlatform = () => new H.service.Platform({apikey: Properties.resolve("HERE_MAPS_API_KEY")});
 
     initMap(wrapper: INode, platform: H.service.Platform) {
         const layers = platform.createDefaultLayers();
@@ -143,8 +143,9 @@ export class HereMap extends AbstractMap {
     onRoutingError = (error: Error) => console.error(error.name, ": ", error.message);
 
     onRoutingSuccess(result: H.service.ServiceResult) {
-        if (result.response && result.response.route && result.response.route[0] && result.response.route[0].shape)
+        if (result.response && result.response.route && result.response.route[0] && result.response.route[0].shape) {
             this.addRouteShapeToMap(result.response.route[0].shape);
+        }
         else console.error("Route can't be displayed");
     }
 
@@ -164,8 +165,9 @@ export class HereMap extends AbstractMap {
     setMarkersToValue(wrapper: INode): void {
         const selectedMarkers: Array<{ position: { lat: number, lng: number }, meta: any }> = [];
         this.markers.forEach(marker => {
-            if (marker.getData().active)
+            if (marker.getData().active) {
                 selectedMarkers.push({position: marker.getData().position, meta: marker.getData().meta});
+            }
         });
         this.addMarkersToForm(wrapper, selectedMarkers);
     }

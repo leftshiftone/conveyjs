@@ -8,9 +8,9 @@ import Properties from "../../Properties";
 
 export class OpenStreetMap extends AbstractMap {
 
-    markerIcon?: Icon;
-    selectedMarkerIcon?: Icon;
-    markers: Array<Marker> = [];
+    private markerIcon?: Icon;
+    private selectedMarkerIcon?: Icon;
+    private markers: Array<Marker> = [];
 
     readonly maxZoom = 18;
     readonly minZoom = 0;
@@ -58,8 +58,9 @@ export class OpenStreetMap extends AbstractMap {
 
                 current.on("click", () => {
                     if (maxSelections === 1) {
-                        if (activeMarker)
+                        if (activeMarker) {
                             this.deactivateMarker(activeMarker);
+                        }
                         this.activateMarker(current);
                         this.setLabel(current.getElement()!.getAttribute("data-label") || "", wrapper);
                         activeMarker = current;
@@ -105,8 +106,9 @@ export class OpenStreetMap extends AbstractMap {
             if (marker.getElement()) {
                 const active = JSON.parse(marker.getElement()!.getAttribute("data-active")!);
                 const meta = JSON.parse(marker.getElement()!.getAttribute("data-meta")!);
-                if (active)
+                if (active) {
                     selectedMarkers.push({position: marker.getLatLng()!, meta});
+                }
             }
         });
 

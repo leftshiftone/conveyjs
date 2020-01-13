@@ -10,11 +10,11 @@ declare const google: google;
 
 export class GoogleMap extends AbstractMap {
 
-    API = "https://maps.googleapis.com/maps/api/js?sensor=false&key=" + Properties.resolve("GOOGLE_MAPS_API_KEY");
+    private API = "https://maps.googleapis.com/maps/api/js?sensor=false&key=" + Properties.resolve("GOOGLE_MAPS_API_KEY");
 
-    markers: Array<google.maps.Marker> = [];
-    markerIcon: MarkerIcon | null = null;
-    selectedMarkerIcon: MarkerIcon | null = null;
+    private markers: Array<google.maps.Marker> = [];
+    private markerIcon: MarkerIcon | null = null;
+    private selectedMarkerIcon: MarkerIcon | null = null;
 
     readonly minZoom: number = 0;
     readonly maxZoom: number = 19;
@@ -104,8 +104,9 @@ export class GoogleMap extends AbstractMap {
     setMarkersToValue(wrapper: INode) {
         const selectedMarkers: Array<{ position: google.maps.LatLng, meta: Map<string, any> }> = [];
         this.markers.forEach(marker => {
-            if (marker.get("context").active)
+            if (marker.get("context").active) {
                 selectedMarkers.push({position: marker.getPosition()!, meta: marker.get("context").meta});
+            }
         });
 
         this.addMarkersToForm(wrapper, selectedMarkers);

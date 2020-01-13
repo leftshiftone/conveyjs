@@ -24,7 +24,6 @@
         "eofline":false,
         "no-duplicate-imports":false,
         "import-name":false,
-        "curly":false,
         "object-shorthand-properties-first": false
     }
 }
