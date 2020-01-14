@@ -53,8 +53,6 @@ export abstract class AbstractRenderer implements IRenderer {
      * @param message the message
      */
     private getRenderable(message: ISpecification): IRenderable {
-        console.debug('Element message of type ' + message.type);
-
         if (message.text) {
             message.text = this.decodeEntities(message.text);
         }
