@@ -143,10 +143,40 @@ export class HereMap extends AbstractMap {
     onRoutingError = (error: Error) => console.error(error.name, ": ", error.message);
 
     onRoutingSuccess(result: H.service.ServiceResult) {
-        if (result.response && result.response.route && result.response.route[0] && result.response.route[0].shape) {
-            this.addRouteShapeToMap(result.response.route[0].shape);
-        }
-        else console.error("Route can't be displayed");
+        if (result.response && result.response.route && result.response.route[0]) {
+            if (result.response.route[0].shape) {
+                this.addRouteShapeToMap(result.response.route[0].shape);
+            }
+            if (result.response.route[0].waypoint) {
+                this.addRouteMarkersToMap(result.response.route[0].waypoint);
+            }
+        } else console.error("Route can't be displayed");
+    }
+
+    addRouteMarkersToMap(waypoints: Array<{mappedPosition: {latitude: number, longitude: number}, originalPosition: {latitude: number, longitude: number}}>) {
+        const startPoint = waypoints[0];
+        const endPoint = waypoints[waypoints.length - 1];
+        const startMarker = new H.map.DomMarker({lat: startPoint.originalPosition.latitude, lng: startPoint.originalPosition.longitude}, {icon: this.getRouteStartIcon()});
+        const endMarker = new H.map.DomMarker({lat: endPoint.originalPosition.latitude, lng: endPoint.originalPosition.longitude}, {icon: this.getRouteEndIcon()});
+        this.map.addObjects([startMarker, endMarker]);
+    }
+
+    private getRouteStartIcon() {
+        const routeStartIcon = document.createElement("img");
+        routeStartIcon.src = this.spec.routeStartIcon || this.getMarkerIconSrc();
+        routeStartIcon.width = Properties.resolve("HERE_MAPS_ROUTE_START_ICON_WIDTH") || 32;
+        routeStartIcon.height = Properties.resolve("HERE_MAPS_ROUTE_START_ICON_HEIGHT") || 32;
+        routeStartIcon.style.margin = Properties.resolve("HERE_MAPS_ROUTE_START_ICON_MARGIN") || "-32px 0 0 -16px";
+        return new H.map.DomIcon(routeStartIcon);
+    }
+
+    private getRouteEndIcon() {
+        const routeEndIcon = document.createElement("img");
+        routeEndIcon.src = this.spec.routeEndIcon || this.getMarkerIconSrc();
+        routeEndIcon.width = Properties.resolve("HERE_MAPS_ROUTE_END_ICON_WIDTH") || 32;
+        routeEndIcon.height = Properties.resolve("HERE_MAPS_ROUTE_END_ICON_HEIGHT") || 32;
+        routeEndIcon.style.margin = Properties.resolve("HERE_MAPS_ROUTE_END_ICON_MARGIN") || "-32px 0 0 -16px";
+        return new H.map.DomIcon(routeEndIcon);
     }
 
     addRouteShapeToMap(routeShape: string[]) {

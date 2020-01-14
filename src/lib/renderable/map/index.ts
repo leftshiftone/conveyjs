@@ -26,6 +26,12 @@ import {HereMap} from "./here";
  * HERE_MAPS_SELECTED_MARKER_HEIGHT to the {@link Properties} registry
  * HERE_MAPS_SELECTED_MARKER_WIDTH to the {@link Properties} registry
  * HERE_MAPS_SELECTED_MARKER_MARGIN to the {@link Properties} registry
+ * HERE_MAPS_ROUTE_START_ICON_HEIGHT to the {@link Properties} registry
+ * HERE_MAPS_ROUTE_START_ICON_WIDTH to the {@link Properties} registry
+ * HERE_MAPS_ROUTE_START_ICON_MARGIN to the {@link Properties} registry
+ * HERE_MAPS_ROUTE_END_ICON_HEIGHT to the {@link Properties} registry
+ * HERE_MAPS_ROUTE_END_ICON_WIDTH to the {@link Properties} registry
+ * HERE_MAPS_ROUTE_END_ICON_MARGIN to the {@link Properties} registry
  *
  * @see {@link IRenderable}
  */
