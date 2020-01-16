@@ -55,8 +55,6 @@ export class RevealJsRenderer extends ContentCentricRenderer {
 
         // wrap renderables with class lto-container into a section element
         // ****************************************************************
-        console.debug(elements);
-
         const sections = document.getElementsByTagName("section");
 
         // open issue controls
@@ -65,25 +63,23 @@ export class RevealJsRenderer extends ContentCentricRenderer {
         if (elements[0].classList.contains("lto-container") &&
             !elements[0].outerHTML.includes("lto-transition")) {
             // create section
-            console.debug("reached container section");
+            console.trace("Reached container section");
             return this.createNewSection(elements, sections);
         } else if (elements[0].classList.contains("lto-container") &&
             elements[0].outerHTML.includes("lto-transition")) {
 
-            console.debug(elements[0]);
-            console.debug("reached transition check");
+            console.trace("Reached transition check");
             const transition = elements[0].firstElementChild;
 
             if (transition && transition.getAttribute("wrapped") === "in") {
 
-                console.debug("reached transition section");
+                console.trace("Reached transition section");
                 // get last section
 
                 if (sections.length === 0) {
                     return this.createNewSection(elements, sections);
                 } else {
                     const lastSection = sections.item(sections.length-1);
-                    console.debug(lastSection);
                     if (lastSection) {
                         elements.forEach(e => lastSection.appendChild(e));
                         return [lastSection];
