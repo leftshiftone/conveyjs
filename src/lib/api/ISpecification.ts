@@ -50,4 +50,6 @@ export interface ISpecification {
     maxSelections?: number;
     zoom?: number;
     routePoints?: string;
+    routeEndIcon?: string;
+    routeStartIcon?: string;
 }
