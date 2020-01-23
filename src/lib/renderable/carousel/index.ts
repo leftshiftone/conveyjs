@@ -8,6 +8,7 @@ import EventStream from '../../event/EventStream';
  * The user can switch between cells by clicking the next or previous button.
  * For CSS manipulations the following classes are added:
  *  lto-carousel: the container
+ *  lto-carousel-cell-container: container for all carousel cell items
  *  lto-carousel-cell: the container where a single markup element is wrapped
  *  lto-next: selects the next carousel cell
  *  lto-previous: selects the previous carousel cell
@@ -24,6 +25,7 @@ export class Carousel implements IRenderable, IStackeable {
     constructor(message: ISpecification) {
         this.spec = message;
         this.cellContainer = document.createElement("div");
+        this.cellContainer.classList.add('lto-carousel-cell-container')
         this.carousel = document.createElement("div");
     }
 
