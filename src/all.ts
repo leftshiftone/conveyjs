@@ -78,6 +78,7 @@ import {Overlays} from "./lib/renderable/overlays/Overlays";
 import {Overlay} from "./lib/renderable/overlays/Overlay";
 import {Transition} from "./lib/renderable/transition";
 import {SmallDevice} from "./lib/renderable/smallDevice";
+import {Basket} from "./lib/renderable/basket";
 
 export * from './lib/api';
 export {
@@ -164,4 +165,5 @@ export {
     Overlay,
     Transition,
     SmallDevice,
+    Basket,
 };

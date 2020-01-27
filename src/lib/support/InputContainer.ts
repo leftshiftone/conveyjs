@@ -2,6 +2,7 @@ import {ChoiceContainer} from "../renderable/choice/ChoiceContainer";
 import {ChoiceAggregator} from "../renderable/submit/ChoiceAggregator";
 import {SubmitState} from "../renderable/submit/SubmitState";
 import node from "./node";
+import wrap from "./node";
 import {ChoiceAggregationResult} from "../renderable/submit/ChoiceAggregationResult";
 
 export class InputContainer {
@@ -33,27 +34,37 @@ export class InputContainer {
         return new Promise<Attr>((resolve, reject) => {
             let attributes = {} as Attr;
             let state: SubmitState = SubmitState.ALLOWED;
-
             container.querySelectorAll(this.ELEMENTS_AS_STRING).forEach(e => {
                 const newState = InputContainer.addValuesToAttributes(e as HTMLElement, attributes);
                 console.debug(`State is ${newState}`);
-                if (state == SubmitState.ALLOWED)
-                    state = newState
+                if (state == SubmitState.ALLOWED) {
+                    state = newState;
+                }
             });
 
             const choiceContainers = container.querySelectorAll(`div.${ChoiceContainer.CSS_BASE_CLASS}`);
             if (choiceContainers.length > 0) {
                 const result: ChoiceAggregationResult = ChoiceAggregator.aggregate(choiceContainers);
                 if (result.state === SubmitState.SUBMIT_REQUIRED_ERROR) {
-                    state = SubmitState.SUBMIT_REQUIRED_ERROR
+                    state = SubmitState.SUBMIT_REQUIRED_ERROR;
                 } else {
-                    Object.assign(attributes, result.attributes)
+                    Object.assign(attributes, result.attributes);
                 }
             } else {
                 container.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
                     InputContainer.addValuesToAttributes(checkbox as HTMLElement, attributes);
                 });
             }
+
+            container.querySelectorAll(".lto-basket").forEach(basket => {
+                const required = this.getNormalOrDataAttribute(basket as HTMLElement, "required");
+                if (required && required === "true") {
+                    const basketName = this.getNormalOrDataAttribute(basket as HTMLElement, "name");
+                    if (!basketName || !attributes[basketName]) {
+                        state = SubmitState.SUBMIT_REQUIRED_ERROR
+                    }
+                }
+            });
 
             container.querySelectorAll(".lto-submit-error").forEach(e => e.remove());
             submit.classList.remove("lto-error");
@@ -66,7 +77,7 @@ export class InputContainer {
                 if (container.name) {
                     const array = [];
                     for (const e in attributes) {
-                        array.push({[e]: attributes[e]})
+                        array.push({[e]: attributes[e]});
                     }
                     container.setAttribute("data-value", JSON.stringify(array));
                     attributes = {} as Attr;
@@ -79,8 +90,8 @@ export class InputContainer {
                 submit.parentElement!.appendChild(span.unwrap());
                 reject("not allowed");
             }
-            resolve(attributes)
-        })
+            resolve(attributes);
+        });
     }
 
     /**
@@ -116,9 +127,21 @@ export class InputContainer {
             } catch (e) {
                 console.debug(`Unable to parse value as JSON for element ${element}: ${e}`);
             }
-            attributes[name] !== undefined ?
-                attributes[name].push(preparedValue) :
-                attributes[name] = [preparedValue];
+
+            const basket = wrap(element).getParentByClass("lto-basket");
+
+            if(basket) {
+                const basketName = this.getNormalOrDataAttribute(basket.unwrap(), "name");
+                if (basketName) {
+                    attributes[basketName] !== undefined  ?
+                        attributes[basketName].push({[name]:preparedValue}) :
+                        attributes[basketName] = [{[name]:preparedValue}];
+                }
+            } else {
+                attributes[name] !== undefined ?
+                    attributes[name].push(preparedValue) :
+                    attributes[name] = [preparedValue];
+            }
         }
 
         element.classList.remove("lto-error");
@@ -128,7 +151,7 @@ export class InputContainer {
     private static getNormalOrDataAttribute(element: HTMLElement, name: string): string | null {
         if (element.hasAttribute(name)) {
             return element.getAttribute(name);
-        } else if (element.hasAttribute(`data-${name}`)) {
+        }  if (element.hasAttribute(`data-${name}`)) {
             return element.getAttribute(`data-${name}`);
         }
         return null;
@@ -137,9 +160,9 @@ export class InputContainer {
     private static getRequiredAttribute(element: HTMLElement): boolean {
         const requiredAttribute = "required";
         if (element.hasAttribute(requiredAttribute)) {
-            return true
-        } else if (element.hasAttribute("data-required")) {
-            return element.getAttribute(`data-${requiredAttribute}`) == "true"
+            return true;
+        }  if (element.hasAttribute("data-required")) {
+            return element.getAttribute(`data-${requiredAttribute}`) == "true";
         }
         return false;
     }
