@@ -15,10 +15,10 @@ import {Specification} from "../../support/Specification";
  */
 export class Basket implements IRenderable, IStackeable {
 
-    private readonly spec: ISpecification;
+    private readonly spec: Specification;
 
-    constructor(message: ISpecification) {
-        this.spec = message;
+    constructor(spec: ISpecification) {
+        this.spec = new Specification(spec);
     }
 
     /**
@@ -28,7 +28,7 @@ export class Basket implements IRenderable, IStackeable {
 
     private renderBasket(renderer: IRenderer): INode {
         const basket = node("div");
-        Specification.initNode(basket, this.spec, "lto-basket");
+        this.spec.initNode(basket, "lto-basket");
         basket.appendChild(this.renderAddButton(basket, renderer));
         return basket;
     }
@@ -36,7 +36,7 @@ export class Basket implements IRenderable, IStackeable {
     private renderBasketEntity(basket: INode, renderer: IRenderer): INode {
         const entity = node("div");
         entity.addClasses("lto-basket-entity");
-        const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
+        const elements = (this.spec.raw.elements || []).map(e => renderer.render(e, this));
         elements.forEach(e => e.forEach(x => entity.appendChild(wrap(x))));
         entity.appendChild(this.renderRemoveButton(basket, entity));
         return entity;

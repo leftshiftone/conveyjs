@@ -3,6 +3,12 @@ import {INode} from "./node";
 
 export class Specification {
 
+    public raw: ISpecification;
+
+    constructor(spec: ISpecification) {
+        this.raw = spec
+    }
+
     /**
      * Initializes the default specification attributes to the node
      *
@@ -10,12 +16,12 @@ export class Specification {
      * @param spec the node specification
      * @param className the className which is set to the node
      */
-    public static initNode(node: INode, spec: ISpecification, className?: string): INode{
+    public initNode(node: INode, className?: string): INode{
         if(className) node.addClasses(className);
-        node.setId(spec.id);
-        node.setName(spec.name);
-        node.setRequired(spec.required);
-        spec.class !== undefined ? node.addClasses(spec.class) : () => {};
+        node.setId(this.raw.id);
+        node.setName(this.raw.name);
+        node.setRequired(this.raw.required);
+        this.raw.class !== undefined ? node.addClasses(this.raw.class) : () => {};
         return node;
     }
 
