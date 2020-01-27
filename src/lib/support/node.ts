@@ -25,7 +25,7 @@ export interface INode {
      *
      * @param qualifier the attribute qualifier
      */
-    getAttribute(qualifier: string): string | null
+    getAttribute(qualifier: string): string | null;
 
 
     /**
@@ -74,7 +74,7 @@ export interface INode {
     /**
      * Get the parent by class of the node
      */
-    getParentByClass(className: string): INode | undefined
+    getParentByClass(className: string): INode | undefined;
 
     toggle(): void;
 
@@ -97,6 +97,9 @@ export interface INode {
     setName(name?: string): void;
 
     setId(id?: string): void;
+
+    setRequired(required?: boolean): void;
+
 }
 
 class Node implements INode {
@@ -147,7 +150,7 @@ class Node implements INode {
     }
 
     public containsClass(className: string): boolean {
-        return this.node.classList.contains(className)
+        return this.node.classList.contains(className);
     }
 
     public appendChild(node: Node | string): INode {
@@ -188,7 +191,7 @@ class Node implements INode {
     }
 
     public find(selector: string): INode {
-        return wrap(this.node.querySelector(selector) as HTMLElement)
+        return wrap(this.node.querySelector(selector) as HTMLElement);
     }
 
     public findAll(selector: string): Array<INode> {
@@ -197,11 +200,11 @@ class Node implements INode {
         elements.forEach(element => {
             array.push(wrap(element as HTMLElement));
         });
-        return array
+        return array;
     }
 
     public setStyle(map: {[key: string]: string}): INode {
-        for (let key in map) {
+        for (const key in map) {
             this.node.style[key] = map[key];
         }
         return this;
@@ -209,7 +212,7 @@ class Node implements INode {
 
     public innerText(str?: string): INode {
         this.node.innerText = str ? str : "";
-        return this
+        return this;
     }
 
     public parent(): INode | null {
@@ -217,19 +220,24 @@ class Node implements INode {
     }
 
     public removeChild(node: INode) {
-        if(node) {
+        if (node) {
             this.node.removeChild(node.unwrap());
         }
     }
 
     public setName(name?: string): void {
-        if(!name) return;
+        if (!name) return;
         this.node.setAttribute("name", name);
     }
 
     public setId(id?: string): void {
-        if(!id) return;
-        this.node.id = id
+        if (!id) return;
+        this.node.id = id;
+    }
+
+    public setRequired(required?: boolean): void {
+        if (!required) return;
+        this.node.setAttribute("data-required", String(required));
     }
 
     public getParentByClass(className: string): INode | undefined {
@@ -242,10 +250,10 @@ class Node implements INode {
                 }
                 if (parent.parent()) {
                     parent = parent.parent();
-                } else return
+                } else return;
             }
         }
-        return
+        return;
     }
 
 }

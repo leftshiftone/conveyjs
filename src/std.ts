@@ -50,7 +50,7 @@ import Properties from "./lib/renderable/Properties";
 import EventStream from "./lib/event/EventStream";
 import {Transition} from "./lib/renderable/transition";
 import {SmallDevice} from "./lib/renderable/smallDevice";
-
+import {Basket} from "./lib/renderable/basket";
 
 export * from './lib/api';
 export {
@@ -108,5 +108,6 @@ export {
     Overlay,
     Trigger,
     Transition,
-    SmallDevice
+    SmallDevice,
+    Basket
 };
