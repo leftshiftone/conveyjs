@@ -138,4 +138,7 @@ Run `yarn trigger-release:minor` locally.
 #### Patch
 Run `yarn trigger-release:patch` locally.
 
+## Project Template
+Visit [conveyjs-starter](https://github.com/leftshiftone/conveyjs-starter/generate) to create a new project including conveyjs
 
+For a short guide check the [conveyjs-starter readme](https://github.com/leftshiftone/conveyjs-starter/blob/master/README.md)
