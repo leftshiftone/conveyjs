@@ -138,4 +138,5 @@ Run `yarn trigger-release:minor` locally.
 #### Patch
 Run `yarn trigger-release:patch` locally.
 
+##Project Template
 
