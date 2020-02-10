@@ -54,7 +54,7 @@ export function getFileExtensionFromFile(file: File) {
  */
 export function isImageFile(fileExtension : string) : Boolean {
     const allowedImageFileExtensions = ["jpg", "jpeg", "png"];
-    return allowedImageFileExtensions.indexOf(fileExtension) !== -1
+    return allowedImageFileExtensions.indexOf(fileExtension.toLowerCase()) !== -1
 }
 
 
