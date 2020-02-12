@@ -8,16 +8,18 @@
             width: 100%;
             height: 100%;
             height: 100vh;
-            height: calc( var(--vh, 1vh) * 100);
+            height: calc(var(--vh, 1vh) * 100);
             overflow: hidden;
         }
+
         .lto-content {
             width: 100%;
             height: 100%;
             height: 100vh;
-            height: calc( var(--vh, 1vh) * 100);
+            height: calc(var(--vh, 1vh) * 100);
             overflow: hidden;
         }
+
         .lto-textbox {
             display: none;
         }
@@ -46,7 +48,6 @@
 
 </div>
 
-</body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const renderer = new GaiaConvey.RevealJsRenderer();
@@ -55,10 +56,12 @@
         let gaia = new GaiaConvey.Gaia(renderer, listener);
         gaia.connect('ws://localhost:61616/mqtt', 'e198738a-5042-47a0-93f7-19329fc48a88')
             .then(connection => {
-            connection.subscribe(GaiaConvey.ChannelType.CONTEXT, (payload) => console.log(`Context: ${JSON.stringify(payload)}`));
-        connection.subscribe(GaiaConvey.ChannelType.NOTIFICATION, (payload) => console.log(`Notification: ${JSON.stringify(payload)}`));
-        connection.subscribe(GaiaConvey.ChannelType.LOG, (payload) => console.log(`Log: ${JSON.stringify(payload)}`));
-        connection.reception();
+                connection.subscribe(GaiaConvey.ChannelType.CONTEXT, (payload) => console.log(`Context: ${JSON.stringify(payload)}`));
+                connection.subscribe(GaiaConvey.ChannelType.NOTIFICATION, (payload) => console.log(`Notification: ${JSON.stringify(payload)}`));
+                connection.subscribe(GaiaConvey.ChannelType.LOG, (payload) => console.log(`Log: ${JSON.stringify(payload)}`));
+                connection.reception();
+            });
     });
 </script>
+</body>
 </html>

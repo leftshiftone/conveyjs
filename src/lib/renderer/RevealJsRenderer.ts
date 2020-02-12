@@ -1,5 +1,5 @@
 import {ContentCentricRenderer} from './ContentCentricRenderer';
-import {IRenderable, IStackeable, ISpecification} from '../api';
+import {IRenderable, ISpecification, IStackeable} from '../api';
 import {Defaults} from '../support/Defaults';
 
 /**
@@ -25,7 +25,6 @@ export class RevealJsRenderer extends ContentCentricRenderer {
             hash: true,
             controlsLayout: 'bottom-right',
             autoSlide: 1,
-
             transition: 'slide',
         });
 
@@ -57,44 +56,33 @@ export class RevealJsRenderer extends ContentCentricRenderer {
         // ****************************************************************
         const sections = document.getElementsByTagName("section");
 
-        // open issue controls
-        //const controls = document.getElementsByClassName("controls");
-
-        if (elements[0].classList.contains("lto-container") &&
-            !elements[0].outerHTML.includes("lto-transition")) {
+        if (elements[0].classList.contains("lto-container") && !elements[0].outerHTML.includes("lto-transition")) {
             // create section
             console.trace("Reached container section");
             return this.createNewSection(elements, sections);
-        } else if (elements[0].classList.contains("lto-container") &&
-            elements[0].outerHTML.includes("lto-transition")) {
-
+        } else if (elements[0].classList.contains("lto-container") && elements[0].outerHTML.includes("lto-transition")) {
             console.trace("Reached transition check");
             const transition = elements[0].firstElementChild;
 
             if (transition && transition.getAttribute("wrapped") === "in") {
-
                 console.trace("Reached transition section");
-                // get last section
 
                 if (sections.length === 0) {
                     return this.createNewSection(elements, sections);
-                } else {
-                    const lastSection = sections.item(sections.length-1);
-                    if (lastSection) {
-                        elements.forEach(e => lastSection.appendChild(e));
-                        return [lastSection];
-                    }
+                }
+                const lastSection = sections.item(sections.length - 1);
+                if (lastSection) {
+                    elements.forEach(e => lastSection.appendChild(e));
+                    return [lastSection];
                 }
             } else {
                 return this.createNewSection(elements, sections);
             }
         }
-
-        // what needs to be returned if I don't want to add to the dom?
         return elements;
     }
 
-    private createNewSection (elements: HTMLElement[], sections: HTMLCollectionOf<HTMLElement>) : HTMLElement [] {
+    private createNewSection(elements: HTMLElement[], sections: HTMLCollectionOf<HTMLElement>): HTMLElement [] {
         const section = document.createElement("section");
         elements.forEach(e => section.appendChild(e));
 
@@ -104,30 +92,21 @@ export class RevealJsRenderer extends ContentCentricRenderer {
         });
         section.classList.add("present");
 
-
         return [section];
     }
 
     private static wrapContent(content?: HTMLElement): HTMLElement {
-        const revealDiv = document.createElement("div");
         const slidesDiv = document.createElement("div");
-
-        revealDiv.classList.add('reveal', 'slide', 'center', 'has-horizontal-slides',
-            'has-vertical-slides', 'ready');
-        revealDiv.setAttribute("role", "application");
-        revealDiv.setAttribute("data-transition-speed", "default");
-        revealDiv.setAttribute("data-background-transition", "fade");
         slidesDiv.classList.add("slides");
 
-        (content || Defaults.content()).appendChild(revealDiv);
+        const revealDiv = document.createElement("div");
+        revealDiv.classList.add('reveal');
         revealDiv.appendChild(slidesDiv);
 
+        (content || Defaults.content()).appendChild(revealDiv);
         return slidesDiv;
     }
 
-    /**
-     * @inheritDoc
-     */
     public appendContent = (element: HTMLElement) => {
         this.content.appendChild(element);
         if (this.Reveal) {
