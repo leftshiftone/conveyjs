@@ -132,10 +132,16 @@ export class InputContainer {
 
             if(basket) {
                 const basketName = this.getNormalOrDataAttribute(basket.unwrap(), "name");
+
                 if (basketName) {
-                    attributes[basketName] !== undefined  ?
-                        attributes[basketName].push({[name]:preparedValue}) :
-                        attributes[basketName] = [{[name]:preparedValue}];
+                    const contextBasket = attributes[basketName+'test'];
+                    if (contextBasket !== undefined) {
+                        let curBasketEntity = contextBasket[contextBasket.length-1];
+                        curBasketEntity !== undefined && !curBasketEntity.basketEntity.includes(name) ?
+                            curBasketEntity.basketEntity.push({[name]:preparedValue}) : curBasketEntity['basketEntity'] = [{[name]:preparedValue}];
+                    } else {
+                        attributes[basketName+'test'] = [{['basketEntity']: [{[name]:preparedValue}]}];
+                    }
                 }
             } else {
                 attributes[name] !== undefined ?
