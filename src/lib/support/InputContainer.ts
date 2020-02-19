@@ -129,18 +129,17 @@ export class InputContainer {
             }
 
             const basket = wrap(element).getParentByClass("lto-basket");
-
             if(basket) {
                 const basketName = this.getNormalOrDataAttribute(basket.unwrap(), "name");
 
                 if (basketName) {
-                    const contextBasket = attributes[basketName+'test'];
+                    const contextBasket = attributes[basketName];
                     if (contextBasket !== undefined) {
                         let curBasketEntity = contextBasket[contextBasket.length-1];
-                        curBasketEntity !== undefined && !curBasketEntity.basketEntity.includes(name) ?
-                            curBasketEntity.basketEntity.push({[name]:preparedValue}) : curBasketEntity['basketEntity'] = [{[name]:preparedValue}];
+                        curBasketEntity !== undefined && curBasketEntity.basketEntity.filter((it:any) => Object.keys(it).find(k => k === name) !== undefined).length === 0 ?
+                            curBasketEntity.basketEntity.push({[name]:preparedValue}) : attributes[basketName].push({['basketEntity']: [{[name]:preparedValue}]});
                     } else {
-                        attributes[basketName+'test'] = [{['basketEntity']: [{[name]:preparedValue}]}];
+                        attributes[basketName] = [{['basketEntity']: [{[name]:preparedValue}]}];
                     }
                 }
             } else {
