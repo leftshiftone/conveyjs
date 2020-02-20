@@ -129,14 +129,9 @@ export class InputContainer {
             }
 
             const basket = wrap(element).getParentByClass("lto-basket");
-
-            if(basket) {
+            if (basket) {
                 const basketName = this.getNormalOrDataAttribute(basket.unwrap(), "name");
-                if (basketName) {
-                    attributes[basketName] !== undefined  ?
-                        attributes[basketName].push({[name]:preparedValue}) :
-                        attributes[basketName] = [{[name]:preparedValue}];
-                }
+                basketName && this.createBasket(basketName, attributes, name, preparedValue);
             } else {
                 attributes[name] !== undefined ?
                     attributes[name].push(preparedValue) :
@@ -146,6 +141,21 @@ export class InputContainer {
 
         element.classList.remove("lto-error");
         return SubmitState.ALLOWED;
+    }
+
+    private static createBasket(basketName : string, attributes: Attr, name : string, value : string) {
+            const contextBasket = attributes[basketName];
+            if (contextBasket !== undefined) {
+                const curBasketItem = contextBasket[contextBasket.length - 1];
+
+                if (!curBasketItem.basketItem.hasOwnProperty(name)) {
+                    curBasketItem.basketItem[name] = value;
+                } else {
+                    contextBasket.push({['basketItem']: {[name]:value}});
+                }
+            } else {
+                attributes[basketName] = [{['basketItem']: {[name]:value}}];
+            }
     }
 
     private static getNormalOrDataAttribute(element: HTMLElement, name: string): string | null {
