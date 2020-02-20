@@ -1,6 +1,7 @@
 import {ChoiceContainer} from "../renderable/choice/ChoiceContainer";
 import {ChoiceAggregator} from "../renderable/submit/ChoiceAggregator";
 import {SubmitState} from "../renderable/submit/SubmitState";
+import node from "./node";
 import wrap from "./node";
 import {ChoiceAggregationResult} from "../renderable/submit/ChoiceAggregationResult";
 
