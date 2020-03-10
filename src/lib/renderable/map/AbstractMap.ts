@@ -38,7 +38,7 @@ export abstract class AbstractMap {
         return this.defaultZoom;
     }
 
-    public getCenter(): WayPoint{
+    public getCenter(): WayPoint {
         if (this.spec.centerBrowserLocation && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
                     return {lat: position.coords.latitude, lng: position.coords.longitude};
@@ -94,11 +94,17 @@ export abstract class AbstractMap {
         } else wrapper.removeAttributes("data-value");
     }
 
-    public includeScripts = (scripts: Array<string>) => new Promise(resolve => {
+    public includeScripts = (scripts: Array<string>) => new Promise(async resolve => {
+        const scriptNodes = (script: String) => document.head.querySelector(`[src="${script}"]`);
+        const loadedScripts = scripts.map(s => scriptNodes(s)).filter(Boolean);
+        if (scripts.length === loadedScripts.length) {
+            return resolve();
+        }
+
         let countScripts = 0;
         let loaded = 0;
         scripts.forEach(script => {
-            if (!document.head.querySelectorAll(`[src="${script}"]`).length) {
+            if (!scriptNodes(script)) {
                 countScripts++;
                 const element = document.createElement('script') as HTMLScriptElement;
                 element.onload = () => {
