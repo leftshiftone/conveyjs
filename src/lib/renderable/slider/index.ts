@@ -49,11 +49,12 @@ export class Slider implements IRenderable {
         let nextButton: HTMLAnchorElement;
 
         //@ts-ignore
-        this.slider.value = isNaN(this.spec.value) ? "" : this.spec.value;
-        //@ts-ignore
         this.slider.min = isNaN(this.spec.min) ? "" : this.spec.min;
         //@ts-ignore
         this.slider.max = isNaN(this.spec.max) ? "" : this.spec.max;
+        //@ts-ignore
+        this.slider.value = isNaN(this.spec.value) ? "" : this.spec.value;
+
         this.slider.step = this.spec.step || "";
 
         let initialValue: string = this.slider.value;
