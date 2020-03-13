@@ -106,7 +106,7 @@ G.A.I.A. sends logs for certain process executions which can be received by subs
 
 ## Renderer
 
-A Renderer defines how elements, which were received by the 'Text' chennel, are rendered in
+A Renderer defines how elements, which were received by the 'Text' channel, are rendered in
 the HTML DOM tree. Furthermore, a renderer specifies the layout of an integration project.
 
 ### Classic Renderer
