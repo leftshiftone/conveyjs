@@ -3,7 +3,7 @@ import Renderables from '../Renderables';
 import node, {INode} from "../../support/node";
 import {Scanner} from "./Scanner";
 import Result from "@zxing/library/esm5/core/Result";
-import {getUserVideoMedia} from "../../support/Navigator";
+import {Navigator} from "../../support/Navigator";
 import {drawCanvas} from "../../support/Canvas";
 
 /**
@@ -65,7 +65,7 @@ export class CodeReader implements IRenderable {
 
         wrapper.removeClasses("lto-not-available");
 
-        const userMedia = getUserVideoMedia();
+        const userMedia = Navigator.getUserVideoMedia();
         if (userMedia == null)
             return;
 
