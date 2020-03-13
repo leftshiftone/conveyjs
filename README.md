@@ -40,7 +40,6 @@ Create the following DOM structure in your project
 ```
 
 #### Integrate Convey as standalone lib
-
 Import Convey
 ```html
 <head>
@@ -65,7 +64,6 @@ Connect to the G.A.I.A. ecosystem
 ```
 
 #### Integrate Convey as NPM package
-
 Import Convey
 ```javascript
 import {Gaia, ContentCentricRenderer, OffSwitchListener, ChannelType} from "@leftshiftone/convey";
@@ -92,7 +90,12 @@ import '@leftshiftone/convey/dist/convey-all.css';
 The communication with G.A.I.A. contains several channels where each one has its own purpose.
 
 ### TEXT
-Is the main channel and is responsible for exchanging the elements configured in G.A.I.A.. Convey automatically subscribes to this channel. The messages in this channel are rendered to HTML elements.
+Is the main channel and is responsible for exchanging the elements configured in G.A.I.A.. Convey
+automatically subscribes to this channel. The messages in this channel are rendered to HTML elements.
+
+### CONTEXT
+The Context consists of attributes defined in the G.A.I.A. BPMN process. It can be received by
+subscribing to this channel.
 
 ### NOTIFICATION
 Each notification configured in the G.A.I.A. BPMN process can be received if subscribed to this channel.
@@ -103,16 +106,19 @@ G.A.I.A. sends logs for certain process executions which can be received by subs
 
 ## Renderer
 
-A Renderer defines how elements, arrived in the *TEXT* channel, are rendered in the HTML DOM tree. Furthermore, a renderer allows for specifying the layout of an integration project.
+A Renderer defines how elements, arrived in the *TEXT* channel, are rendered in the HTML DOM tree.
+Furthermore, a renderer allows for specifying the layout of an integration project.
 
 ### Classic Renderer
 The classic renderer renders the G.A.I.A. messages in a classic top-down manner.
 
 ### Content Centric Renderer
-The content centric renderer tries to maximize the time a content is visible by updating the content if possible or displaying interrupting actions like intent cascading by overlaying the content.
+The content centric renderer tries to maximize the time a content is visible by updating the content
+if possible or displaying interrupting actions like intent cascading by overlaying the content.
 
 ### RevealJS Renderer
-Renderer implementation which is based on the reveal.js library. This renderer supports horizontal as well as vertical navigation.
+Renderer implementation which is based on the reveal.js library. This renderer supports horizontal
+as well as vertical navigation.
 
 ### NoopRenderer
 No-operation dummy renderer. Mainly used for audio only use cases.
@@ -160,12 +166,16 @@ Run `yarn trigger-release:minor` locally.
 #### Patch
 Run `yarn trigger-release:patch` locally.
 
+
 ## Project Template
+
 Visit [conveyjs-starter](https://github.com/leftshiftone/conveyjs-starter/generate) to create a new project including conveyjs
 
 For a short guide check the [conveyjs-starter readme](https://github.com/leftshiftone/conveyjs-starter/blob/master/README.md)
 
+
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you
 would like to change.
 
@@ -181,5 +191,7 @@ to update tests as appropriate.
 
 NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
+
 ## License
+
 MIT Licence
