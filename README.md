@@ -15,12 +15,12 @@ In order to add Convey to your project, follow these steps:
 
 ## Installation
 
-**Using npm:**
+Using npm:
 ```bash
 $ npm i @leftshiftone/convey
 ```
 
-**Using in browser:**
+Using in browser:
 ```html
 <script src="convey-std.js"/>
 ```
@@ -73,14 +73,13 @@ Connect to the G.A.I.A. ecosystem
 ```javascript
 new Gaia(new ContentCentricRenderer(), new OffSwitchListener())
     .connect('wss://DOMAIN_NAME/mqtt', 'IDENTITY_ID')
-    .then(conn => {
-        conn.subscribe(ChannelType.CONTEXT, (data) => console.log(data));
-        conn.reception();
+    .then(connection => {
+        connection.subscribe(ChannelType.CONTEXT, (data) => console.log(data));
+        connection.reception();
     });
 ```
 
 To use the default styling you can import it like the following:
-
 ```javascript
 import '@leftshiftone/convey/dist/convey-all.css';
 ```
@@ -90,8 +89,9 @@ import '@leftshiftone/convey/dist/convey-all.css';
 The communication with G.A.I.A. contains several channels where each one has its own purpose.
 
 ### TEXT
-Is the main channel and is responsible for exchanging the elements configured in G.A.I.A.. Convey
-automatically subscribes to this channel. The messages in this channel are rendered to HTML elements.
+The Text channel is the main channel and is responsible for exchanging the elements configured in
+G.A.I.A.. Convey automatically subscribes to this channel by calling `connection.reception()`.
+The messages in this channel are rendered to HTML elements.
 
 ### CONTEXT
 The Context consists of attributes defined in the G.A.I.A. BPMN process. It can be received by
@@ -106,8 +106,8 @@ G.A.I.A. sends logs for certain process executions which can be received by subs
 
 ## Renderer
 
-A Renderer defines how elements, arrived in the *TEXT* channel, are rendered in the HTML DOM tree.
-Furthermore, a renderer allows for specifying the layout of an integration project.
+A Renderer defines how elements, which were received by the 'Text' chennel, are rendered in
+the HTML DOM tree. Furthermore, a renderer specifies the layout of an integration project.
 
 ### Classic Renderer
 The classic renderer renders the G.A.I.A. messages in a classic top-down manner.
