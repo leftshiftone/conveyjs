@@ -76,6 +76,11 @@ export interface INode {
      */
     getParentByClass(className: string): INode | undefined;
 
+    /**
+     * Returns the first element with an id attribute. Yields null if no element was found.
+     */
+    getChildWithId(): INode | null;
+
     toggle(): void;
 
     onClick(callback: (e: MouseEvent) => void, options?: AddEventListenerOptions): void;
@@ -254,6 +259,14 @@ class Node implements INode {
             }
         }
         return;
+    }
+
+    public getChildWithId(): INode | null {
+        const childWithId = Array.from(this.node.children).find(child => child && !!child.id);
+        if (childWithId) {
+            return wrap(childWithId as HTMLElement);
+        }
+        return null;
     }
 
 }
