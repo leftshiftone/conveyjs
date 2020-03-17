@@ -2,6 +2,7 @@ import {Gaia} from './lib/Gaia';
 import {ChannelType} from './lib/support/ChannelType';
 import {OffSwitchListener} from './lib/listener/OffSwitchListener';
 import {Defaults} from './lib/support/Defaults';
+import {Navigator} from './lib/support/Navigator';
 import EventStream from "./lib/event/EventStream";
 import {VoiceBehaviour} from "./lib/behaviour/VoiceBehaviour";
 import {WebRTCRecorder} from "./lib/audio/recorder/WebRTCRecorder";
@@ -98,6 +99,7 @@ export {
     ChannelType,
     OffSwitchListener,
     Defaults,
+    Navigator,
     Renderables,
     Properties,
     EventStream,
