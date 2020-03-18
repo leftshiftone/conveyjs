@@ -164,7 +164,7 @@ Run `yarn trigger-release:major` locally.
 Run `yarn trigger-release:minor` locally.
 
 #### Patch
-Run `yarn trigger-release:patch` locally.
+Switch to the minor version branch, before performing the release (e.g. `release/1.3.x`) then run `yarn trigger-release:patch` locally.
 
 
 ## Project Template
