@@ -2,10 +2,10 @@ import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import Renderables from '../Renderables';
 import EventStream from '../../event/EventStream';
 
-enum Direction {
-    Previous,
-    Next
-}
+import Properties from "../Properties";
+
+import BootstrapCarousel from "./BootstrapCarousel";
+
 /**
  * Implementation of the 'carousel' markup element.
  * A HTML div element which can contain several 'form' or 'block' elements.
@@ -23,32 +23,26 @@ enum Direction {
 export class Carousel implements IRenderable, IStackeable {
 
     public spec: ISpecification;
-
-    // bootstrap
+    private readonly cellContainer: HTMLDivElement;
     private readonly carousel: HTMLDivElement;
-    private readonly carouselInner: HTMLDivElement;
-    private readonly carouselIndicator: HTMLOListElement;
 
     constructor(message: ISpecification) {
         this.spec = message;
-
-        // bootstrap
-        this.carousel = document.createElement('div');
-        this.carouselInner = document.createElement('div');
-        this.carouselIndicator = document.createElement('ol');
+        this.cellContainer = document.createElement("div");
+        this.cellContainer.classList.add('lto-carousel-cell-container');
+        this.carousel = document.createElement("div");
     }
 
     /**
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        this.carousel.classList.add('carousel', 'slide');
-        this.carousel.setAttribute('data-ride', 'carousel');
-        this.carousel.setAttribute('data-interval', 'false');
-        this.carousel.id = 'ltoBootstrapCarousel';
-        this.carouselInner.classList.add('carousel-inner');
-        this.carouselIndicator.classList.add('carousel-indicators');
+        if (Properties.resolve("CAROUSEL") === "bootstrap") {
+           const bsc: BootstrapCarousel = new BootstrapCarousel(this.spec);
+           return bsc.render(renderer, isNested);
+        }
 
+        this.carousel.classList.add('lto-carousel', 'lto-left');
         if (this.spec.id !== undefined) {
             this.carousel.id = this.spec.id;
         }
@@ -56,74 +50,128 @@ export class Carousel implements IRenderable, IStackeable {
             this.spec.class.split(" ").forEach(e => this.carousel.classList.add(e));
         }
 
-        let idx = 0;
         (this.spec.elements || []).map((e) => {
             renderer.render(e, this).forEach(x => {
-                x.classList.add('carousel-item');
-                if (idx === 0) {
-                    x.classList.add('active');
-                }
-
-                this.carouselInner.appendChild(x);
-                this.carouselIndicator.appendChild(this.getIndicator(idx));
-                idx++;
+                x.classList.add("lto-carousel-cell");
+                this.cellContainer.appendChild(x);
             });
         });
 
-        EventStream.emit("GAIA::carousel", this.current());
+        const next = document.createElement("div");
+        const previous = document.createElement("div");
 
-        this.carousel.appendChild(this.carouselIndicator);
-        this.carousel.appendChild(this.carouselInner);
+        next.addEventListener("click", () => this.next(this.getCurrent()));
+        previous.addEventListener("click", () => this.previous(this.getCurrent()));
 
-        this.carousel.appendChild(this.getNavigation(Direction.Previous));
-        this.carousel.appendChild(this.getNavigation(Direction.Next));
+        next.classList.add("lto-next");
+        previous.classList.add("lto-previous");
+
+        const nextSpan = document.createElement("span");
+        nextSpan.appendChild(document.createTextNode(">"));
+        next.appendChild(nextSpan);
+
+        const previousSpan = document.createElement("span");
+        previousSpan.appendChild(document.createTextNode("<"));
+        previous.appendChild(previousSpan);
+
+        this.resetCells();
+        this.init(this.getCurrent());
+
+        for (let i = 0; i < this.cellContainer.children.length; i++) {
+            const block = this.cellContainer.children[i];
+            const attribute = document.createAttribute("data-counter");
+            attribute.value = i + "";
+            block.attributes.setNamedItem(attribute);
+
+            const suggestions = block.querySelectorAll(".lto-suggestion");
+            suggestions.forEach(suggestion => {
+                block.removeChild(suggestion);
+                suggestion.classList.remove("lto-nested");
+                suggestion.attributes.setNamedItem(attribute.cloneNode(true) as Attr);
+                if (i > 0) {
+                    suggestion.classList.add("lto-hide");
+                }
+                renderer.appendSuggest(suggestion as HTMLElement);
+            });
+        }
+
+        this.carousel.appendChild(this.cellContainer);
+
+        this.carousel.appendChild(next);
+        this.carousel.appendChild(previous);
 
         return this.carousel;
+
     }
 
-    private getIndicator(idx : number) {
-        const indicator = document.createElement('li');
-        !idx && indicator.classList.add('active');
+    private init(current: number) {
+        this.resetCells();
+        EventStream.emit("GAIA::carousel", current);
+        this.cellContainer.children[current].classList.remove("lto-not-visible-item");
+        this.cellContainer.children[current].classList.add("lto-center-item");
 
-        indicator.setAttribute('data-target', '#ltoBootstrapCarousel');
-        indicator.setAttribute('data-slide-to', idx.toString());
+        if (current + 1 < this.cellContainer.children.length) {
+            this.cellContainer.children[current + 1].classList.remove("lto-not-visible-item");
+            this.cellContainer.children[current + 1].classList.add("lto-next-item");
+        }
 
-        return indicator;
+        setTimeout(() => this.carousel.style.height = (this.cellContainer.children[current] as HTMLElement).scrollHeight + "px", 1);
     }
 
-    private getNavigation(direction: Direction) {
-        const navItem = document.createElement('a');
-
-        navItem.classList.add(direction ? 'carousel-control-prev' : 'carousel-control-next');
-        navItem.href = '#ltoBootstrapCarousel';
-        navItem.setAttribute('role', 'button');
-        navItem.setAttribute('data-slide', direction ? 'prev' : 'next');
-
-        const navIcon = document.createElement('span');
-        navIcon.classList.add(direction ? 'carousel-control-prev-icon' : 'carousel-control-next-icon');
-        navIcon.setAttribute('aria-hidden', 'true');
-
-        const navText = document.createElement('span');
-        navText.classList.add('sr-only');
-        navText.innerText = direction ? 'Previous' : 'Next';
-        navItem.appendChild(navIcon);
-        navItem.appendChild(navText);
-
-        return navItem;
+    private next(current: number) {
+        EventStream.emit("GAIA::carousel", current);
+        this.resetCells();
+        current + 1 === this.cellContainer.children.length ? current = 0 : current++;
+        EventStream.emit("GAIA::carousel", current);
+        if (current > 0) {
+            this.cellContainer.children[current - 1].classList.remove("lto-not-visible-item");
+            this.cellContainer.children[current - 1].classList.add("lto-previous-item");
+        }
+        this.cellContainer.children[current].classList.remove("lto-not-visible-item");
+        this.cellContainer.children[current].classList.add("lto-center-item");
+        if (current + 1 < this.cellContainer.children.length) {
+            this.cellContainer.children[current + 1].classList.remove("lto-not-visible-item");
+            this.cellContainer.children[current + 1].classList.add("lto-next-item");
+        }
+        setTimeout(() => this.carousel.style.height = (this.cellContainer.children[current] as HTMLElement).scrollHeight + "px", 1);
     }
 
-    private current() {
+    private previous(current: number) {
+        this.resetCells();
+        current === 0 ? current = this.cellContainer.children.length - 1 : current--;
+        EventStream.emit("GAIA::carousel", current);
+        if (current - 1 > -1) {
+            this.cellContainer.children[current - 1].classList.remove("lto-not-visible-item");
+            this.cellContainer.children[current - 1].classList.add("lto-previous-item");
+        }
+        this.cellContainer.children[current].classList.remove("lto-not-visible-item");
+        this.cellContainer.children[current].classList.add("lto-center-item");
+        if (current + 1 < this.cellContainer.children.length) {
+            this.cellContainer.children[current + 1].classList.remove("lto-not-visible-item");
+            this.cellContainer.children[current + 1].classList.add("lto-next-item");
+        }
+        setTimeout(() => this.carousel.style.height = (this.cellContainer.children[current] as HTMLElement).scrollHeight + "px", 1);
+    }
+
+    private getCurrent() {
         let current = 0;
         let counter = 0;
 
-        this.carouselInner.childNodes.forEach(item => {
-            if ((item as HTMLElement).classList.contains('active')) {
+        this.cellContainer.childNodes.forEach(node => {
+            if ((node as HTMLElement).classList.contains("lto-center-item")) {
                 current = counter;
             }
             counter++;
         });
 
         return current;
+    }
+
+    private resetCells() {
+        this.cellContainer.childNodes.forEach(node => {
+            (node as HTMLElement).classList.remove("lto-center-item", "lto-next-item", "lto-previous-item", "lto-not-visible-item");
+            (node as HTMLElement).classList.add("lto-not-visible-item");
+        });
     }
 }
 
