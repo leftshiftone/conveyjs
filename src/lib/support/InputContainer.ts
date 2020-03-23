@@ -19,7 +19,7 @@ export class InputContainer {
         'input.lto-phone',
         'input.lto-slider',
         'input.lto-spinner',
-        'input.lto-textInput',
+        'input.lto-text',
         'textarea.lto-textarea',
     ];
     private static ELEMENTS_AS_STRING: string = InputContainer.ELEMENTS.join(",");

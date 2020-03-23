@@ -1,16 +1,14 @@
 import {RevealJsRenderer} from "../RevealJsRenderer";
 import {ISpecification} from "../../api";
 import Renderables from "../../renderable/Renderables";
-import {Text} from "../../renderable/text/index";
-import {TextInput} from "../../renderable/textInput/index";
-import {Submit} from "../../renderable/submit/index";
-import {Form} from "../../renderable/form/index";
+import {Label} from "../../renderable/label";
+import {Text} from "../../renderable/input/text";
+import {Submit} from "../../renderable/submit";
+import {Form} from "../../renderable/form";
 import {Container} from "../../renderable/container";
 
 
 describe("Reveal Js Renderer test", () => {
-
-
 
     it("simple container test", () => {
 
@@ -28,40 +26,39 @@ describe("Reveal Js Renderer test", () => {
         document.body.appendChild(suggestDiv);
 
 
-
         const specification = {
-            "type" : "container",
-            "elements": [{
-                "class": "start-application",
-                "elements": [
+            type: "container",
+            elements: [{
+                class: "start-application",
+                elements: [
                     {
-                        "class": "uppercase bold",
-                        "text": "Bevor es losgeht, verrate uns bitte deinen Vornamen:",
-                        "type": "text"
+                        class: "uppercase bold",
+                        text: "Bevor es losgeht, verrate uns bitte deinen Vornamen:",
+                        type: "label"
                     },
                     {
-                        "elements": [
+                        elements: [
                             {
-                                "name": "firstName",
-                                "placeholder": "Vorname",
-                                "required": true,
-                                "type": "textinput"
+                                name: "firstName",
+                                placeholder: "Vorname",
+                                required: true,
+                                type: "text"
                             },
                             {
-                                "text": "Bewerbung starten",
-                                "type": "submit"
+                                text: "Bewerbung starten",
+                                type: "submit"
                             }
                         ],
-                        "type": "form"
+                        type: "form"
                     }
                 ],
-                "type": "block"
+                type: "block"
             }]
         } as ISpecification;
 
         const revealJsRenderer = new RevealJsRenderer();
+        Renderables.register("label", Label);
         Renderables.register("text", Text);
-        Renderables.register("textinput", TextInput);
         Renderables.register("submit", Submit);
         Renderables.register("form", Form);
         Renderables.register("container", Container);
@@ -70,6 +67,5 @@ describe("Reveal Js Renderer test", () => {
         expect(rendered[0].localName).toBe("section");
 
     });
-
 
 });

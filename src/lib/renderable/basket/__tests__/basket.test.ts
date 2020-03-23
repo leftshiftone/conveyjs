@@ -1,10 +1,10 @@
 import {ClassicRenderer} from "../../../renderer/ClassicRenderer";
 import Renderables from "../../Renderables";
-import {Basket, Form, TextInput, Submit} from "../../../../std";
+import {Basket, Form, Text, Submit} from "../../../../std";
 
 describe("Basket", () => {
     it("beforeAll", () => {
-        Renderables.register("textInput", TextInput);
+        Renderables.register("text", Text);
         Renderables.register("basket", Basket);
         Renderables.register("submit", Submit);
     });
@@ -13,8 +13,8 @@ describe("Basket", () => {
         const mock = document.createElement("div");
         const form = new Form({
             type: "form", name: "form", elements: [
-                {type: "textInput", name: "textInput"},
-                {type: "basket", name: "basket", elements: [{type: "textInput", name: "textInputInBasket"}]},
+                {type: "text", name: "text"},
+                {type: "basket", name: "basket", elements: [{type: "text", name: "textInBasket"}]},
                 {type: "submit", name: "submit", text: "submit"},
             ]
         }).render(new ClassicRenderer(mock, mock), false);
@@ -32,9 +32,9 @@ describe("Basket", () => {
 
         const removeButtons: Array<HTMLElement> = [];
 
-        // Assert that every entity has a textInput and a remove button as child node
+        // Assert that every entity has a text and a remove button as child node
         basketEnts.forEach(ent => {
-            const input = ent.querySelector(".lto-textInput");
+            const input = ent.querySelector(".lto-text");
             const remove = ent.querySelector(".lto-remove-from-basket");
             expect(input).not.toBeNull();
             expect(remove).not.toBeNull();
