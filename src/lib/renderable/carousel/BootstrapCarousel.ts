@@ -5,16 +5,9 @@ enum Direction {
     Previous,
     Next
 }
+
 /**
- * Implementation of the 'carousel' markup element.
- * A HTML div element which can contain several 'form' or 'block' elements.
- * The user can switch between cells by clicking the next or previous button.
- * For CSS manipulations the following classes are added:
- *  lto-carousel: the container
- *  lto-carousel-cell-container: container for all carousel cell items
- *  lto-carousel-cell: the container where a single markup element is wrapped
- *  lto-next: selects the next carousel cell
- *  lto-previous: selects the previous carousel cell
+ * Implementation of the Bootstrap 4 Carousel
  *
  * @see {@link IRenderable}
  * @see {@link IStackeable}
