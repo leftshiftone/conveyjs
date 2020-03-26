@@ -154,10 +154,6 @@ The following modules are available:
 ## Development
 
 ### Release
-### Release
-### Release
-Releases are triggered locally. Just a tag will be pushed to trigger the CI release pipeline.
-Releases are triggered locally. Just a tag will be pushed to trigger the CI release pipeline.
 Releases are triggered locally. Just a tag will be pushed to trigger the CI release pipeline.
 
 #### Major
