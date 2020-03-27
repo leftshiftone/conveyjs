@@ -6,7 +6,7 @@ export class Specification {
     public raw: ISpecification;
 
     constructor(spec: ISpecification) {
-        this.raw = spec
+        this.raw = spec;
     }
 
     /**
@@ -21,7 +21,9 @@ export class Specification {
         node.setName(this.raw.name);
         node.setRequired(this.raw.required);
         node.innerText(this.raw.text);
-        node.addClasses("lto-" + this.raw.position || 'left');
+        if (this.raw.position) {
+            node.addClasses("lto-" + this.raw.position || 'left');
+        }
         this.raw.class !== undefined ? node.addClasses(this.raw.class) : () => {};
         return node;
     }

@@ -22,7 +22,9 @@ export class Text extends BaseInput implements IRenderable {
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const text = this.initInput("text", "lto-text", isNested);
-        text.pattern = this.spec.regex || "";
+        if (this.spec.regex) {
+            text.pattern = this.spec.regex;
+        }
         return text;
     }
 }
