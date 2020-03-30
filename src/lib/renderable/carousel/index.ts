@@ -2,6 +2,10 @@ import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import Renderables from '../Renderables';
 import EventStream from '../../event/EventStream';
 
+import Properties from "../Properties";
+
+import BootstrapCarousel from "./BootstrapCarousel";
+
 /**
  * Implementation of the 'carousel' markup element.
  * A HTML div element which can contain several 'form' or 'block' elements.
@@ -25,7 +29,7 @@ export class Carousel implements IRenderable, IStackeable {
     constructor(message: ISpecification) {
         this.spec = message;
         this.cellContainer = document.createElement("div");
-        this.cellContainer.classList.add('lto-carousel-cell-container')
+        this.cellContainer.classList.add('lto-carousel-cell-container');
         this.carousel = document.createElement("div");
     }
 
@@ -33,6 +37,11 @@ export class Carousel implements IRenderable, IStackeable {
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
+        if (Properties.resolve("CAROUSEL") === "bootstrap") {
+           const bsc: BootstrapCarousel = new BootstrapCarousel(this.spec);
+           return bsc.render(renderer, isNested);
+        }
+
         this.carousel.classList.add('lto-carousel', 'lto-left');
         if (this.spec.id !== undefined) {
             this.carousel.id = this.spec.id;
@@ -92,6 +101,7 @@ export class Carousel implements IRenderable, IStackeable {
         this.carousel.appendChild(previous);
 
         return this.carousel;
+
     }
 
     private init(current: number) {
@@ -163,7 +173,6 @@ export class Carousel implements IRenderable, IStackeable {
             (node as HTMLElement).classList.add("lto-not-visible-item");
         });
     }
-
 }
 
 Renderables.register("carousel", Carousel);
