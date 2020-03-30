@@ -13,14 +13,14 @@ import {BaseInput} from "../BaseInput";
 export class Email extends BaseInput implements IRenderable {
 
     constructor(spec: ISpecification) {
-        super(spec)
+        super(spec);
     }
 
     /**
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        return this.initInput("email", "lto-email", isNested)
+        return this.initInput("email", "lto-email", isNested);
     }
 }
 

@@ -21,9 +21,7 @@ import {Bold} from './lib/renderable/bold';
 import {Italic} from './lib/renderable/italic';
 import {Break} from './lib/renderable/break';
 import {Button} from './lib/renderable/button';
-import {Calendar} from './lib/renderable/calendar';
 import {Carousel} from './lib/renderable/carousel';
-import {Checkbox} from './lib/renderable/checkbox';
 import {Container} from './lib/renderable/container';
 import {Headline} from './lib/renderable/headline';
 import {Image} from './lib/renderable/image';
@@ -107,10 +105,8 @@ export {
     Bold,
     Break,
     Button,
-    Calendar,
     Upload,
     Carousel,
-    Checkbox,
     Video,
     Container,
     Headline,
