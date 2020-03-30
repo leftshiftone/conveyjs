@@ -39,19 +39,19 @@ describe("ChoiceMutatorTest", () => {
                 elements: [{
                     elements: [{
                         text: "DEU",
-                        type: "text"
+                        type: "label"
                     }],
                     type: "col"
                 }, {
                     elements: [{
                         text: "ENG",
-                        type: "text"
+                        type: "label"
                     }],
                     type: "col"
                 }, {
                     elements: [{
                         text: "FRA",
-                        type: "text"
+                        type: "label"
                     }],
                     type: "col"
                 }],

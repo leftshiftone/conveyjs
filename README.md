@@ -31,11 +31,10 @@ Create the following DOM structure in your project
 
 ```html
 <div class="lto-gaia">
-    <div class="lto-content"></div>
-        <div class="lto-suggest"/>
-        <input class="lto-textbox"/>
-        <button class="lto-invoker"/>
-    </div>
+    <div class="lto-content"/>
+    <div class="lto-suggest"/>
+    <input class="lto-textbox"/>
+    <button class="lto-invoker"/>
 </div>
 ```
 

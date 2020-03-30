@@ -8,7 +8,6 @@ import {ChoiceAggregationResult} from "../renderable/submit/ChoiceAggregationRes
 export class InputContainer {
 
     public static ELEMENTS = [
-        'div.lto-calendar-input',
         'div.lto-camera',
         'div.lto-code-reader',
         'div.lto-drop-area',
@@ -19,7 +18,7 @@ export class InputContainer {
         'input.lto-phone',
         'input.lto-slider',
         'input.lto-spinner',
-        'input.lto-textInput',
+        'input.lto-text',
         'textarea.lto-textarea',
     ];
     private static ELEMENTS_AS_STRING: string = InputContainer.ELEMENTS.join(",");
