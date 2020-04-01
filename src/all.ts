@@ -2,6 +2,7 @@ import {Gaia} from './lib/Gaia';
 import {ChannelType} from './lib/support/ChannelType';
 import {OffSwitchListener} from './lib/listener/OffSwitchListener';
 import {Defaults} from './lib/support/Defaults';
+import {Navigator} from './lib/support/Navigator';
 import EventStream from "./lib/event/EventStream";
 import {VoiceBehaviour} from "./lib/behaviour/VoiceBehaviour";
 import {WebRTCRecorder} from "./lib/audio/recorder/WebRTCRecorder";
@@ -20,9 +21,7 @@ import {Bold} from './lib/renderable/bold';
 import {Italic} from './lib/renderable/italic';
 import {Break} from './lib/renderable/break';
 import {Button} from './lib/renderable/button';
-import {Calendar} from './lib/renderable/calendar';
 import {Carousel} from './lib/renderable/carousel';
-import {Checkbox} from './lib/renderable/checkbox';
 import {Container} from './lib/renderable/container';
 import {Headline} from './lib/renderable/headline';
 import {Image} from './lib/renderable/image';
@@ -35,16 +34,16 @@ import {Slider} from './lib/renderable/slider';
 import {SlotMachine} from './lib/renderable/slotmachine';
 import {Spinner} from './lib/renderable/spinner';
 import {Form} from "./lib/renderable/form";
-import {Email} from "./lib/renderable/email";
-import {Phone} from "./lib/renderable/phone";
-import {TextInput} from "./lib/renderable/textInput";
+import {Email} from "./lib/renderable/input/email";
+import {Phone} from "./lib/renderable/input/phone";
+import {Text} from "./lib/renderable/input/text";
 import {Submit} from './lib/renderable/submit';
 import {Suggestion} from './lib/renderable/suggestion';
 import {Table} from './lib/renderable/table';
 import {Col} from "./lib/renderable/table/col";
 import {Row} from "./lib/renderable/table/row";
 import {ReelValue} from "./lib/renderable/reelValue";
-import {Text} from './lib/renderable/text';
+import {Label} from './lib/renderable/label';
 import {CheckboxChoice, MultipleChoice, RadioChoice, SingleChoice} from "./lib/renderable/choice";
 import {Textarea} from "./lib/renderable/textarea";
 import {Video} from "./lib/renderable/video";
@@ -98,6 +97,7 @@ export {
     ChannelType,
     OffSwitchListener,
     Defaults,
+    Navigator,
     Renderables,
     Properties,
     EventStream,
@@ -105,10 +105,8 @@ export {
     Bold,
     Break,
     Button,
-    Calendar,
     Upload,
     Carousel,
-    Checkbox,
     Video,
     Container,
     Headline,
@@ -119,7 +117,7 @@ export {
     Form,
     Email,
     Camera,
-    TextInput,
+    Text,
     Phone,
     Link,
     Reel,
@@ -129,7 +127,7 @@ export {
     Submit,
     Suggestion,
     Table,
-    Text,
+    Label,
     Textarea,
     Row,
     Col,

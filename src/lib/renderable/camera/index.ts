@@ -1,7 +1,7 @@
 import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import Renderables from '../Renderables';
 import {drawCanvas} from "../../support/Canvas";
-import {getUserVideoMedia} from "../../support/Navigator";
+import {Navigator} from "../../support/Navigator";
 import {getBase64FromFile} from "../../support/Files";
 import {InputContainer} from "../../support/InputContainer";
 
@@ -72,7 +72,7 @@ export class Camera implements IRenderable, IStackeable {
 
         wrapper.classList.remove("lto-not-available");
 
-        const userMedia = getUserVideoMedia();
+        const userMedia = Navigator.getUserVideoMedia();
         if (userMedia == null) {
             return;
         }

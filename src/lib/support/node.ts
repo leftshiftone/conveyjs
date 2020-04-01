@@ -76,6 +76,11 @@ export interface INode {
      */
     getParentByClass(className: string): INode | undefined;
 
+    /**
+     * Returns the first element with an id attribute. Yields null if no element was found.
+     */
+    getChildWithId(): INode | null;
+
     toggle(): void;
 
     onClick(callback: (e: MouseEvent) => void, options?: AddEventListenerOptions): void;
@@ -94,11 +99,11 @@ export interface INode {
 
     setStyle(map: {[key: string]: string}): INode;
 
-    setName(name?: string): void;
+    setName(name?: string): INode;
 
-    setId(id?: string): void;
+    setId(id?: string): INode;
 
-    setRequired(required?: boolean): void;
+    setRequired(required?: boolean): INode;
 
 }
 
@@ -210,8 +215,9 @@ class Node implements INode {
         return this;
     }
 
-    public innerText(str?: string): INode {
-        this.node.innerText = str ? str : "";
+    public innerText(text?: string): INode {
+        if (!text) return this;
+        this.node.innerText = text;
         return this;
     }
 
@@ -225,19 +231,23 @@ class Node implements INode {
         }
     }
 
-    public setName(name?: string): void {
-        if (!name) return;
+    public setName(name?: string): INode {
+        if (!name) return this;
         this.node.setAttribute("name", name);
+        return this;
     }
 
-    public setId(id?: string): void {
-        if (!id) return;
+    public setId(id?: string): INode {
+        if (!id) return this;
         this.node.id = id;
+        return this;
     }
 
-    public setRequired(required?: boolean): void {
-        if (!required) return;
+    public setRequired(required?: boolean): INode {
+        if (!required) return this;
+        this.node.setAttribute("required", "required");
         this.node.setAttribute("data-required", String(required));
+        return this;
     }
 
     public getParentByClass(className: string): INode | undefined {
@@ -254,6 +264,14 @@ class Node implements INode {
             }
         }
         return;
+    }
+
+    public getChildWithId(): INode | null {
+        const childWithId = Array.from(this.node.children).find(child => child && !!child.id);
+        if (childWithId) {
+            return wrap(childWithId as HTMLElement);
+        }
+        return null;
     }
 
 }
