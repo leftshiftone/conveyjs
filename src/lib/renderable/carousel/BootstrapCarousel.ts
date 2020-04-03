@@ -1,5 +1,6 @@
 import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import EventStream from '../../event/EventStream';
+import {EventType} from "../../event/EventType";
 
 enum Direction {
     Previous,
@@ -61,7 +62,7 @@ export default class BootstrapCarousel implements IRenderable, IStackeable {
             });
         });
 
-        EventStream.emit("GAIA::carousel", this.current());
+        EventStream.emit(EventType.CAROUSEL, this.current());
 
         this.carousel.appendChild(this.carouselIndicator);
         this.carousel.appendChild(this.carouselInner);
@@ -72,7 +73,7 @@ export default class BootstrapCarousel implements IRenderable, IStackeable {
         return this.carousel;
     }
 
-    private getIndicator(idx : number) {
+    private getIndicator(idx: number) {
         const indicator = document.createElement('li');
         !idx && indicator.classList.add('active');
 

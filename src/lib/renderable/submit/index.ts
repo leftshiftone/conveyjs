@@ -6,6 +6,8 @@ import {Button} from "../button";
 import {InputContainer} from "../../support/InputContainer";
 import {Overlay} from "../overlays/Overlay";
 import node from "../../support/node";
+import {EventType} from "../../event/EventType";
+import {MessageType} from "../../support/MessageType";
 
 /**
  * Implementation of the 'submit' markup element.
@@ -17,6 +19,7 @@ import node from "../../support/node";
  * @see {@link Form}
  */
 export class Submit implements IRenderable {
+    public static readonly TYPE = "submit";
 
     private readonly spec: ISpecification;
 
@@ -30,7 +33,7 @@ export class Submit implements IRenderable {
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const position = this.spec.position || 'left';
         const submit: HTMLButtonElement = document.createElement('button');
-        submit.setAttribute(`type`, "submit");
+        submit.setAttribute(`type`, Submit.TYPE);
 
         submit.classList.add("lto-submit", "lto-" + position);
         if (this.spec.id !== undefined)
@@ -62,12 +65,15 @@ export class Submit implements IRenderable {
             if (content) content.style.pointerEvents = "none";
             InputContainer.getAll(content as HTMLFormElement, submit).then((attr) => {
 
-                EventStream.emit("GAIA::publish", {
-                    timestamp,
-                    text,
-                    attributes: {type: "submit", value: JSON.stringify(attr)},
-                    type: "submit",
-                    position: "right"
+                EventStream.emitEvent({
+                    type: EventType.PUBLISH,
+                    payload: {
+                        text,
+                        type: MessageType.SUBMIT,
+                        attributes: {type: Submit.TYPE, value: JSON.stringify(attr)},
+                        position: "right",
+                        timestamp
+                    }
                 });
 
                 Button.cleanupButtons();
@@ -105,4 +111,4 @@ export class Submit implements IRenderable {
     }
 }
 
-Renderables.register("submit", Submit);
+Renderables.register(Submit.TYPE, Submit);
