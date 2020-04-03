@@ -1,4 +1,4 @@
-.lto-text {
+.lto-label {
   max-width: 75%;
   min-width: 30%;
   animation: slide-up 0.4s ease;
@@ -6,7 +6,7 @@
   padding: 10px;
   display: inline-block;
 }
-.lto-text.lto-nested {
+.lto-label.lto-nested {
     width: 100%;
     min-width: unset;
     max-width: unset;
@@ -14,7 +14,7 @@
     padding:0;
     margin-bottom:10px;
 }
-.lto-text.lto-right {
+.lto-label.lto-right {
   margin-left: 30px;
   bottom: 40px;
 }

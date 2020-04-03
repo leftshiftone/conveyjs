@@ -1,6 +1,9 @@
-import {IRenderer, ISpecification, IRenderable} from '../../api';
+import {IRenderable, IRenderer, ISpecification} from '../../api';
 import EventStream from '../../event/EventStream';
 import Renderables from '../Renderables';
+import {IEvent} from "../../api/IEvent";
+import {EventType} from "../../event/EventType";
+import {MessageType} from "../../support/MessageType";
 
 /**
  * Implementation of the 'button' markup element.
@@ -12,6 +15,7 @@ import Renderables from '../Renderables';
  * @see {@link IRenderable}
  */
 export class Button implements IRenderable {
+    public static readonly TYPE = "button";
 
     private readonly spec: ISpecification;
 
@@ -25,7 +29,7 @@ export class Button implements IRenderable {
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const position = this.spec.position || "left";
         const button = document.createElement("button");
-        button.setAttribute(`type`, "button");
+        button.setAttribute(`type`, Button.TYPE);
 
         button.setAttribute(`name`, this.spec.name || "");
         if (this.spec.id !== undefined) {
@@ -47,18 +51,20 @@ export class Button implements IRenderable {
                 const text = this.spec.text || "";
                 const name = this.spec.name || "";
                 const value = this.spec.value || "";
-
-                const buttonObject = {text, type: "button", attributes: {name, value, type: "button"}};
-                EventStream.emit("GAIA::publish", buttonObject);
+                const event = {
+                    type: EventType.PUBLISH,
+                    payload: {text, type: MessageType.BUTTON, attributes: {name, value, type: Button.TYPE}}
+                } as IEvent;
+                EventStream.emitEvent(event);
 
                 Button.cleanupButtons();
 
                 // add right button
-                const newButton = Object.assign(buttonObject, {
+                const newButton = Object.assign(event.payload, {
                     class: this.spec.class,
                     position: "right",
                     timestamp: new Date().getTime()
-                });
+                }) as ISpecification;
                 renderer.render({type: "container", elements: [newButton]}).forEach(e => renderer.appendContent(e));
             };
             button.addEventListener("click", eventListener, {once: true});
@@ -93,4 +99,4 @@ export class Button implements IRenderable {
     }
 }
 
-Renderables.register("button", Button);
+Renderables.register(Button.TYPE, Button);

@@ -31,11 +31,10 @@ Create the following DOM structure in your project
 
 ```html
 <div class="lto-gaia">
-    <div class="lto-content"></div>
-        <div class="lto-suggest"/>
-        <input class="lto-textbox"/>
-        <button class="lto-invoker"/>
-    </div>
+    <div class="lto-content"/>
+    <div class="lto-suggest"/>
+    <input class="lto-textbox"/>
+    <button class="lto-invoker"/>
 </div>
 ```
 
@@ -164,7 +163,7 @@ Run `yarn trigger-release:major` locally.
 Run `yarn trigger-release:minor` locally.
 
 #### Patch
-Run `yarn trigger-release:patch` locally.
+Switch to the minor version branch, before performing the release (e.g. `release/1.3.x`) then run `yarn trigger-release:patch` locally.
 
 
 ## Project Template

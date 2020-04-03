@@ -4,6 +4,8 @@ import EventStream from '../event/EventStream';
 import {Overlay} from '../renderable/overlay';
 import {Block} from '../renderable/block';
 import {Container} from '../renderable/container';
+import {EventType} from "../event/EventType";
+import {Suggestion} from "../renderable/suggestion";
 
 /**
  * The content centric renderer tries to maximize the time a content is visible by updating
@@ -16,8 +18,8 @@ export class ContentCentricRenderer extends ClassicRenderer {
 
     constructor(content?: HTMLElement, suggest?: HTMLElement) {
         super(content, suggest);
-        EventStream.addListener("GAIA::publish", (e) => {
-            if (e[0].type === "suggestion") {
+        EventStream.addListener(EventType.PUBLISH, (e) => {
+            if (e[0].type === Suggestion.TYPE) {
                 this.behaviour = this.suggestionBehaviour(this.qualifier || "");
             }
         });

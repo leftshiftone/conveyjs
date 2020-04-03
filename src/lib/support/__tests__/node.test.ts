@@ -159,4 +159,18 @@ describe('NodeTest', () => {
         expect(n.unwrap().style.fontFamily).toBe("Arial");
     });
 
+    it('getChildWithId()', () => {
+        const outer = node("div");
+        const child1 = node("div").addAttributes({style: 'x'});
+        const child2 = node("div").addAttributes({role: 'y'});
+
+        // no elements with id attribute appended
+        outer.appendChild(child1).appendChild(child2);
+        expect(outer.getChildWithId()).toBe(null);
+
+        // element with id attribute appended
+        const childWithId = node("div").addAttributes({id: 'myId'});
+        expect(outer.appendChild(childWithId).getChildWithId()).toEqual(childWithId);
+    });
+
 });
