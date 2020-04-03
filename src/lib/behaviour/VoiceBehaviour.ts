@@ -11,16 +11,18 @@ import {BufferedAudioPlayer} from "../audio/player/BufferedAudioPlayer";
  * onmouseup starts the recording, onmousedown stops the recording and publishes an audio message
  * to the outbound audio channel.
  */
-export class VoiceBehaviour implements IBehaviour {
+export class VoiceBehaviour extends IBehaviour {
 
-    private readonly recordButton: HTMLButtonElement;
     private readonly recorder: AudioRecorder;
     private readonly callback: (eventType: EventType) => void;
 
     constructor(recordButton: HTMLButtonElement,
                 recorder: AudioRecorder = WebRTCRecorder.instance(),
                 callback: (eventType: EventType) => void = () => undefined) {
-        this.recordButton = recordButton;
+        super(recordButton, [
+            { type: EventType.ON_MOUSE_DOWN, handler: () => this.startRecordingOnMouseDown() },
+            { type: EventType.ON_MOUSE_UP, handler: () => this.gateway && this.stopRecordingOnMouseUp(this.gateway) }
+        ]);
         this.recorder = recorder;
         this.callback = callback;
     }
@@ -31,18 +33,15 @@ export class VoiceBehaviour implements IBehaviour {
      */
     public bind(gateway: MqttConnection): void {
         this.subscribeToAudioChannel(gateway);
-        this.startRecordingOnMouseDown();
-        this.stopRecordingOnMouseUp(gateway);
+        super.bind(gateway);
     }
 
     /**
      * Binds {@link AudioRecorder#startRecording} to {@link this#recordButton} when an "mousedown" event occurs
      */
     private startRecordingOnMouseDown(): void {
-        this.recordButton.addEventListener(EventType.ON_MOUSE_DOWN, () => {
-            this.recorder.startRecording();
-            this.callback(EventType.ON_MOUSE_DOWN);
-        });
+        this.recorder.startRecording();
+        this.callback(EventType.ON_MOUSE_DOWN);
     }
 
     /**
@@ -50,10 +49,8 @@ export class VoiceBehaviour implements IBehaviour {
      */
 
     private stopRecordingOnMouseUp(gateway: MqttConnection): void {
-        this.recordButton.addEventListener(EventType.ON_MOUSE_UP, () => {
-            this.recorder.stopRecording().then(result => {
-                gateway.publish(ChannelType.AUDIO, {type: "text", text: result} as ISpecification);
-            });
+        this.recorder.stopRecording().then(result => {
+            gateway.publish(ChannelType.AUDIO, {type: "text", text: result} as ISpecification);
         });
     }
 

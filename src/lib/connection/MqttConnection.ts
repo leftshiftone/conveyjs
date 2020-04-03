@@ -11,7 +11,7 @@ export class MqttConnection {
 
     private readonly callbacks: Map<ChannelType, (message: object) => void> = new Map();
     private readonly subscriptions: Array<string> = [];
-    private readonly behaviourBind: Array<string> = [];
+    private readonly behaviourBind: Array<IBehaviour> = [];
 
     private readonly listener: IListener;
     private readonly renderer: IRenderer;
@@ -48,6 +48,7 @@ export class MqttConnection {
      */
     public disconnect = () => {
         this.removeFromEventStream();
+        this.behaviourBind.forEach(behaviour => behaviour.unbind());
         return this.mqttClient.end(false, () => this.listener.onDisconnected());
     };
 
@@ -154,7 +155,7 @@ export class MqttConnection {
      * @param behaviour
      */
     public bind(behaviour: IBehaviour) {
-        this.behaviourBind.push(behaviour.constructor.name);
+        this.behaviourBind.push(behaviour);
         behaviour.bind(this);
     }
 
