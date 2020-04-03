@@ -5,6 +5,7 @@ import {Link} from '../renderable/link';
 import {Defaults} from '../support/Defaults';
 import {Suggestion} from '../renderable/suggestion';
 import EventStream from '../event/EventStream';
+import {EventType} from "../event/EventType";
 
 /**
  * The classic renderer renders the G.A.I.A. messages in a classic top-down manner.
@@ -13,7 +14,7 @@ export class ClassicRenderer extends AbstractRenderer {
 
     constructor(content?: HTMLElement, suggest?: HTMLElement) {
         super(content || Defaults.content(), suggest || Defaults.suggest());
-        EventStream.addListener("GAIA::carousel", this.handleCarousel.bind(this));
+        EventStream.addListener(EventType.CAROUSEL, this.handleCarousel.bind(this));
     }
 
     /**

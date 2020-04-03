@@ -1,9 +1,10 @@
-import {IBehaviour, ISpecification} from "../api";
+import {IBehaviour} from "../api";
 import {MqttConnection} from "../connection/MqttConnection";
 import {AudioRecorder} from "../audio/recorder/AudioRecorder";
 import {WebRTCRecorder} from "../audio/recorder/WebRTCRecorder";
 import {ChannelType} from "../support/ChannelType";
 import {BufferedAudioPlayer} from "../audio/player/BufferedAudioPlayer";
+import {MessageType} from "../support/MessageType";
 
 /**
  * IBehaviour implementation that listens for a onmouseup/down on the given recordButton.
@@ -20,8 +21,8 @@ export class VoiceBehaviour extends IBehaviour {
                 recorder: AudioRecorder = WebRTCRecorder.instance(),
                 callback: (eventType: EventType) => void = () => undefined) {
         super(recordButton, [
-            { type: EventType.ON_MOUSE_DOWN, handler: () => this.startRecordingOnMouseDown() },
-            { type: EventType.ON_MOUSE_UP, handler: () => this.gateway && this.stopRecordingOnMouseUp(this.gateway) }
+            {type: EventType.ON_MOUSE_DOWN, handler: () => this.startRecordingOnMouseDown()},
+            {type: EventType.ON_MOUSE_UP, handler: () => this.gateway && this.stopRecordingOnMouseUp(this.gateway)}
         ]);
         this.recorder = recorder;
         this.callback = callback;
@@ -50,7 +51,7 @@ export class VoiceBehaviour extends IBehaviour {
 
     private stopRecordingOnMouseUp(gateway: MqttConnection): void {
         this.recorder.stopRecording().then(result => {
-            gateway.publish(ChannelType.AUDIO, {type: "text", text: result} as ISpecification);
+            gateway.publish(ChannelType.AUDIO, {type: MessageType.UTTERANCE, text: result});
         });
     }
 

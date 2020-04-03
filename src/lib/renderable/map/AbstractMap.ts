@@ -76,7 +76,7 @@ export abstract class AbstractMap {
         const label = node("div");
         label.addClasses("lto-map-label");
         wrapper.appendChild(label);
-        EventStream.addListener("GAIA::map::reset::" + this.spec.name, () => {
+        EventStream.addListener(`${EventStream.SYSTEM_EVENT_TYPE_PREFIX}map::reset::${this.spec.name}`, () => {
                 this.resetAllMarkers();
                 this.setMarkersToValue(wrapper);
                 this.setLabel("", wrapper);

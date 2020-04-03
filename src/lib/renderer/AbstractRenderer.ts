@@ -46,12 +46,12 @@ export abstract class AbstractRenderer implements IRenderer {
         return handler.textContent || "";
     }
 
-    // noinspection JSMethodCanBeStatic
     /**
      * Returns the element by evaluating the message type.
      *
      * @param message the message
      */
+    // noinspection JSMethodCanBeStatic
     private getRenderable(message: ISpecification): IRenderable {
         if (message.text) {
             message.text = this.decodeEntities(message.text);

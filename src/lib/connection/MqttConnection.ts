@@ -1,11 +1,13 @@
 import * as mqtt from 'mqtt';
 import {ChannelNameFactory} from "../support/ChannelNameFactory";
 import {ChannelType} from "../support/ChannelType";
-import {IPacket, IRenderer, ISpecification, IListener, IBehaviour} from '../api';
+import {IBehaviour, IListener, IPacket, IRenderer} from '../api';
 import {uuid} from '../support/Uuid';
 import EventStream from '../event/EventStream';
 import {KeyboardBehaviour} from '../behaviour/KeyboardBehaviour';
 import {MouseBehaviour} from '../behaviour/MouseBehaviour';
+import {IMessage} from "../api/IMessage";
+import {EventType} from "../event/EventType";
 
 export class MqttConnection {
 
@@ -40,7 +42,7 @@ export class MqttConnection {
         this.mqttClient.on('message', this.onMessage.bind(this));
         this.mqttClient.on('packetsend', (packet: IPacket) => this.listener.onPacketSend(packet));
 
-        this.removeFromEventStream = EventStream.addListener("GAIA::publish", this.publish.bind(this, ChannelType.TEXT)).remove;
+        this.removeFromEventStream = EventStream.addListener(EventType.PUBLISH, this.publish.bind(this, ChannelType.TEXT)).remove;
     }
 
     /**
@@ -83,7 +85,7 @@ export class MqttConnection {
      * @param channelType the channel type
      * @param msg the message
      */
-    public publish(channelType: ChannelType, msg: ISpecification) {
+    public publish(channelType: ChannelType, msg: IMessage) {
         const destination = this.outgoing(channelType);
         console.debug('Sending message to destination ' + destination);
 
