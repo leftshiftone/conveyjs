@@ -24,7 +24,6 @@ export class Button implements IRenderable {
 
     constructor(message: ISpecification) {
         this.spec = message;
-        console.log(this.spec)
     }
 
     /**
