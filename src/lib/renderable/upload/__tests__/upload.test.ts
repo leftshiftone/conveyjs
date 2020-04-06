@@ -34,8 +34,4 @@ describe("Upload", () => {
         expect(fileUpload.files).not.toBeNull();
         expect(fileUpload!.files![0]!.name!).toEqual("quokka.jpeg");
     });
-
-
-
-
 });
