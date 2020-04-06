@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@leftshiftone/convey</title>
+    <link rel="stylesheet" href="../../dist/convey-std.css">
+    <script src="../../dist/convey-std.js"></script>
+</head>
+<body>
+
+<div class="lto-content"></div>
+<div class="lto-suggest"></div>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const renderer = new GaiaConvey.ClassicRenderer();
+
+        const block = new GaiaConvey.Block({
+            elements: [{
+                type: "button",
+                elements: [{
+                    type: "label",
+                    text: "text"
+                }]
+            }],
+            type: "block"
+        });
+        const element = block.render(renderer, false);
+
+        document.getElementsByClassName("lto-content").item(0).appendChild(element);
+    });
+</script>
+</html>
