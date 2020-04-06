@@ -1,11 +1,14 @@
-import {IRenderer, ISpecification, IRenderable} from '../../api';
+import {IRenderable, IRenderer, ISpecification} from '../../api';
 import EventStream from '../../event/EventStream';
 import Renderables from '../Renderables';
+import {EventType} from "../../event/EventType";
+import {MessageType} from "../../support/MessageType";
 
 /**
  * Implementation of the 'suggestion' markup element.
  */
 export class Suggestion implements IRenderable {
+    public static readonly TYPE = "suggestion";
 
     private readonly spec: ISpecification;
 
@@ -40,12 +43,14 @@ export class Suggestion implements IRenderable {
                 const elements = document.querySelectorAll('.lto-suggestion.lto-left');
                 elements.forEach(element => element.remove());
 
-                EventStream.emit("GAIA::publish", {
-                        type: 'suggestion',
+                EventStream.emitEvent({
+                    type: EventType.PUBLISH,
+                    payload: {
                         text: this.spec.text || "",
-                        attributes: {type: 'suggestion', name: this.spec.name || "", value: this.spec.value || ""}
-                    },
-                );
+                        type: MessageType.SUGGESTION,
+                        attributes: {type: Suggestion.TYPE, name: this.spec.name || "", value: this.spec.value || ""},
+                    }
+                });
             }, {once: true});
         }
 
@@ -54,4 +59,4 @@ export class Suggestion implements IRenderable {
 
 }
 
-Renderables.register("suggestion", Suggestion);
+Renderables.register(Suggestion.TYPE, Suggestion);

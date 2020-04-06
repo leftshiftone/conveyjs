@@ -1,6 +1,6 @@
 import {Icon} from '../icon';
 import {Timestamp} from '../timestamp';
-import {IRenderer, ISpecification, IRenderable} from '../../api';
+import {IRenderable, IRenderer, ISpecification} from '../../api';
 import Renderables from '../Renderables';
 import {Specification} from "../../support/Specification";
 import node from "../../support/node";
@@ -15,6 +15,7 @@ import node from "../../support/node";
  * @see {@link Icon}
  */
 export class Label implements IRenderable {
+    public static readonly TYPE = "label";
 
     private readonly spec: ISpecification;
 
@@ -43,4 +44,4 @@ export class Label implements IRenderable {
 
 }
 
-Renderables.register("label", Label);
+Renderables.register(Label.TYPE, Label);

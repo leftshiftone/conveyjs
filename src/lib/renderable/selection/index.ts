@@ -1,6 +1,9 @@
 import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import Renderables from '../Renderables';
 import EventStream from "../../event/EventStream";
+import {EventType} from "../../event/EventType";
+import {MessageType} from "../../support/MessageType";
+import {Submit} from "../submit";
 
 /**
  * Implementation of the 'selection' markup element.
@@ -103,9 +106,15 @@ export class Selection implements IRenderable, IStackeable {
     public publish(): void {
         if (!this.isPublished) {
             this.selection.style.pointerEvents = "none";
-            EventStream.emit("GAIA::publish", {
-                attributes: {type: 'submit', value: JSON.stringify({[this.spec.name as string || ""]: this.values})},
-                type: 'submit',
+            EventStream.emitEvent({
+                type: EventType.PUBLISH,
+                payload: {
+                    type: MessageType.SUBMIT,
+                    attributes: {
+                        type: Submit.TYPE,
+                        value: JSON.stringify({[this.spec.name as string || ""]: this.values})
+                    },
+                }
             });
             this.isPublished = true;
         }

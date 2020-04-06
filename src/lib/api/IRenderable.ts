@@ -12,5 +12,5 @@ export interface IRenderable {
      * @param renderer the {@link IRenderer} which can be used for wrapping elements in the current element
      * @param isNested the boolean containing if the element is already wrapped in another element
      */
-    render(renderer: IRenderer, isNested:boolean): HTMLElement;
+    render(renderer: IRenderer, isNested: boolean): HTMLElement;
 }

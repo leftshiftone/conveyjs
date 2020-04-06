@@ -1,17 +1,19 @@
 import * as mqtt from 'mqtt';
 import {ChannelNameFactory} from "../support/ChannelNameFactory";
 import {ChannelType} from "../support/ChannelType";
-import {IPacket, IRenderer, ISpecification, IListener, IBehaviour} from '../api';
+import {IBehaviour, IListener, IPacket, IRenderer} from '../api';
 import {uuid} from '../support/Uuid';
 import EventStream from '../event/EventStream';
 import {KeyboardBehaviour} from '../behaviour/KeyboardBehaviour';
 import {MouseBehaviour} from '../behaviour/MouseBehaviour';
+import {IMessage} from "../api/IMessage";
+import {EventType} from "../event/EventType";
 
 export class MqttConnection {
 
     private readonly callbacks: Map<ChannelType, (message: object) => void> = new Map();
     private readonly subscriptions: Array<string> = [];
-    private readonly behaviourBind: Array<string> = [];
+    private readonly behaviourBind: Array<IBehaviour> = [];
 
     private readonly listener: IListener;
     private readonly renderer: IRenderer;
@@ -40,7 +42,7 @@ export class MqttConnection {
         this.mqttClient.on('message', this.onMessage.bind(this));
         this.mqttClient.on('packetsend', (packet: IPacket) => this.listener.onPacketSend(packet));
 
-        this.removeFromEventStream = EventStream.addListener("GAIA::publish", this.publish.bind(this, ChannelType.TEXT)).remove;
+        this.removeFromEventStream = EventStream.addListener(EventType.PUBLISH, this.publish.bind(this, ChannelType.TEXT)).remove;
     }
 
     /**
@@ -48,6 +50,7 @@ export class MqttConnection {
      */
     public disconnect = () => {
         this.removeFromEventStream();
+        this.behaviourBind.forEach(behaviour => behaviour.unbind());
         return this.mqttClient.end(false, () => this.listener.onDisconnected());
     };
 
@@ -82,7 +85,7 @@ export class MqttConnection {
      * @param channelType the channel type
      * @param msg the message
      */
-    public publish(channelType: ChannelType, msg: ISpecification) {
+    public publish(channelType: ChannelType, msg: IMessage) {
         const destination = this.outgoing(channelType);
         console.debug('Sending message to destination ' + destination);
 
@@ -154,7 +157,7 @@ export class MqttConnection {
      * @param behaviour
      */
     public bind(behaviour: IBehaviour) {
-        this.behaviourBind.push(behaviour.constructor.name);
+        this.behaviourBind.push(behaviour);
         behaviour.bind(this);
     }
 

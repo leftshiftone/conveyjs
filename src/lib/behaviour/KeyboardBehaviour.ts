@@ -1,50 +1,42 @@
 import {IBehaviour, IRenderer, ISpecification} from '../api';
-import {MqttConnection} from '../connection/MqttConnection';
 import {ChannelType} from '../support/ChannelType';
 import {Defaults} from '../support/Defaults';
+import {Label} from "../renderable/label";
+import {MessageType} from "../support/MessageType";
 
 /**
  * IBehaviour implementation which listens for a keyup event with code 13 in order to publish
  * a text message to the outgoing text channel.
  */
-export class KeyboardBehaviour implements IBehaviour {
+export class KeyboardBehaviour extends IBehaviour {
 
-    private readonly target: HTMLTextAreaElement;
     private readonly renderer: IRenderer;
     private readonly callback: (() => void) | undefined;
 
     constructor(renderer: IRenderer, target?: HTMLTextAreaElement, callback?: () => void) {
-        this.target = target || Defaults.textbox();
+        super(target || Defaults.textbox(), { type: 'keyup', handler: (event: Event) => this.handler(event as KeyboardEvent) });
         this.renderer = renderer;
         this.callback = callback;
+        this.gateway = null;
     }
 
-    /**
-     * Adds an event listener to the textbox.
-     * When the textbox is focused, the user
-     * is able to publish a message by pressing
-     * enter.
-     *
-     * @inheritDoc
-     */
-    public bind(gateway: MqttConnection): void {
-        this.target.addEventListener("keyup", ((ev) => {
-            if (ev.key === "Enter") {
-                const value = this.target.value;
+    protected handler(ev: KeyboardEvent) {
+        if (ev.key === "Enter") {
+            const element = (this.target as HTMLInputElement);
+            const value = element.value;
 
-                if (value.replace(/^\s+|\s+$/g, "") !== "") {
-                    gateway.publish(ChannelType.TEXT, {type: "text", text: value});
-                    this.target.value = "";
+            if (this.gateway && value.replace(/^\s+|\s+$/g, "") !== "") {
+                this.gateway.publish(ChannelType.TEXT, {type: MessageType.UTTERANCE, text: value});
+                element.value = "";
 
-                    const payload = {type:"text", text: value, position:"right"} as ISpecification;
-                    this.renderer.render(payload).forEach(e => this.renderer.appendContent(e));
+                const payload = {type: Label.TYPE, text: value, position: "right"} as ISpecification;
+                this.renderer.render(payload).forEach(e => this.renderer.appendContent(e));
 
-                    if (this.callback !== undefined) {
-                        this.callback();
-                    }
+                if (this.callback !== undefined) {
+                    this.callback();
                 }
             }
-        }));
+        }
     }
 
 }
