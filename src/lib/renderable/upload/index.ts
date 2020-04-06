@@ -157,7 +157,7 @@ export class Upload implements IRenderable {
     }
 
     private async compressImage(file: File): Promise<File> {
-        console.info(`Attempt to comress file with max. compress size ${this.spec.maxCompressSize}`);
+        console.info(`Attempt to compress file with max. compress size ${this.spec.maxCompressSize}`);
 
         let imageCompression = typeof window !== "undefined" ? require("browser-image-compression/dist/browser-image-compression") : null;
         if (!imageCompression) {

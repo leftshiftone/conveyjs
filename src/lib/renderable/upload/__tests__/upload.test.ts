@@ -16,7 +16,7 @@ describe("Upload", () => {
             type: "form", name: "form", elements: [
             {type: "text", name: "text"},
             {type: "block", name: "uploadBlock", elements: [
-                    {type: "upload", maxCompressSize: 1, maxSize: 5, name: "upload", accept: "jpeg"}
+                    {type: "upload", maxSize: 5, name: "upload", accept: "jpeg"}
                 ]}
         ]
         }).render(new ClassicRenderer(mock, mock), false);
