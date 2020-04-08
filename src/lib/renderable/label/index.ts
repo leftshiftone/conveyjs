@@ -38,7 +38,7 @@ export class Label implements IRenderable {
             return container.unwrap();
         }
 
-        label.addClasses("lto-nexted");
+        label.addClasses("lto-nested");
         return label.unwrap();
     }
 
