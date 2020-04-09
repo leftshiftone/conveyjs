@@ -21,9 +21,7 @@ export class Specification {
         node.setName(this.raw.name);
         node.setRequired(this.raw.required);
         node.innerText(this.raw.text);
-        if (this.raw.position) {
-            node.addClasses("lto-" + this.raw.position || 'left');
-        }
+        node.addClasses(`lto-${this.raw.position || 'left'}`);
         this.raw.class !== undefined ? node.addClasses(this.raw.class) : () => {};
         return node;
     }
