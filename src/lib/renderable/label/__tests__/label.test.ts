@@ -10,7 +10,7 @@ describe("LabelTest", () => {
         const label = new Label({type: "Label"});
         const element = label.render(new ContentCentricRenderer(), true);
         expect(element.tagName).toBe("DIV");
-        expect(element.className).toBe("lto-label lto-nexted");
+        expect(element.className).toBe("lto-label lto-left lto-nested");
     });
 
     it("renderNotNested", () => {
