@@ -5,6 +5,7 @@ describe("LinkTest", () => {
     it("beforeAll", () => {
         document.body.innerHTML = `<div class="lto-gaia lto-content lto-suggest"/>`
     });
+
     it("render", () => {
         const label = new Link({type: "Link"});
         const element = label.render(new ContentCentricRenderer(), true);
@@ -13,6 +14,7 @@ describe("LinkTest", () => {
         expect(element.getAttribute("href")).toBe("");
         expect(element.getAttribute("target")).toBe("_blank");
     });
+
     it("renderWithOptionals", () => {
         const label = new Link({
             id: "id",
