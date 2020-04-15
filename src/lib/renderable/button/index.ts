@@ -41,7 +41,7 @@ export class Button implements IRenderable {
         const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
         elements.forEach(e => e.forEach(x => button.appendChild(wrap(x))));
 
-        if (this.spec.position === "left") {
+        if (button.containsClass("lto-left")) {
             button.onClick((ev: MouseEvent) => {
                 ev.preventDefault();
 
