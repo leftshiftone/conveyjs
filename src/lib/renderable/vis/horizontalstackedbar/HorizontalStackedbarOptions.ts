@@ -1,4 +1,4 @@
-export default class StackedbarOptions {
+export default class HorizontalStackedbarOptions {
     public width: number = 500;
     public height: number = 500;
     public data: Promise<any> = Promise.resolve([]);

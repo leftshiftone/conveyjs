@@ -56,6 +56,8 @@ import {Sunburst} from './lib/renderable/vis/sunburst/Sunburst';
 import {Sankey} from './lib/renderable/vis/sankey/Sankey';
 import Scatterplot from './lib/renderable/vis/scatterplot/Scatterplot';
 import Stackedbar from './lib/renderable/vis/stackedbar/Stackedbar';
+import HorizontalStackedbar from './lib/renderable/vis/horizontalstackedbar/HorizontalStackedbar';
+import HorizontalStackedbarOptions from './lib/renderable/vis/horizontalstackedbar/HorizontalStackedbarOptions';
 import HeatmapOptions from './lib/renderable/vis/heatmap/HeatmapOptions';
 import SunburstOptions from './lib/renderable/vis/sunburst/SunburstOptions';
 import SankeyOptions from './lib/renderable/vis/sankey/SankeyOptions';
@@ -147,6 +149,8 @@ export {
     ScatterplotOptions,
     Stackedbar,
     StackedbarOptions,
+    HorizontalStackedbar,
+    HorizontalStackedbarOptions,
     Doughnut,
     DoughnutOptions,
     Line,

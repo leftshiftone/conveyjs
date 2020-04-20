@@ -8,8 +8,8 @@ import {getDigit, getLetter} from '../../../support/Strings';
  */
 export class Doughnut {
 
-    private options: DoughnutOptions;
-    private radius: number;
+    private readonly options: DoughnutOptions;
+    private readonly radius: number;
 
     private readonly idMap: Map<string, number> = new Map<string, number>();
 
@@ -24,20 +24,16 @@ export class Doughnut {
     public render(): HTMLElement {
         const div = document.createElement("div");
         div.classList.add("lto-vis-doughnut");
-        div.innerHTML = '<svg />';
-        div.style.height = this.options.height + "px";
-        div.style.width = (this.options.width + 200) + "px";
+        const width = this.options.width + 200;
+        div.innerHTML = `<svg viewBox="-${width / 2} -${this.options.height / 2} ${width} ${this.options.height}"/>`;
         return div;
     }
 
     public init(element: HTMLElement) {
         const svg = d3.select(element.querySelector("svg")).append("g");
-
         svg.append("g").attr("class", "lto-vis-slices");
         svg.append("g").attr("class", "lto-vis-labels");
         svg.append("g").attr("class", "lto-vis-lines");
-
-        svg.attr("transform", "translate(" + ((this.options.width / 2) + 100) + "," + this.options.height / 2 + ")");
         this.options.data.then(e => this.change(e, svg, element));
     }
 

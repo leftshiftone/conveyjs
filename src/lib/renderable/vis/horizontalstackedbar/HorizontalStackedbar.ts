@@ -1,14 +1,28 @@
 import * as d3 from "d3";
 import {BaseType, ScaleBand, ScaleLinear} from "d3";
-import StackedbarOptions from './StackedbarOptions';
+import HorizontalStackedbarOptions from './HorizontalStackedbarOptions';
 import {getDigit, getLetter} from '../../../support/Strings';
 
-export default class Stackedbar {
+class AxisDetail<T> {
+    readonly axis: T;
+    readonly name: "x" | "y";
+    readonly dim: "width" | "height";
 
-    private readonly options: StackedbarOptions;
+    constructor(axis: T, name: "x" | "y", dim: "width" | "height") {
+        this.axis = axis;
+        this.name = name;
+        this.dim = dim;
+    }
+}
+
+export default class HorizontalStackedbar {
+
+    private readonly options: HorizontalStackedbarOptions;
     private readonly idMap: Map<string, number> = new Map<string, number>();
+    private linear?: AxisDetail<d3.ScaleLinear<number, number>>;
+    private band?: AxisDetail<d3.ScaleBand<string>>;
 
-    constructor(options: StackedbarOptions = new StackedbarOptions()) {
+    constructor(options: HorizontalStackedbarOptions = new HorizontalStackedbarOptions()) {
         this.options = options;
     }
 
@@ -20,6 +34,16 @@ export default class Stackedbar {
         return div;
     }
 
+    private initAxis(width: number, height: number) {
+        if (this.options.horizontal) {
+            this.linear = new AxisDetail(d3.scaleLinear().rangeRound([0, width]), "x", "width");
+            this.band = new AxisDetail(d3.scaleBand().rangeRound([height, 0]).padding(0.0).align(0.1), "y", "height");
+        } else {
+            this.linear = new AxisDetail(d3.scaleLinear().rangeRound([height, 0]), "y", "height");
+            this.band = new AxisDetail(d3.scaleBand().rangeRound([0, width]).padding(0.1).align(0.1), "x", "width");
+        }
+    }
+
     public init(element: HTMLElement) {
         this.options.data.then(data => {
             const svg = d3.select(element.querySelector("svg"));
@@ -28,9 +52,7 @@ export default class Stackedbar {
             const height = +svg.attr("height") - margin.top - margin.bottom;
             const g = svg.append("g");
 
-            const x = d3.scaleBand().rangeRound([0, width]).padding(0.1).align(0.1);
-            const y = d3.scaleLinear().rangeRound([height, 0]);
-
+            this.initAxis(width, height);
             let layers;
             let rect;
 
@@ -45,17 +67,17 @@ export default class Stackedbar {
             layers = stack(data).map((layer: any) => layer.map((e: any, i: any) => {
                 return {
                     type: e.data.type,
-                    x: i,
-                    y: this.getValues(columns, e.data)[columns.indexOf(layer.key)],
+                    [this.linear!!.name]: this.getValues(columns, e.data)[columns.indexOf(layer.key)],
+                    [this.band!!.name]: i,
                     column: layer.key
                 };
             }));
             for (let s = 0; s < numStates; ++s) {
-                let y0 = 0;
+                let x0 = 0;
                 for (let ag = 0; ag < columns.length; ++ag) {
                     const e = layers[ag][s];
-                    e.y0 = y0;
-                    y0 += e.y;
+                    e["linear0"] = x0;
+                    x0 += e[this.linear!!.name];
                 }
             }
 
@@ -64,15 +86,17 @@ export default class Stackedbar {
              * and the maximum of the age groups.
              */
             // const yGroupMax = d3.max(layers, (layer: any) => d3.max(layer, (d: any) => d.y));
-            const yStackMax = d3.max(layers, (layer: any) => d3.max(layer, (d: any) => d.y0 + d.y));
+            const xStackMax = d3.max(layers, (layer: any) => d3.max(layer, (d: any) => d["linear0"] + d[this.linear!!.name]));
             /*
              * Set the domains for the x-, y-axis and categorical color scales.
              */
-            x.domain(data.map((d: any) => d.type));
+            this.band!!.axis.domain(data.map((d: any) => d.type));
             // @ts-ignore
-            y.domain([0, d3.max(data, (d: any) => this.sumup(d))]).nice();
+            this.linear.axis.domain([0, d3.max(data, (d: any) => this.sumup(d))]).nice();
+
+
             /*
-             * Render the bars.
+             * Render intial state of bars
              */
             g.selectAll(".serie")
                 .data(layers)
@@ -81,21 +105,21 @@ export default class Stackedbar {
                 .selectAll("rect")
                 .data((d: any) => d)
                 .enter().append("rect")
-                .attr("x", (d: any) => x(d.type) as number)
-                .attr("y", height)
-                .attr("width", x.bandwidth())
-                .attr("height", 0);
+                .attr(this.linear!!.name, 0)
+                .attr(this.band!!.name, (d: any) => this.band!!.axis(d.type) as number)
+                .attr(this.linear!!.dim, 0)
+                .attr(this.band!!.dim, this.band!!.axis.bandwidth());
             rect = g.selectAll("rect");
-            // Initial animation to gradually "grow" the bars from the x-axis.
+            // Animation to gradually "grow" the bars from the x-axis.
             rect.transition()
                 .delay((d, i) => i)
-                .attr("y", (d: any) => y(d.y0 + d.y))
-                .attr("height", (d: any) => y(d.y0) - y(d.y0 + d.y))
+                .attr(this.linear!!.name, (d: any) => this.linear!!.axis(d.linear0))
+                .attr(this.linear!!.dim, (d: any) => this.linear!!.axis(d[this.linear!!.name] + d.linear0) - this.linear!!.axis(d.linear0))
                 .attr("class", (d: any) => d.column);
 
             // add svg title for tooltip support
             rect.append("svg:title")
-                .text((d: any) => d.type + ", " + d.column + ": " + d.y + " (total: " + this.sumup(d) + ")");
+                .text((d: any) => d.type + ", " + d.column + ": " + d[this.linear!!.name]);
             /*
              * X-axis set-up.
              * Note that we do not set up the Y-axis, since the bar heights are
@@ -104,7 +128,7 @@ export default class Stackedbar {
             g.append("g")
                 .attr("class", "axis axis--x")
                 .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
+                .call(d3.axisBottom(this.linear!!.axis));
 
             // Add labels to the axes.
             svg.append("text")
@@ -120,26 +144,30 @@ export default class Stackedbar {
                 .text(this.options.textY);
 
             if (this.options.legend) {
-                const legend = g.selectAll(".legend")
-                    .data(columns.reverse())
-                    .enter().append("g")
-                    .attr("class", "legend")
-                    .attr("transform", (d, i) => "translate(" + ((i % 4) * 100) + ", " + (Math.floor(i / 4) * 20) + ")");
-                legend.append("rect")
-                    .attr("x", 0)
-                    .attr("width", 18)
-                    .attr("height", 18)
-                    .attr("class", (d: any) => `serie lto-vis-${getDigit(this.idMap, d)} lto-vis-${getLetter(this.idMap, d)}`);
-                legend.append("text")
-                    .attr("x", 20)
-                    .attr("y", 9)
-                    .attr("dy", ".35em")
-                    .attr("text-anchor", "start")
-                    .text((d: any) => d);
+                const transition = this.transitionStacked(this.linear!!.axis, this.band!!.axis, rect, parseFloat(xStackMax as string));
+                transition.on("end", () => this.renderLegend(g, columns));
             }
-
-            this.transitionStacked(x, y, rect, parseFloat(yStackMax as string));
         });
+    }
+
+
+    private renderLegend(g: d3.Selection<any, any, any, any>, columns: Array<string>) {
+        const legend = g.selectAll(".legend")
+            .data(columns.reverse())
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", (d, i) => "translate(" + ((i % 4) * 100) + ", " + (Math.floor(i / 4) * 20) + ")");
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("width", 18)
+            .attr("height", 18)
+            .attr("class", (d: any) => `serie lto-vis-${getDigit(this.idMap, d)} lto-vis-${getLetter(this.idMap, d)}`);
+        legend.append("text")
+            .attr("x", 20)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .attr("text-anchor", "start")
+            .text((d: any) => d);
     }
 
     /*
@@ -147,17 +175,21 @@ export default class Stackedbar {
      * transition the y-axis changes to the bar heights, and then transition the
      * x-axis changes to the bar widths.
      */
-    private transitionStacked(x: ScaleBand<string>, y: ScaleLinear<number, number>,
-                              rect: d3.Selection<BaseType, any, any, any>, yStackMax: number) {
-        y.domain([0, yStackMax]);
-        rect.transition()
+
+    private transitionStacked(x: ScaleLinear<number, number>, y: ScaleBand<string>,
+                              rect: d3.Selection<BaseType, any, any, any>, xStackMax: number): d3.Transition<any, any, any, any> {
+        this.linear!!.axis.domain([0, xStackMax]);
+        return rect.transition()
             .duration(500)
             .delay((d: any, i: any) => i)
-            .attr("y", (d: any) => ((y(d.y0 + d.y) * 0.85) + 40))
-            .attr("height", (d: any) => (y(d.y0) - y(d.y0 + d.y)) * 0.85)
+            .attr(this.linear!!.name, (d: any) => this.linear!!.axis(d.linear0))
+            .attr(this.linear!!.dim, (d: any) => this.linear!!.axis(d[this.linear!!.name] + d.linear0) - this.linear!!.axis(d.linear0))
             .transition()
-            .attr("x", (d: any) => x(d.type) as number)
-            .attr("width", x.bandwidth());
+            .attr(this.band!!.name, (d: any) => {
+                const margin = this.options.legend ? 40 : 0;
+                return margin + (this.band!!.axis(d.type) as number);
+            })
+            .attr(this.band!!.dim, this.band!!.axis.bandwidth() * 0.85);
     }
 
     private sumup(data: any) {
