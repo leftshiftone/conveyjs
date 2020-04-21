@@ -58,14 +58,14 @@ export class RevealJsRenderer extends ContentCentricRenderer {
 
         if (elements[0].classList.contains("lto-container") && !elements[0].outerHTML.includes("lto-transition")) {
             // create section
-            console.trace("Reached container section");
+            console.debug("Reached container section");
             return this.createNewSection(elements, sections);
         } else if (elements[0].classList.contains("lto-container") && elements[0].outerHTML.includes("lto-transition")) {
-            console.trace("Reached transition check");
+            console.debug("Reached transition check");
             const transition = elements[0].firstElementChild;
 
             if (transition && transition.getAttribute("wrapped") === "in") {
-                console.trace("Reached transition section");
+                console.debug("Reached transition section");
 
                 if (sections.length === 0) {
                     return this.createNewSection(elements, sections);
