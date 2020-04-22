@@ -40,6 +40,8 @@ jobs:
             name: Collect test results
             command: find . -type f -regex ".*/build/test/.*xml" -exec cp {} $TEST_RESULTS_PATH \;
             when: always
+      - store_test_results:
+            path: build/circleci/test-results
       - run: yarn build
       - run:
           <<: *webhook-failed
