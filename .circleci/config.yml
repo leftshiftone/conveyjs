@@ -21,10 +21,13 @@ jobs:
   build:
     docker:
       - image: circleci/node:10-browsers
+    environment:
+        TEST_RESULTS_PATH: build/circleci/test-results
     steps:
       - run:
           <<: *webhook-created
       - checkout
+      - run: mkdir -p $TEST_RESULTS_PATH
       - restore_cache:
           key: cache-node-{{ checksum "package.json" }}
       - run: yarn install
@@ -33,6 +36,10 @@ jobs:
             - ./node_modules
           key: cache-node-{{ checksum "package.json" }}
       - run: yarn test
+      - run:
+            name: Collect test results
+            command: find . -type f -regex ".*/build/test/.*xml" -exec cp {} $TEST_RESULTS_PATH \;
+            when: always
       - run: yarn build
       - run:
           <<: *webhook-failed

@@ -75,7 +75,7 @@
   "jest-junit": {
     "suiteName": "Frontend Tests",
     "suiteNameTemplate": "{filename}",
-    "output": "./test-results/test/TEST-Frontend.xml",
+    "output": "build/test/TEST-junit.xml",
     "classNameTemplate": "{classname}-{title}",
     "titleTemplate": "{classname}-{title}"
   },
