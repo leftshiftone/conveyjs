@@ -43,12 +43,15 @@ export abstract class Choice implements IRenderable {
         };
         if (this.inputType() === "radio") {
             input.unwrap().addEventListener("click", () => {
-                label.unwrap().parentElement!.parentElement!.querySelectorAll('input[name=' + input.unwrap().getAttribute("name") + ']').forEach(e => {
-                    e.parentElement!.classList.remove("lto-toggle", "lto-checked", "lto-unchecked");
-                    e.parentElement!.classList.add("lto-unchecked");
-                });
-                label.addClasses("lto-toggle", "lto-checked");
-                label.unwrap().classList.remove("lto-unchecked");
+                const parent = label.getParentByClass("lto-choice-container");
+                if(parent) {
+                    parent.unwrap().querySelectorAll('input[name=' + input.unwrap().getAttribute("name") + ']').forEach(e => {
+                        e.parentElement!.classList.remove("lto-toggle", "lto-checked", "lto-unchecked");
+                        e.parentElement!.classList.add("lto-unchecked");
+                    });
+                    label.addClasses("lto-toggle", "lto-checked");
+                    label.unwrap().classList.remove("lto-unchecked");
+                }
             });
         } else {
             input.unwrap().addEventListener("click", () => {
