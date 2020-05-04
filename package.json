@@ -1,6 +1,6 @@
 {
   "name": "@leftshiftone/convey",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "JavaScript connector to the G.A.I.A. ecosystem.",
   "main": "./dist/convey-std.js",
   "module": "./dist/esm5/all.js",
@@ -27,6 +27,7 @@
     "reveal.js": "^3.8.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^7.2.0",
     "@types/d3": "^5.7.0",
     "@types/d3-sankey": "^0.7.4",
     "@types/d3-scale": "^2.1.0",
@@ -34,9 +35,9 @@
     "@types/d3-time-format": "^2.1.0",
     "@types/d3-tip": "^3.5.5",
     "@types/google-maps": "^3.2.1",
+    "@types/heremaps": "^3.0.15",
     "@types/jest": "^24.0.11",
     "@types/leaflet": "^1.5.7",
-    "@types/heremaps": "^3.0.15",
     "@types/mqtt": "^2.5.0",
     "@types/node": "^11.11.6",
     "@types/sinon": "^7.0.10",
@@ -74,7 +75,7 @@
   "jest-junit": {
     "suiteName": "Frontend Tests",
     "suiteNameTemplate": "{filename}",
-    "output": "./test-results/test/TEST-Frontend.xml",
+    "output": "build/test/TEST-junit.xml",
     "classNameTemplate": "{classname}-{title}",
     "titleTemplate": "{classname}-{title}"
   },
@@ -95,7 +96,7 @@
     "release:major": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it major --no-git.requireCleanWorkingDir",
     "release:minor": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it minor --no-git.requireCleanWorkingDir",
     "release:patch": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it patch",
-    "test": "jest",
+    "test": "jest -w 1",
     "doc": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/"
   },
   "repository": {

@@ -21,18 +21,27 @@ jobs:
   build:
     docker:
       - image: circleci/node:10-browsers
+    environment:
+        TEST_RESULTS_PATH: build/circleci/test-results
     steps:
       - run:
           <<: *webhook-created
       - checkout
+      - run: mkdir -p $TEST_RESULTS_PATH
       - restore_cache:
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn install
       - save_cache:
           paths:
             - ./node_modules
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn test
+      - run:
+            name: Collect test results
+            command: find . -type f -regex ".*/build/test/.*xml" -exec cp {} $TEST_RESULTS_PATH \;
+            when: always
+      - store_test_results:
+            path: build/circleci/test-results
       - run: yarn build
       - run:
           <<: *webhook-failed
@@ -46,12 +55,12 @@ jobs:
           <<: *webhook-created
       - checkout
       - restore_cache:
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn sonarqube
       - save_cache:
           paths:
             - ./node_modules
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run:
           <<: *webhook-failed
   dependency-updates:
@@ -65,12 +74,12 @@ jobs:
       - checkout
       - run: yarn add --dev ndc
       - restore_cache:
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn install
       - save_cache:
           paths:
             - ./node_modules
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn ndc --stats --export $BUILD_STATUS_URL\?flow\=depsNdc\&repositoryName\=$CIRCLE_PROJECT_REPONAME\&repositoryBranch\=$CIRCLE_BRANCH\&buildNumber\=$CIRCLE_BUILD_NUM
       - run:
           <<: *webhook-failed
@@ -88,13 +97,12 @@ jobs:
       - run: git config --local user.email "ci@leftshift.one" && git config --local user.name "Continuous Integration"
       - run: git checkout master && git pull --tags
       - restore_cache:
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn install
       - save_cache:
           paths:
             - ./node_modules
-          key: cache-node-{{ checksum "package.json" }}
-      - run: yarn test
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: npm set registry https://registry.npmjs.org/
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run: npm run release:major
@@ -115,13 +123,12 @@ jobs:
       - run: git config --local user.email "ci@leftshift.one" && git config --local user.name "Continuous Integration"
       - run: git checkout master && git pull --tags
       - restore_cache:
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn install
       - save_cache:
           paths:
             - ./node_modules
-          key: cache-node-{{ checksum "package.json" }}
-      - run: yarn test
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: npm set registry https://registry.npmjs.org/
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run: npm run release:minor
@@ -142,13 +149,12 @@ jobs:
       - run: git config --local user.email "ci@leftshift.one" && git config --local user.name "Continuous Integration"
       - run: git checkout ${CIRCLE_TAG/-/\/}
       - restore_cache:
-          key: cache-node-{{ checksum "package.json" }}
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: yarn install
       - save_cache:
           paths:
             - ./node_modules
-          key: cache-node-{{ checksum "package.json" }}
-      - run: yarn test
+          key: cache-node-{{ checksum "yarn.lock" }}
       - run: npm set registry https://registry.npmjs.org/
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run: npm run release:patch

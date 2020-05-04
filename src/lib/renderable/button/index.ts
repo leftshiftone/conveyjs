@@ -4,6 +4,9 @@ import Renderables from '../Renderables';
 import {IEvent} from "../../api/IEvent";
 import {EventType} from "../../event/EventType";
 import {MessageType} from "../../support/MessageType";
+import node from "../../support/node";
+import {Specification} from "../../support/Specification";
+import wrap from "../../support/node";
 
 /**
  * Implementation of the 'button' markup element.
@@ -27,25 +30,19 @@ export class Button implements IRenderable {
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        const position = this.spec.position || "left";
-        const button = document.createElement("button");
-        button.setAttribute(`type`, Button.TYPE);
+        const button = node("button");
+        new Specification(this.spec).initNode(button, "lto-button");
+        button.addAttributes({type: Button.TYPE});
 
-        button.setAttribute(`name`, this.spec.name || "");
-        if (this.spec.id !== undefined) {
-            button.id = this.spec.id;
-        }
-        if (this.spec.class !== undefined) {
-            this.spec.class.split(" ").forEach(e => button.classList.add(e));
-        }
-        button.classList.add("lto-button", "lto-" + position);
         if (isNested) {
-            button.classList.add("lto-nested");
+            button.addClasses("lto-nested");
         }
-        button.appendChild(document.createTextNode(this.spec.text || ""));
 
-        if (position === "left") {
-            const eventListener = (ev: MouseEvent) => {
+        const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
+        elements.forEach(e => e.forEach(x => button.appendChild(wrap(x))));
+
+        if (button.containsClass("lto-left")) {
+            button.onClick((ev: MouseEvent) => {
                 ev.preventDefault();
 
                 const text = this.spec.text || "";
@@ -63,13 +60,13 @@ export class Button implements IRenderable {
                 const newButton = Object.assign(event.payload, {
                     class: this.spec.class,
                     position: "right",
-                    timestamp: new Date().getTime()
+                    timestamp: new Date().getTime(),
+                    elements: this.spec.elements
                 }) as ISpecification;
                 renderer.render({type: "container", elements: [newButton]}).forEach(e => renderer.appendContent(e));
-            };
-            button.addEventListener("click", eventListener, {once: true});
+            });
         }
-        return button;
+        return button.unwrap();
     }
 
     public static cleanupButtons() {
@@ -79,7 +76,7 @@ export class Button implements IRenderable {
             if (element.classList.contains("lto-persistent")) {
                 (element as HTMLElement).style.pointerEvents = "none";
             } else {
-                element.remove()
+                element.remove();
             }
         });
 
