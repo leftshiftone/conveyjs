@@ -1,7 +1,7 @@
 import Renderables from "../../Renderables";
 import {Timestamp} from "../index";
 
-describe("Upload", () => {
+describe("Timestamp", () => {
     it("beforeAll", () => {
         Renderables.register("timestamp", Timestamp);
     });
