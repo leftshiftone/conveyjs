@@ -75,7 +75,7 @@
   "jest-junit": {
     "suiteName": "Frontend Tests",
     "suiteNameTemplate": "{filename}",
-    "output": "./test-results/test/TEST-Frontend.xml",
+    "output": "build/test/TEST-junit.xml",
     "classNameTemplate": "{classname}-{title}",
     "titleTemplate": "{classname}-{title}"
   },
@@ -96,7 +96,7 @@
     "release:major": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it major --no-git.requireCleanWorkingDir",
     "release:minor": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it minor --no-git.requireCleanWorkingDir",
     "release:patch": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it patch",
-    "test": "jest",
+    "test": "jest -w 1",
     "doc": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/"
   },
   "repository": {

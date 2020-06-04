@@ -2,6 +2,7 @@
 
 [![CircleCI branch](https://img.shields.io/circleci/project/github/leftshiftone/conveyjs/master.svg?style=flat-square)](https://circleci.com/gh/leftshiftone/conveyjs)
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/leftshiftone/conveyjs.svg?style=flat-square)](https://github.com/leftshiftone/conveyjs)
+[![npm (scoped)](https://img.shields.io/npm/v/@leftshiftone/convey?style=flat-square)](https://www.npmjs.com/package/@leftshiftone/convey)
 
 Convey is a JavaScript Framework for connecting to processes created with [G.A.I.A.](https://www.leftshift.one/produkt/gaia-services/).
 
