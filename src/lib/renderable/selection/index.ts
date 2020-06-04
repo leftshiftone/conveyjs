@@ -7,13 +7,12 @@ import {Submit} from "../submit";
 
 /**
  * Implementation of the 'selection' markup element.
- * A HTML div element is used to create a selection containing multiple 'block' elements.
- * Only one 'block' is visible.
- * The user can either click on the left or right side of the visible 'block' to select one of the two options.
- * If the click happened, the next 'block' will be showed.
+ * A HTML div element is used to create a selection containing multiple 'selectionItem' elements.
+ * Only one 'selectionItem' is visible.
+ * The user can either click on the left or right side of the visible 'selectionItem' to select one of the two options.
+ * If the click happened, the next 'selectionItem' will be showed.
  * For CSS manipulations the following classes are added:
  *  lto-selection: the container
- *  lto-selection-item: the container where the 'block' is wrapped
  *  lto-selection-left: click to choose the left option
  *  lto-selection-right: click to choose the right option
  *  lto-animation-left: is set when clicking lto-selection-left
@@ -42,7 +41,6 @@ export class Selection implements IRenderable, IStackeable {
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const position = this.spec.position || 'left';
-
         this.selection.setAttribute("name", this.spec.name || "");
         this.selection.classList.add('lto-selection', "lto-" + position);
 
@@ -55,29 +53,28 @@ export class Selection implements IRenderable, IStackeable {
         let publishedBlocks: number = 0;
         const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
 
-        elements.forEach(e => e.forEach(block => {
+        elements.forEach(e => e.forEach(items => {
             const left = document.createElement("div");
             const right = document.createElement("div");
-            block.style.userSelect = "none";
-            block.classList.add("lto-selection-item");
+            items.style.userSelect = "none";
             left.className = "lto-selection-left";
             right.className = "lto-selection-right";
-            block.appendChild(left);
-            block.appendChild(right);
-            this.selection.appendChild(block);
+            items.appendChild(left);
+            items.appendChild(right);
+            this.selection.appendChild(items);
         }));
 
-        this.selection.querySelectorAll(".lto-block.lto-selection-item").forEach(block => {
-            block.addEventListener("click", ev => {
+        this.selection.querySelectorAll(".lto-selection-item").forEach(items => {
+            items.addEventListener("click", ev => {
                 //@ts-ignore
                 if (ev.target.getAttribute("class") === "lto-selection-left") {
-                    block.classList.add("lto-animate-left");
-                    this.values.push({[block.getAttribute("name") || ""]: "left"});
+                    items.classList.add("lto-animate-left");
+                    this.values.push({[items.getAttribute("name") || ""]: "left"});
                 } else {
-                    block.classList.add("lto-animate-right");
-                    this.values.push({[block.getAttribute("name") || ""]: "right"});
+                    items.classList.add("lto-animate-right");
+                    this.values.push({[items.getAttribute("name") || ""]: "right"});
                 }
-                setTimeout(() => (block as HTMLElement).style.display = "none", this.animationDuration);
+                setTimeout(() => (items as HTMLElement).style.display = "none", this.animationDuration);
 
                 if (++publishedBlocks === this.numOfBlocks) {
                     // wait till animation is finished
