@@ -78,6 +78,8 @@ import {Overlay} from "./lib/renderable/overlays/Overlay";
 import {Transition} from "./lib/renderable/transition";
 import {SmallDevice} from "./lib/renderable/smallDevice";
 import {Basket} from "./lib/renderable/basket";
+import {SelectionItem} from "./lib/renderable/selectionItem";
+import {Selectable} from "./lib/renderable/selectable";
 
 export * from './lib/api';
 export {
@@ -164,4 +166,6 @@ export {
     Transition,
     SmallDevice,
     Basket,
+    SelectionItem,
+    Selectable,
 };
