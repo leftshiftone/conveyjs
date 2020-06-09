@@ -1,5 +1,5 @@
 import {IRenderable, IRenderer, ISpecification} from "../../api";
-import node, {INode} from "../../support/node";
+import node from "../../support/node";
 import wrap from "../../support/node";
 
 /**
@@ -20,7 +20,7 @@ export abstract class Choice implements IRenderable {
     }
 
     render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        let choiceNode = node("div");
+        const choiceNode = node("div");
         const input = node("input").addAttributes({
             type: this.inputType(),
             name: "choice",
@@ -31,20 +31,14 @@ export abstract class Choice implements IRenderable {
             name: this.spec.name
         });
 
-        let label: INode;
-
-        if (isNested) {
-            choiceNode.addClasses("lto-nested");
-            const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
-            elements.forEach(e => e.forEach(x => choiceNode.appendChild(wrap(x))));
-            label = choiceNode.find("lto-label");
-            console.info(label);
-            label.appendChild(input);
-        } else {
-            label = node("label");
+        const label = node("label");
+        if (this.spec.text) {
             label.appendChild(this.spec.text || "");
-            label.appendChild(input);
+        } else {
+            const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
+            elements.forEach(e => e.forEach(x => label.appendChild(wrap(x))));
         }
+        label.appendChild(input);
 
         if (this.spec.selected) {
             (input.unwrap() as HTMLInputElement).checked = this.spec.selected;
