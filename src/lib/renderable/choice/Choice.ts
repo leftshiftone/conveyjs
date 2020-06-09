@@ -1,5 +1,6 @@
 import {IRenderable, IRenderer, ISpecification} from "../../api";
-import node from "../../support/node";
+import node, {INode} from "../../support/node";
+import wrap from "../../support/node";
 
 /**
  * Represents either a checkbox (multiple choice) or a radio button (single choice) element.
@@ -19,7 +20,7 @@ export abstract class Choice implements IRenderable {
     }
 
     render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        const choiceNode = node("div");
+        let choiceNode = node("div");
         const input = node("input").addAttributes({
             type: this.inputType(),
             name: "choice",
@@ -30,9 +31,20 @@ export abstract class Choice implements IRenderable {
             name: this.spec.name
         });
 
-        const label = node("label");
-        label.appendChild(this.spec.text || "");
-        label.appendChild(input);
+        let label: INode;
+
+        if (isNested) {
+            choiceNode.addClasses("lto-nested");
+            const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
+            elements.forEach(e => e.forEach(x => choiceNode.appendChild(wrap(x))));
+            label = choiceNode.find("lto-label");
+            console.info(label);
+            label.appendChild(input);
+        } else {
+            label = node("label");
+            label.appendChild(this.spec.text || "");
+            label.appendChild(input);
+        }
 
         if (this.spec.selected) {
             (input.unwrap() as HTMLInputElement).checked = this.spec.selected;
