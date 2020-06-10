@@ -49,6 +49,8 @@ import EventStream from "./lib/event/EventStream";
 import {Transition} from "./lib/renderable/transition";
 import {SmallDevice} from "./lib/renderable/smallDevice";
 import {Basket} from "./lib/renderable/basket";
+import {SelectionItem} from './lib/renderable/selectionItem';
+import {Selectable} from './lib/renderable/selectable';
 
 export * from './lib/api';
 export {
@@ -105,5 +107,7 @@ export {
     Trigger,
     Transition,
     SmallDevice,
-    Basket
+    Basket,
+    SelectionItem,
+    Selectable,
 };

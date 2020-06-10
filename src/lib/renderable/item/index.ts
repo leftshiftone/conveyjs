@@ -29,6 +29,8 @@ export class Item implements IRenderable {
         (this.spec.elements || []).map(e => renderer.render(e, this))
             .forEach(e => e.forEach(x => item.appendChild(node(x as HTMLElement))));
         item.unwrap().appendChild(document.createTextNode(this.spec.text || ""));
+        if (isNested)
+            item.addClasses("lto-nested");
         return item.unwrap();
     }
 

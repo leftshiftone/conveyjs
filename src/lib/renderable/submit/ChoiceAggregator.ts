@@ -34,7 +34,7 @@ export class ChoiceAggregator {
             }
             this.addToContainer(name, this.toChoiceResults(container, "input[type='checkbox']"), choices);
             this.addToContainer(name, this.toChoiceResults(container, "input[type='radio']"), choices);
-            if (required && Object.keys(choices).length == 0) allowed = false;
+            if (required && !Object.keys(choices).find(choice => choice === name)) allowed = false;
         });
 
         return {state: allowed ? SubmitState.ALLOWED: SubmitState.SUBMIT_REQUIRED_ERROR, attributes: choices as Attr};
