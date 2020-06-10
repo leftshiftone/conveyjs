@@ -15,7 +15,6 @@ describe("Choice", () => {
     });
     it("render <button><label>Test Button</label></button>", () => {
         const mock = document.createElement("div");
-        //const mockCallBack = jest.fn();
         const singleChoice = new SingleChoice({
             type: "singleChoice", name: "singleC", elements: [{
                 type: "choice", name: "choice", value: "multiLayerChoice",
@@ -49,5 +48,6 @@ describe("Choice", () => {
         expect(scChildren.length).toBe(2);
         expect((scChildren.item(0) as Text).data).toBe("choiceText");
         expect((scChildren.item(1) as HTMLInputElement).value).toBe("choice");
+
     });
 });
