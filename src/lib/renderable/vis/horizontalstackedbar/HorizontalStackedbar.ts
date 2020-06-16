@@ -1,26 +1,15 @@
 import * as d3 from "d3";
-import {BaseType, ScaleBand, ScaleLinear} from "d3";
 import HorizontalStackedbarOptions from './HorizontalStackedbarOptions';
 import {getDigit, getLetter} from '../../../support/Strings';
-
-class AxisDetail<T> {
-    readonly axis: T;
-    readonly name: "x" | "y";
-    readonly dim: "width" | "height";
-
-    constructor(axis: T, name: "x" | "y", dim: "width" | "height") {
-        this.axis = axis;
-        this.name = name;
-        this.dim = dim;
-    }
-}
 
 export default class HorizontalStackedbar {
 
     private readonly options: HorizontalStackedbarOptions;
     private readonly idMap: Map<string, number> = new Map<string, number>();
-    private linear?: AxisDetail<d3.ScaleLinear<number, number>>;
-    private band?: AxisDetail<d3.ScaleBand<string>>;
+    private xAxis?: d3.ScaleLinear<number, number>;
+    private yAxis?: d3.ScaleBand<string>;
+    private margin = {top: 0, right: 0, bottom: 0, left: 0};
+
 
     constructor(options: HorizontalStackedbarOptions = new HorizontalStackedbarOptions()) {
         this.options = options;
@@ -29,30 +18,29 @@ export default class HorizontalStackedbar {
     public render() {
         const div = document.createElement("div");
         div.classList.add("lto-vis-stackedbar");
-        div.innerHTML = `<svg width=${this.options.width} height=${this.options.height}></svg>`;
+        div.innerHTML = `<svg viewBox="0 0 ${this.options.width} ${this.options.height}"></svg>`;
 
-        return div;
-    }
-
-    private initAxis(width: number, height: number) {
-        if (this.options.horizontal) {
-            this.linear = new AxisDetail(d3.scaleLinear().rangeRound([0, width]), "x", "width");
-            this.band = new AxisDetail(d3.scaleBand().rangeRound([height, 0]).padding(0.0).align(0.1), "y", "height");
-        } else {
-            this.linear = new AxisDetail(d3.scaleLinear().rangeRound([height, 0]), "y", "height");
-            this.band = new AxisDetail(d3.scaleBand().rangeRound([0, width]).padding(0.1).align(0.1), "x", "width");
+        if (this.options.showAxis) {
+            this.margin.right = 20;
+            this.margin.left = 40;
+            this.margin.bottom = 40;
         }
+        if (this.options.showLegend) {
+            this.margin.top = this.options.height * 0.35;
+        }
+        return div;
     }
 
     public init(element: HTMLElement) {
         this.options.data.then(data => {
             const svg = d3.select(element.querySelector("svg"));
-            const margin = {top: 20, right: 20, bottom: 50, left: 40};
-            const width = +svg.attr("width") - margin.left - margin.right;
-            const height = +svg.attr("height") - margin.top - margin.bottom;
+            const width = this.options.width - this.margin.left - this.margin.right;
+            const height = this.options.height - this.margin.top - this.margin.bottom;
             const g = svg.append("g");
 
-            this.initAxis(width, height);
+            this.xAxis = d3.scaleLinear().rangeRound([this.margin.left, width + this.margin.left]);
+            this.yAxis = d3.scaleBand().rangeRound([height + this.margin.top, 0]).padding(0.0).align(0.1);
+
             let layers;
             let rect;
 
@@ -67,17 +55,18 @@ export default class HorizontalStackedbar {
             layers = stack(data).map((layer: any) => layer.map((e: any, i: any) => {
                 return {
                     type: e.data.type,
-                    [this.linear!!.name]: this.getValues(columns, e.data)[columns.indexOf(layer.key)],
-                    [this.band!!.name]: i,
-                    column: layer.key
+                    x: this.getValues(columns, e.data, "values")[columns.indexOf(layer.key)],
+                    y: i,
+                    column: layer.key,
+                    barLabels: this.getValues(columns, e.data, "barLabels")[columns.indexOf(layer.key)],
                 };
             }));
             for (let s = 0; s < numStates; ++s) {
                 let x0 = 0;
                 for (let ag = 0; ag < columns.length; ++ag) {
                     const e = layers[ag][s];
-                    e["linear0"] = x0;
-                    x0 += e[this.linear!!.name];
+                    e.x0 = x0;
+                    x0 += e.x;
                 }
             }
 
@@ -86,13 +75,13 @@ export default class HorizontalStackedbar {
              * and the maximum of the age groups.
              */
             // const yGroupMax = d3.max(layers, (layer: any) => d3.max(layer, (d: any) => d.y));
-            const xStackMax = d3.max(layers, (layer: any) => d3.max(layer, (d: any) => d["linear0"] + d[this.linear!!.name]));
+            const xStackMax = parseFloat(d3.max(layers, (layer: any) => d3.max(layer, (d: any) => d.x0 + d.x)) as string);
             /*
              * Set the domains for the x-, y-axis and categorical color scales.
              */
-            this.band!!.axis.domain(data.map((d: any) => d.type));
+            this.yAxis!!.domain(data.map((d: any) => d.type));
             // @ts-ignore
-            this.linear.axis.domain([0, d3.max(data, (d: any) => this.sumup(d))]).nice();
+            this.xAxis.domain([0, d3.max(data, (d: any) => this.sumup(d))]).nice();
 
 
             /*
@@ -105,91 +94,127 @@ export default class HorizontalStackedbar {
                 .selectAll("rect")
                 .data((d: any) => d)
                 .enter().append("rect")
-                .attr(this.linear!!.name, 0)
-                .attr(this.band!!.name, (d: any) => this.band!!.axis(d.type) as number)
-                .attr(this.linear!!.dim, 0)
-                .attr(this.band!!.dim, this.band!!.axis.bandwidth());
+                .attr("x", 0)
+                .attr("y", (d: any) => this.yAxis!!(d.type) as number)
+                .attr("width", 0)
+                .attr("height", this.yAxis!!.bandwidth());
             rect = g.selectAll("rect");
-            // Animation to gradually "grow" the bars from the x-axis.
+            // Animation to gradually "grow" the bars from the y-axis.
             rect.transition()
                 .delay((d, i) => i)
-                .attr(this.linear!!.name, (d: any) => this.linear!!.axis(d.linear0))
-                .attr(this.linear!!.dim, (d: any) => this.linear!!.axis(d[this.linear!!.name] + d.linear0) - this.linear!!.axis(d.linear0))
+                .attr("x", (d: any) => this.xAxis!!(d.x0))
+                .attr("width", (d: any) => this.getBarWidth(d))
                 .attr("class", (d: any) => d.column);
 
-            // add svg title for tooltip support
+            // bar tooltips
             rect.append("svg:title")
-                .text((d: any) => d.type + ", " + d.column + ": " + d[this.linear!!.name]);
-            /*
-             * X-axis set-up.
-             * Note that we do not set up the Y-axis, since the bar heights are
-             * scaled dynamically.
-             */
-            g.append("g")
-                .attr("class", "axis axis--x")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(this.linear!!.axis));
+                .text((d: any) => d.column + ": " + d.x);
 
-            // Add labels to the axes.
-            svg.append("text")
+            // render bar labels
+            g.selectAll(".serie")
+                .append("text")
                 .attr("class", "axis axis--x")
                 .attr("text-anchor", "middle")
-                .attr("transform", "translate(" + (width / 2) + "," + (height + 60) + ")")
-                .text(this.options.textX);
-            svg.append("text")
-                .attr("class", "axis axis--y")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(0," + (height / 2) + ")rotate(-90)")
-                .attr("dy", "20.0")
-                .text(this.options.textY);
+                .attr("x", (d: any) => this.xAxis!!(d[0].x0) + (this.getBarWidth(d[0]) / 2))
+                .attr("y", this.yAxis!!.bandwidth() / 2)
+                .attr("alignment-baseline", "middle")
+                .text((d: any) => d[0].barLabels)
+                .style('fill', 'white');
 
-            if (this.options.legend) {
-                const transition = this.transitionStacked(this.linear!!.axis, this.band!!.axis, rect, parseFloat(xStackMax as string));
+            if (this.options.showAxis) {
+                this.renderAxis(g, svg, width, height);
+            }
+            if (this.options.showLegend) {
+                const transition = this.transitionStacked(g, xStackMax);
                 transition.on("end", () => this.renderLegend(g, columns));
             }
         });
     }
 
+    private renderAxis(g: d3.Selection<any, any, any, any>, svg: d3.Selection<SVGSVGElement | null, {}, null, undefined>, width: number, height: number) {
+        g.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + (height + this.margin.top) + ")")
+            .call(d3.axisBottom(this.xAxis!!));
+
+        // Labels
+        svg.append("text")
+            .attr("class", "axis axis--x")
+            .attr("text-anchor", "middle")
+            .attr("transform", "translate(" + ((width / 2) + this.margin.left) + "," + (height + this.margin.top + 35) + ")")
+            .text(this.options.textY);
+        svg.append("text")
+            .attr("class", "axis axis--y")
+            .attr("text-anchor", "middle")
+            .attr("transform", "translate(0," + ((height / 2) + this.margin.top) + ")rotate(-90)")
+            .attr("dy", "20.0")
+            .text(this.options.textX);
+    }
+
+    private getBarWidth(d: any): number {
+        return Math.abs(this.xAxis!!(d.x + d.x0) - this.xAxis!!(d.x0));
+    }
+
+    private getBarHeight(): number {
+        return this.yAxis!!.bandwidth() - this.margin.top;
+    }
 
     private renderLegend(g: d3.Selection<any, any, any, any>, columns: Array<string>) {
+        const elementsPerRow = 3;
+        const elementWidth = (this.options.width - this.margin.left) / elementsPerRow;
         const legend = g.selectAll(".legend")
-            .data(columns.reverse())
+            .data(columns)
             .enter().append("g")
             .attr("class", "legend")
-            .attr("transform", (d, i) => "translate(" + ((i % 4) * 100) + ", " + (Math.floor(i / 4) * 20) + ")");
+            .attr("transform", (d, i) => "translate(" + (((i % elementsPerRow) * elementWidth) + this.margin.left) + ", " + (Math.floor(i / elementsPerRow) * 20) + ")");
+        const rectSize = 0.036 * this.options.width;
         legend.append("rect")
             .attr("x", 0)
-            .attr("width", 18)
-            .attr("height", 18)
+            .attr("width", rectSize)
+            .attr("height", rectSize)
+            .attr("class", (d: any) => `serie lto-vis-${getDigit(this.idMap, d)} lto-vis-${getLetter(this.idMap, d)}`);
+        legend.append("circle")
+            .attr("cx", rectSize / 2)
+            .attr("cy", rectSize / 2)
+            .attr("r", rectSize / 2)
             .attr("class", (d: any) => `serie lto-vis-${getDigit(this.idMap, d)} lto-vis-${getLetter(this.idMap, d)}`);
         legend.append("text")
-            .attr("x", 20)
-            .attr("y", 9)
+            .attr("x", rectSize * 1.12)
+            .attr("y", rectSize / 2)
             .attr("dy", ".35em")
             .attr("text-anchor", "start")
             .text((d: any) => d);
     }
 
+    private renderBarLabels(g: d3.Selection<any, any, any, any>, xStackMax: number) {
+        g.selectAll(".serie").selectAll("text")
+            .transition()
+            .duration(500)
+            .attr("y", (d: any) => this.margin.top + (this.yAxis!!(d[0].type) as number) + (this.getBarHeight() / 2))
+            .attr("x", (d: any) => this.xAxis!!(d[0].x0) + (this.getBarWidth(d[0]) / 2))
+            .attr("class", (d: any) => d[0].x / xStackMax < 0.1 ? "lower-10-pct" : "higher-10-pct"
+            );
+    }
+
+
     /*
-     * Reset the domain for the y-axis scaling to maximum of the population totals,
+     * Reset the domain for the x-axis scaling to maximum of the x axis totals,
      * transition the y-axis changes to the bar heights, and then transition the
      * x-axis changes to the bar widths.
      */
-
-    private transitionStacked(x: ScaleLinear<number, number>, y: ScaleBand<string>,
-                              rect: d3.Selection<BaseType, any, any, any>, xStackMax: number): d3.Transition<any, any, any, any> {
-        this.linear!!.axis.domain([0, xStackMax]);
-        return rect.transition()
+    private transitionStacked(g: d3.Selection<any, any, any, any>, xStackMax: number): d3.Transition<any, any, any, any> {
+        this.xAxis!!.domain([0, xStackMax]);
+        return g.selectAll("rect").transition()
             .duration(500)
             .delay((d: any, i: any) => i)
-            .attr(this.linear!!.name, (d: any) => this.linear!!.axis(d.linear0))
-            .attr(this.linear!!.dim, (d: any) => this.linear!!.axis(d[this.linear!!.name] + d.linear0) - this.linear!!.axis(d.linear0))
+            .attr("x", (d: any) => this.xAxis!!(d.x0))
+            .attr("width", (d: any) => this.xAxis!!(d.x + d.x0) - this.xAxis!!(d.x0))
             .transition()
-            .attr(this.band!!.name, (d: any) => {
-                const margin = this.options.legend ? 40 : 0;
-                return margin + (this.band!!.axis(d.type) as number);
+            .call(() => this.renderBarLabels(g, xStackMax))
+            .attr("y", (d: any) => {
+                return this.margin.top + (this.yAxis!!(d.type) as number);
             })
-            .attr(this.band!!.dim, this.band!!.axis.bandwidth() * 0.85);
+            .attr("height", this.getBarHeight());
     }
 
     private sumup(data: any) {
@@ -210,13 +235,12 @@ export default class HorizontalStackedbar {
         return labels;
     }
 
-    private getValues(labels: Array<string>, data: any) {
+    private getValues(labels: Array<string>, data: any, fieldName: string) {
         const values: Array<number> = Array.from({length: labels.length}, () => 0);
         data.labels.forEach((key: string) => {
             const index = labels.indexOf(key);
-            values[labels.indexOf(key)] = data.values.length > index ? data.values[index] : 0;
+            values[labels.indexOf(key)] = data[fieldName].length > index ? data[fieldName][index] : 0;
         });
         return values;
     }
-
 }

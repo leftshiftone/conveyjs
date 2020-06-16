@@ -26,7 +26,7 @@ export default class Stackedbar {
             const margin = {top: 20, right: 20, bottom: 50, left: 40};
             const width = +svg.attr("width") - margin.left - margin.right;
             const height = +svg.attr("height") - margin.top - margin.bottom;
-            const g = svg.append("g");
+            const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             const x = d3.scaleBand().rangeRound([0, width]).padding(0.1).align(0.1);
             const y = d3.scaleLinear().rangeRound([height, 0]);
@@ -96,30 +96,33 @@ export default class Stackedbar {
             // add svg title for tooltip support
             rect.append("svg:title")
                 .text((d: any) => d.type + ", " + d.column + ": " + d.y + " (total: " + this.sumup(d) + ")");
-            /*
-             * X-axis set-up.
-             * Note that we do not set up the Y-axis, since the bar heights are
-             * scaled dynamically.
-             */
-            g.append("g")
-                .attr("class", "axis axis--x")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
 
-            // Add labels to the axes.
-            svg.append("text")
-                .attr("class", "axis axis--x")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(" + (width / 2) + "," + (height + 60) + ")")
-                .text(this.options.textX);
-            svg.append("text")
-                .attr("class", "axis axis--y")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(0," + (height / 2) + ")rotate(-90)")
-                .attr("dy", "20.0")
-                .text(this.options.textY);
+            if (this.options.showAxis) {
+                /*
+                 * X-axis set-up.
+                 * Note that we do not set up the Y-axis, since the bar heights are
+                 * scaled dynamically.
+                 */
+                g.append("g")
+                    .attr("class", "axis axis--x")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x));
 
-            if (this.options.legend) {
+                // Add labels to the axes.
+                svg.append("text")
+                    .attr("class", "axis axis--x")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + (width / 2) + "," + (height + 60) + ")")
+                    .text(this.options.textX);
+                svg.append("text")
+                    .attr("class", "axis axis--y")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(0," + (height / 2) + ")rotate(-90)")
+                    .attr("dy", "20.0")
+                    .text(this.options.textY);
+            }
+
+            if (this.options.showLegend) {
                 const legend = g.selectAll(".legend")
                     .data(columns.reverse())
                     .enter().append("g")
@@ -161,7 +164,13 @@ export default class Stackedbar {
     }
 
     private sumup(data: any) {
-        return data.values.reduce((sum: number, val: number) => sum + val, 0);
+        let sum = 0.0;
+        Object.keys(data).forEach(key => {
+            if (typeof data[key] === "number") {
+                sum += data[key];
+            }
+        });
+        return sum;
     }
 
     private getLabels(data: [any]): Array<string> {

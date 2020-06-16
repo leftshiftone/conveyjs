@@ -1,7 +1,6 @@
 // noinspection TsLint
 import * as d3 from "d3";
 import DoughnutOptions from './DoughnutOptions';
-import {getDigit, getLetter} from '../../../support/Strings';
 
 /**
  * Implementation of the 'doughnut' markup element.
@@ -10,8 +9,6 @@ export class Doughnut {
 
     private readonly options: DoughnutOptions;
     private readonly radius: number;
-
-    private readonly idMap: Map<string, number> = new Map<string, number>();
 
     constructor(options: DoughnutOptions = new DoughnutOptions()) {
         this.options = options;
@@ -37,6 +34,10 @@ export class Doughnut {
         this.options.data.then(e => this.change(e, svg, element));
     }
 
+    private getLetter(index: number) {
+        return String.fromCharCode('A'.charCodeAt(0) + (index % 5));
+    }
+
     private change(data: any, svg: any, element: HTMLElement) {
         const arc = d3.arc().outerRadius(this.radius * 0.8).innerRadius(this.radius * this.options.doughnutRatio);
         const outerArc = d3.arc().innerRadius(this.radius * 0.9).outerRadius(this.radius * 0.9);
@@ -45,10 +46,21 @@ export class Doughnut {
         const key = (d: any) => d.data.label;
         const slice = svg.select(".lto-vis-slices").selectAll("path.lto-vis-slice").data(pie(data), key);
 
+        if (this.options.iconUrl) {
+            const width = this.radius * (this.options.doughnutRatio) * Math.sqrt(2);
+            svg.select("g")
+                .append("image")
+                .attr("xlink:href", this.options.iconUrl)
+                .attr("width", width)
+                .attr("height", width)
+                .attr("x", -width / 2)
+                .attr("y", -width / 2);
+        }
+
         let _current: any;
         slice.enter()
             .insert("path")
-            .attr("class", (d: any) => `lto-vis-${getDigit(this.idMap, d.data.label)} lto-vis-${getLetter(this.idMap, d.data.label)}`)
+            .attr("class", (d: any, index: number) => `lto-vis-${index} lto-vis-${this.getLetter(index)}`)
             .merge(slice)
             .transition().duration(1000)
             .attrTween("d", (d: any) => {
@@ -98,7 +110,7 @@ export class Doughnut {
 
         polyline.enter()
             .append("polyline")
-            .attr("class", (d: any) => `lto-vis-${getDigit(this.idMap, d.data.label)} lto-vis-${getLetter(this.idMap, d.data.label)}`)
+            .attr("class", (d: any, index: number) => `lto-vis-${index} lto-vis-${this.getLetter(index)}`)
             .merge(polyline)
             .transition().duration(1000)
             .attrTween("points", (d: any) => {

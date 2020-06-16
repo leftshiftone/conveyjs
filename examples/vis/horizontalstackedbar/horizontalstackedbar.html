@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@leftshiftone/convey</title>
-    <script src="stackedbar.js"></script>
+    <script src="horizontalstackedbar.js"></script>
     <script src="../../../dist/convey-vis.js"></script>
     <link rel="stylesheet" href="../../../dist/convey-vis.css">
 </head>
@@ -16,20 +16,20 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const options = new GaiaConvey.StackedbarOptions();
+        const options = new GaiaConvey.HorizontalStackedbarOptions();
         options.data = Promise.resolve(window.data);
         options.textX = "Time (Hour)";
         options.textY = "Events";
         options.showLegend = true;
-        options.height = 500;
+        options.height = 100;
         options.width = 500;
         options.showAxis = true;
 
-        const stackedbar = new GaiaConvey.Stackedbar(options);
+        const horizontalstackedbar = new GaiaConvey.HorizontalStackedbar(options);
         let gaia = document.getElementsByClassName("lto-gaia")[0];
-        const element = stackedbar.render();
+        const element = horizontalstackedbar.render();
         gaia.appendChild(element);
-        stackedbar.init(element);
+        horizontalstackedbar.init(element);
     });
 </script>
 </html>
