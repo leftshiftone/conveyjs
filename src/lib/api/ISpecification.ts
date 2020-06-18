@@ -51,4 +51,6 @@ export interface ISpecification {
     routePoints?: string;
     routeEndIcon?: string;
     routeStartIcon?: string;
+    clientId?: string;
+    interactionContentClassName?: string;
 }

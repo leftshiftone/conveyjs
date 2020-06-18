@@ -24,25 +24,27 @@ export class MqttConnection {
     private readonly removeFromEventStream: () => void;
 
     constructor(url: string, identityId: string, renderer: IRenderer, listener: IListener, username?: string | null, password?: string | null) {
-        this.listener = listener;
-        this.renderer = renderer;
         this.clientId = uuid();
-        this.identityId = identityId;
         this.userId = uuid();
+        this.listener = listener;
+        this.identityId = identityId;
+        this.renderer = renderer;
+        this.renderer.setClientId(this.clientId);
 
-        let connectionOptions = {};
-        if (username || password) {
-            connectionOptions = {clean: false, clientId: this.clientId, username: username, password: password}
-        } else {
-            connectionOptions = {clean: false, clientId: this.clientId}
-        }
+        const connectionOptions: mqtt.IClientOptions = username && password ?
+            {clean: false, clientId: this.clientId, username, password} :
+            {clean: false, clientId: this.clientId};
         this.mqttClient = mqtt.connect(url, connectionOptions);
+        this.initMqttListeners();
+        this.removeFromEventStream = EventStream.addListener(EventType.create(EventType.PUBLISH, this.clientId), this.publish.bind(this, ChannelType.TEXT)).remove;
+        this.removeFromEventStream = EventStream.addListener(EventType.create(EventType.PUBLISH), this.publish.bind(this, ChannelType.TEXT)).remove;
+    }
+
+    public initMqttListeners() {
         this.mqttClient.on('connect', () => this.listener.onConnected());
         this.mqttClient.on('offline', () => this.listener.onConnectionLost());
         this.mqttClient.on('message', this.onMessage.bind(this));
         this.mqttClient.on('packetsend', (packet: IPacket) => this.listener.onPacketSend(packet));
-
-        this.removeFromEventStream = EventStream.addListener(EventType.PUBLISH, this.publish.bind(this, ChannelType.TEXT)).remove;
     }
 
     /**
@@ -52,7 +54,7 @@ export class MqttConnection {
         this.removeFromEventStream();
         this.behaviourBind.forEach(behaviour => behaviour.unbind());
         return this.mqttClient.end(false, () => this.listener.onDisconnected());
-    };
+    }
 
     /**
      * Subscribes to the given destination.
@@ -107,7 +109,7 @@ export class MqttConnection {
             this.bind(new KeyboardBehaviour(this.renderer));
             this.bind(new MouseBehaviour(this.renderer));
         }
-        const payload = JSON.stringify({header: this.header(), body: {type: 'reception', attributes: attributes}});
+        const payload = JSON.stringify({header: this.header(), body: {type: 'reception', attributes}});
         this.mqttClient.publish(this.outgoing(ChannelType.TEXT), payload, this.mqttCallback("reception"));
     }
 

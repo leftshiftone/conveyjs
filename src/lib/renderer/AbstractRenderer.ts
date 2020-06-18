@@ -8,20 +8,29 @@ export abstract class AbstractRenderer implements IRenderer {
 
     protected readonly content: HTMLElement;
     protected readonly suggest: HTMLElement;
+    public clientId : null | string = null;
 
     constructor(content: HTMLElement, suggest: HTMLElement) {
         this.content = content;
         this.suggest = suggest;
     }
 
+    abstract initListeners(): void;
+
+    public setClientId(clientId: string): void {
+        this.clientId = clientId;
+        this.initListeners();
+    }
+
     /**
      * @inheritDoc
      */
     public render(message: ISpecification | IRenderable, containerType?: IStackeable): HTMLElement[] {
+        const spec = Object.assign(message, {clientId: this.clientId, interactionContentClassName: this.content.className});
         if (message["render"] !== undefined) {
-            return this.renderElement(message as IRenderable, containerType);
+            return this.renderElement(spec as IRenderable, containerType);
         }
-        const renderable = this.getRenderable(message as ISpecification);
+        const renderable = this.getRenderable(spec as ISpecification);
         return this.renderElement(renderable, containerType);
     }
 
@@ -69,13 +78,13 @@ export abstract class AbstractRenderer implements IRenderer {
      */
     public appendContent = (element: HTMLElement) => {
         this.content.appendChild(element);
-    };
+    }
 
     /**
      * @inheritDoc
      */
     public appendSuggest = (element: HTMLElement) => {
         this.suggest.appendChild(element);
-    };
+    }
 
 }

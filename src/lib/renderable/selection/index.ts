@@ -104,7 +104,7 @@ export class Selection implements IRenderable, IStackeable {
         if (!this.isPublished) {
             this.selection.style.pointerEvents = "none";
             EventStream.emitEvent({
-                type: EventType.PUBLISH,
+                type: EventType.create(EventType.PUBLISH, this.spec.clientId),
                 payload: {
                     type: MessageType.SUBMIT,
                     attributes: {

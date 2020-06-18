@@ -1,11 +1,10 @@
 /**
  * This interface is used to specify an outgoing message
  */
-import {EventType} from "../event/EventType";
 import {MessageType} from "../support/MessageType";
 
 export interface IEvent {
-    type: EventType;
+    type: string;
     payload?: IEventPayload;
 }
 

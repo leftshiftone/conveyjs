@@ -18,7 +18,11 @@ export class ContentCentricRenderer extends ClassicRenderer {
 
     constructor(content?: HTMLElement, suggest?: HTMLElement) {
         super(content, suggest);
-        EventStream.addListener(EventType.PUBLISH, (e) => {
+    }
+
+    public initListeners() {
+        super.initListeners();
+        EventStream.addListener(EventType.create(EventType.PUBLISH, this.clientId!), (e) => {
             if (e[0].type === Suggestion.TYPE) {
                 this.behaviour = this.suggestionBehaviour(this.qualifier || "");
             }

@@ -28,5 +28,7 @@ export interface IRenderer {
      * @param element the element which will be appended
      */
     appendSuggest(element: HTMLElement): void;
+
+    setClientId(clientId: string): void;
 }
 
