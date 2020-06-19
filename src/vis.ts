@@ -8,6 +8,8 @@ import SunburstOptions from './lib/renderable/vis/sunburst/SunburstOptions';
 import SankeyOptions from './lib/renderable/vis/sankey/SankeyOptions';
 import ScatterplotOptions from './lib/renderable/vis/scatterplot/ScatterplotOptions';
 import StackedbarOptions from './lib/renderable/vis/stackedbar/StackedbarOptions';
+import HorizontalStackedbar from './lib/renderable/vis/horizontalstackedbar/HorizontalStackedbar';
+import HorizontalStackedbarOptions from './lib/renderable/vis/horizontalstackedbar/HorizontalStackedbarOptions';
 import {Doughnut} from './lib/renderable/vis/doughnut/Doughnut';
 import DoughnutOptions from './lib/renderable/vis/doughnut/DoughnutOptions';
 import {Line} from './lib/renderable/vis/line/Line';
@@ -39,5 +41,7 @@ export {
     Graph,
     GraphOptions,
     Bar3D,
-    Bar3DOptions
+    Bar3DOptions,
+    HorizontalStackedbar,
+    HorizontalStackedbarOptions,
 };

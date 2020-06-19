@@ -3,4 +3,5 @@ export default class DoughnutOptions {
     public height:number = 500;
     public doughnutRatio = 0.4;
     public data:Promise<any> = Promise.resolve([]);
+    public iconUrl?:string = undefined;
 }
