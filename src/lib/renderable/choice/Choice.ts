@@ -1,5 +1,6 @@
 import {IRenderable, IRenderer, ISpecification} from "../../api";
 import node from "../../support/node";
+import wrap from "../../support/node";
 
 /**
  * Represents either a checkbox (multiple choice) or a radio button (single choice) element.
@@ -31,7 +32,12 @@ export abstract class Choice implements IRenderable {
         });
 
         const label = node("label");
-        label.appendChild(this.spec.text || "");
+        if (this.spec.text) {
+            label.appendChild(this.spec.text || "");
+        } else {
+            const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
+            elements.forEach(e => e.forEach(x => label.appendChild(wrap(x))));
+        }
         label.appendChild(input);
 
         if (this.spec.selected) {
