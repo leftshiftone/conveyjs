@@ -66,7 +66,7 @@ export class Submit implements IRenderable {
             InputContainer.getAll(content as HTMLFormElement, submit).then((attr) => {
 
                 EventStream.emitEvent({
-                    type: EventType.create(EventType.PUBLISH, this.spec.clientId),
+                    type: EventType.withClientId(EventType.PUBLISH, this.spec.clientId),
                     payload: {
                         text,
                         type: MessageType.SUBMIT,

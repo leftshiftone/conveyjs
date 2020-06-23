@@ -15,9 +15,10 @@ export class MqttConnection {
     private readonly subscriptions: Array<string> = [];
     private readonly behaviourBind: Array<IBehaviour> = [];
 
+    public readonly clientId: string;
+
     private readonly listener: IListener;
     private readonly renderer: IRenderer;
-    private readonly clientId: string;
     private readonly identityId: string;
     private readonly userId: string;
     private readonly mqttClient: mqtt.MqttClient;
@@ -36,8 +37,8 @@ export class MqttConnection {
             {clean: false, clientId: this.clientId};
         this.mqttClient = mqtt.connect(url, connectionOptions);
         this.initMqttListeners();
-        this.removeFromEventStream = EventStream.addListener(EventType.create(EventType.PUBLISH, this.clientId), this.publish.bind(this, ChannelType.TEXT)).remove;
-        this.removeFromEventStream = EventStream.addListener(EventType.create(EventType.PUBLISH), this.publish.bind(this, ChannelType.TEXT)).remove;
+        this.removeFromEventStream = EventStream.addListener(EventType.withClientId(EventType.PUBLISH, this.clientId), this.publish.bind(this, ChannelType.TEXT)).remove;
+        this.removeFromEventStream = EventStream.addListener(EventType.PUBLISH, this.publish.bind(this, ChannelType.TEXT)).remove;
     }
 
     public initMqttListeners() {

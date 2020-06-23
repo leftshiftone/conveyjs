@@ -49,7 +49,7 @@ export class Button implements IRenderable {
                 const name = this.spec.name || "";
                 const value = this.spec.value || "";
                 const event = {
-                    type: EventType.create(EventType.PUBLISH, this.spec.clientId),
+                    type: EventType.withClientId(EventType.PUBLISH, this.spec.clientId),
                     payload: {text, type: MessageType.BUTTON, attributes: {name, value, type: Button.TYPE}}
                 } as IEvent;
                 EventStream.emitEvent(event);

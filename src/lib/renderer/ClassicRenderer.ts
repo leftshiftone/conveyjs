@@ -17,7 +17,7 @@ export class ClassicRenderer extends AbstractRenderer {
     }
 
     public initListeners() {
-        EventStream.addListener(EventType.create(EventType.CAROUSEL, this.clientId!), this.handleCarousel.bind(this));
+        EventStream.addListener(EventType.withClientId(EventType.CAROUSEL, this.clientId!), this.handleCarousel.bind(this));
     }
 
     /**

@@ -22,7 +22,7 @@ export class ContentCentricRenderer extends ClassicRenderer {
 
     public initListeners() {
         super.initListeners();
-        EventStream.addListener(EventType.create(EventType.PUBLISH, this.clientId!), (e) => {
+        EventStream.addListener(EventType.withClientId(EventType.PUBLISH, this.clientId!), (e) => {
             if (e[0].type === Suggestion.TYPE) {
                 this.behaviour = this.suggestionBehaviour(this.qualifier || "");
             }

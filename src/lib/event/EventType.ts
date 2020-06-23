@@ -1,10 +1,13 @@
 export enum EventType {
-    PUBLISH = "publish",
-    CAROUSEL = "carousel"
+    PUBLISH = "GAIA::publish",
+    CAROUSEL = "GAIA::carousel"
 }
 
 export namespace EventType {
-    export function create(eventType: EventType, clientId?: string) {
-        return clientId ? `GAIA::${clientId}::${eventType}` : `GAIA::${eventType}`;
+    export function withClientId(eventType: EventType, clientId?: string): string {
+        switch (eventType) {
+            case EventType.CAROUSEL: return `GAIA::${clientId}::CAROUSEL`;
+            case EventType.PUBLISH: return `GAIA::${clientId}::PUBLISH`;
+        }
     }
 }
