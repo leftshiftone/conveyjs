@@ -69,8 +69,9 @@ export class Button implements IRenderable {
         return button.unwrap();
     }
 
-    public static cleanupButtons(className: string) {
-        const interactionContent = document.getElementsByClassName(className)[0];
+    public static cleanupButtons(className?: string) {
+        const interactionContent = document.getElementsByClassName(className || "lto-content")[0];
+        if(!interactionContent) return;
         // remove left buttons from interaction content
         const buttons = interactionContent.querySelectorAll(".lto-button.lto-left");
         buttons.forEach(element => {

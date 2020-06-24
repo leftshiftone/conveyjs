@@ -8,6 +8,7 @@ describe("Button", () => {
     });
     it("render <button><label>Test Button</label></button>", () => {
         const mock = document.createElement("div");
+        mock.className = "lto-content";
         const mockCallBack = jest.fn();
         const form = new Form({
             type: "form", name: "form", elements: [{
@@ -28,6 +29,7 @@ describe("Button", () => {
     });
     it("render <button>Test Button</button>", () => {
         const mock = document.createElement("div");
+        mock.className = "lto-content";
         const mockCallBack = jest.fn();
         const form = new Form({
             type: "form", name: "form", elements: [{
