@@ -8,6 +8,7 @@
  */
 export enum MessageType {
     RECEPTION = "reception",
+    AUDIO = "audio",
     UTTERANCE = "utterance",
     BUTTON = "button",
     SUBMIT = "submit",

@@ -15,6 +15,8 @@ export interface IRenderer {
      */
     render(message: ISpecification | IRenderable, containerType?: IStackeable): HTMLElement[];
 
+    init(channelId?: string): void;
+
     /**
      * Appends the incoming {@link HTMLElement} to the content div which is specified in the used renderer
      *
@@ -28,5 +30,6 @@ export interface IRenderer {
      * @param element the element which will be appended
      */
     appendSuggest(element: HTMLElement): void;
+
 }
 

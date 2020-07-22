@@ -114,4 +114,8 @@ export class RevealJsRenderer extends ContentCentricRenderer {
         }
     };
 
+    init(channelId?: string) {
+        super.init(channelId);
+    }
+
 }

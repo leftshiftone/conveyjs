@@ -1,5 +1,6 @@
 import {Gaia} from './lib/Gaia';
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
+import {MultiTargetRenderer} from './lib/renderer/MultiTargetRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
@@ -51,9 +52,12 @@ import {SmallDevice} from "./lib/renderable/smallDevice";
 import {Basket} from "./lib/renderable/basket";
 import {SelectionItem} from './lib/renderable/selectionItem';
 import {Selectable} from './lib/renderable/selectable';
+import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
 
 export * from './lib/api';
 export {
+    ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
+    MultiTargetRenderer,
     ClassicRenderer,
     ContentCentricRenderer,
     RevealJsRenderer,

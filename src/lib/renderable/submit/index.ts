@@ -36,17 +36,19 @@ export class Submit implements IRenderable {
         submit.setAttribute(`type`, Submit.TYPE);
 
         submit.classList.add("lto-submit", "lto-" + position);
-        if (this.spec.id !== undefined)
+        if (this.spec.id !== undefined) {
             submit.id = this.spec.id;
-        if (this.spec.class !== undefined)
+        }
+        if (this.spec.class !== undefined) {
             this.spec.class.split(" ").forEach(e => submit.classList.add(e));
-        if (isNested)
+        }
+        if (isNested) {
             submit.classList.add("lto-nested");
+        }
 
         submit.appendChild(document.createTextNode(this.spec.text || ""));
 
         const text = this.spec.text || "";
-        const timestamp = this.spec.timestamp || "";
 
         submit.addEventListener("click", (ev) => {
             ev.preventDefault();
@@ -64,24 +66,20 @@ export class Submit implements IRenderable {
             submit.disabled = true;
             if (content) content.style.pointerEvents = "none";
             InputContainer.getAll(content as HTMLFormElement, submit).then((attr) => {
+                const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
+                const value = attr;
+                const name = this.spec.name;
+                const type = MessageType.SUBMIT;
+                const payload = {value, text};
+                const attributes = {name, value};
+                EventStream.emit(evType, {type, payload, attributes});
 
-                EventStream.emitEvent({
-                    type: EventType.PUBLISH,
-                    payload: {
-                        text,
-                        type: MessageType.SUBMIT,
-                        attributes: {type: Submit.TYPE, value: JSON.stringify(attr)},
-                        position: "right",
-                        timestamp
-                    }
-                });
-
-                Button.cleanupButtons();
+                Button.cleanupButtons(this.spec.interactionContentClassName!);
             }).catch((reason) => {
                 console.error(`Unable to collect form input data: ${reason}`);
                 submit.disabled = false;
                 if (content) content.style.pointerEvents = "auto";
-            })
+            });
         });
 
         return submit;
@@ -98,16 +96,18 @@ export class Submit implements IRenderable {
                 trigger.setAttribute("data-value", JSON.stringify(attr));
             } else if (Object.keys(attr).length === 0) {
                 trigger.classList.remove("lto-success");
-                if (trigger.hasAttribute("value"))
+                if (trigger.hasAttribute("value")) {
                     trigger.removeAttribute("value");
-                else if (trigger.hasAttribute("data-value"))
+                }
+                else if (trigger.hasAttribute("data-value")) {
                     trigger.removeAttribute("data-value");
+ }
             }
             Overlay.hide(node(overlay));
         }).catch(reason => {
             console.error(`Unable to collect form input data: ${reason}`);
             trigger.classList.remove("lto-success");
-        })
+        });
     }
 }
 

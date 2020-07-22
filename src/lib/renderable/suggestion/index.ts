@@ -3,6 +3,7 @@ import EventStream from '../../event/EventStream';
 import Renderables from '../Renderables';
 import {EventType} from "../../event/EventType";
 import {MessageType} from "../../support/MessageType";
+import {IEventPayload} from "../../api/IEvent";
 
 /**
  * Implementation of the 'suggestion' markup element.
@@ -43,15 +44,16 @@ export class Suggestion implements IRenderable {
                 const elements = document.querySelectorAll('.lto-suggestion.lto-left');
                 elements.forEach(element => element.remove());
 
-                EventStream.emitEvent({
-                    type: EventType.PUBLISH,
-                    payload: {
-                        text: this.spec.text || "",
-                        type: MessageType.SUGGESTION,
-                        attributes: {type: Suggestion.TYPE, name: this.spec.name || "", value: this.spec.value || ""},
-                    }
-                });
-            }, {once: true});
+                const name = this.spec.name || "";
+                const text = this.spec.text || "";
+                const value = this.spec.value || "";
+
+                const attributes = {name, value};
+                const payload = {text, name, value};
+                const type = MessageType.SUGGESTION;
+                const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
+                EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
+            });
         }
 
         return button;

@@ -41,8 +41,12 @@ export default class EventStream {
      *
      * @param eventType
      */
-    public static removeAllListeners(eventType: string) {
-        delete this.theListeners[eventType];
+    public static removeAllListeners(eventType?: string) {
+        if (eventType) {
+            delete this.theListeners[eventType];
+        } else {
+            delete this.theListeners
+        }
     }
 
     /**
