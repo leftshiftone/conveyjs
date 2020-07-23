@@ -96,30 +96,33 @@ export default class Stackedbar {
             // add svg title for tooltip support
             rect.append("svg:title")
                 .text((d: any) => d.type + ", " + d.column + ": " + d.y + " (total: " + this.sumup(d) + ")");
-            /*
-             * X-axis set-up.
-             * Note that we do not set up the Y-axis, since the bar heights are
-             * scaled dynamically.
-             */
-            g.append("g")
-                .attr("class", "axis axis--x")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
 
-            // Add labels to the axes.
-            svg.append("text")
-                .attr("class", "axis axis--x")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(" + (width / 2) + "," + (height + 60) + ")")
-                .text(this.options.textX);
-            svg.append("text")
-                .attr("class", "axis axis--y")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(0," + (height / 2) + ")rotate(-90)")
-                .attr("dy", "20.0")
-                .text(this.options.textY);
+            if (this.options.showAxis) {
+                /*
+                 * X-axis set-up.
+                 * Note that we do not set up the Y-axis, since the bar heights are
+                 * scaled dynamically.
+                 */
+                g.append("g")
+                    .attr("class", "axis axis--x")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x));
 
-            if (this.options.legend) {
+                // Add labels to the axes.
+                svg.append("text")
+                    .attr("class", "axis axis--x")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + (width / 2) + "," + (height + 60) + ")")
+                    .text(this.options.textX);
+                svg.append("text")
+                    .attr("class", "axis axis--y")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(0," + (height / 2) + ")rotate(-90)")
+                    .attr("dy", "20.0")
+                    .text(this.options.textY);
+            }
+
+            if (this.options.showLegend) {
                 const legend = g.selectAll(".legend")
                     .data(columns.reverse())
                     .enter().append("g")
@@ -129,7 +132,7 @@ export default class Stackedbar {
                     .attr("x", 0)
                     .attr("width", 18)
                     .attr("height", 18)
-                    .attr("class", (d: any) => `serie lto-vis-${getDigit(this.idMap, d[0].column)} lto-vis-${getLetter(this.idMap, d[0].column)}`);
+                    .attr("class", (d: any) => `serie lto-vis-${getDigit(this.idMap, d)} lto-vis-${getLetter(this.idMap, d)}`);
                 legend.append("text")
                     .attr("x", 20)
                     .attr("y", 9)
