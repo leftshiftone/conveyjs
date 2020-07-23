@@ -320,10 +320,13 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@leftshiftone/gaia-sdk@file:../gaia-sdk/gaia-sdk-javascript":
-  version "2.0.0-rc.1"
+"@leftshiftone/gaia-sdk@^2.0.0-rc.3":
+  version "2.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@leftshiftone/gaia-sdk/-/gaia-sdk-2.0.0-rc.3.tgz#459377de422e6f01b0fb9ddc1e3628682aa1afb6"
+  integrity sha512-DWDdxwv+EAqse0zUWBqCmTndQ5joAdftNBp2aWMQEKrtA1JmM9KDKMMQIc+Qd+wrGLte8TiZImi7igG6LhlM7w==
   dependencies:
     "@types/mqtt" "^2.5.0"
+    axios "^0.19.2"
     bytebuffer "^5.0.1"
     crypto-js "^3.1.9-1"
     mqtt "^4.1.0"
@@ -1410,6 +1413,13 @@ axios@^0.19.0:
   dependencies:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
+
+axios@^0.19.2:
+  version "0.19.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.2.tgz#3ea36c5d8818d0d5f8a8a97a6d36b86cdc00cb27"
+  integrity sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
+  dependencies:
+    follow-redirects "1.5.10"
 
 babel-code-frame@^6.22.0:
   version "6.26.0"
