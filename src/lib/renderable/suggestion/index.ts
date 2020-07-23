@@ -44,7 +44,7 @@ export class Suggestion implements IRenderable {
                 elements.forEach(element => element.remove());
 
                 EventStream.emitEvent({
-                    type: EventType.PUBLISH,
+                    type: EventType.create(EventType.PUBLISH, this.spec.clientId),
                     payload: {
                         text: this.spec.text || "",
                         type: MessageType.SUGGESTION,

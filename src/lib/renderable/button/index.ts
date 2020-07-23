@@ -49,12 +49,12 @@ export class Button implements IRenderable {
                 const name = this.spec.name || "";
                 const value = this.spec.value || "";
                 const event = {
-                    type: EventType.PUBLISH,
+                    type: EventType.create(EventType.PUBLISH, this.spec.clientId),
                     payload: {text, type: MessageType.BUTTON, attributes: {name, value, type: Button.TYPE}}
                 } as IEvent;
                 EventStream.emitEvent(event);
 
-                Button.cleanupButtons();
+                Button.cleanupButtons(this.spec.interactionContentClassName!);
 
                 // add right button
                 const newButton = Object.assign(event.payload, {
@@ -69,26 +69,29 @@ export class Button implements IRenderable {
         return button.unwrap();
     }
 
-    public static cleanupButtons() {
-        // remove left buttons
-        const buttons = document.querySelectorAll(".lto-button.lto-left");
-        buttons.forEach(element => {
-            if (element.classList.contains("lto-persistent")) {
-                (element as HTMLElement).style.pointerEvents = "none";
-            } else {
-                element.remove();
-            }
-        });
+    public static cleanupButtons(className: string) {
+        const interactionContent = document.getElementsByClassName(className)[0];
+        // remove left buttons from interaction content
+        if (interactionContent) {
+            const buttons = interactionContent.querySelectorAll(".lto-button.lto-left");
+            buttons.forEach(element => {
+                if (element.classList.contains("lto-persistent")) {
+                    (element as HTMLElement).style.pointerEvents = "none";
+                } else {
+                    element.remove();
+                }
+            });
 
-        // remove left submits
-        const submits = document.querySelectorAll(".lto-submit.lto-left");
-        submits.forEach(element => {
-            if (element.classList.contains("lto-persistent")) {
-                (element as HTMLElement).style.pointerEvents = "none";
-            } else {
-                element.remove();
-            }
-        });
+            // remove left submits from interaction content
+            const submits = interactionContent.querySelectorAll(".lto-submit.lto-left");
+            submits.forEach(element => {
+                if (element.classList.contains("lto-persistent")) {
+                    (element as HTMLElement).style.pointerEvents = "none";
+                } else {
+                    element.remove();
+                }
+            });
+        }
 
         // remove left suggestions
         const suggestions = document.querySelectorAll(".lto-suggestion.lto-left");

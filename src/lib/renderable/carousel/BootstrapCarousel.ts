@@ -62,7 +62,7 @@ export default class BootstrapCarousel implements IRenderable, IStackeable {
             });
         });
 
-        EventStream.emit(EventType.CAROUSEL, this.current());
+        EventStream.emit(EventType.create(EventType.CAROUSEL, this.spec.clientId), this.current());
 
         this.carousel.appendChild(this.carouselIndicator);
         this.carousel.appendChild(this.carouselInner);

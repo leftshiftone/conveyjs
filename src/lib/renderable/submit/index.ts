@@ -66,7 +66,7 @@ export class Submit implements IRenderable {
             InputContainer.getAll(content as HTMLFormElement, submit).then((attr) => {
 
                 EventStream.emitEvent({
-                    type: EventType.PUBLISH,
+                    type: EventType.create(EventType.PUBLISH, this.spec.clientId),
                     payload: {
                         text,
                         type: MessageType.SUBMIT,
@@ -76,7 +76,7 @@ export class Submit implements IRenderable {
                     }
                 });
 
-                Button.cleanupButtons();
+                Button.cleanupButtons(this.spec.interactionContentClassName!);
             }).catch((reason) => {
                 console.error(`Unable to collect form input data: ${reason}`);
                 submit.disabled = false;
