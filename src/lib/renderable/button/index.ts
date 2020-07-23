@@ -1,12 +1,12 @@
 import {IRenderable, IRenderer, ISpecification} from '../../api';
 import EventStream from '../../event/EventStream';
 import Renderables from '../Renderables';
-import {IEvent} from "../../api/IEvent";
 import {EventType} from "../../event/EventType";
 import {MessageType} from "../../support/MessageType";
 import node from "../../support/node";
 import {Specification} from "../../support/Specification";
 import wrap from "../../support/node";
+import {IEventPayload} from "../../api/IEvent";
 
 /**
  * Implementation of the 'button' markup element.
@@ -48,30 +48,36 @@ export class Button implements IRenderable {
                 const text = this.spec.text || "";
                 const name = this.spec.name || "";
                 const value = this.spec.value || "";
-                const event = {
-                    type: EventType.PUBLISH,
-                    payload: {text, type: MessageType.BUTTON, attributes: {name, value, type: Button.TYPE}}
-                } as IEvent;
-                EventStream.emitEvent(event);
 
-                Button.cleanupButtons();
+                const attributes = {name, value};
+                const payload = {text, name, value};
+                const type = MessageType.BUTTON;
+                const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
+                EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
+
+                Button.cleanupButtons(this.spec.interactionContentClassName!);
 
                 // add right button
-                const newButton = Object.assign(event.payload, {
+                const newButton = Object.assign(attributes, {
                     class: this.spec.class,
                     position: "right",
-                    timestamp: new Date().getTime(),
-                    elements: this.spec.elements
-                }) as ISpecification;
+                    timestamp: new Date().getTime().toString(),
+                    elements: this.spec.elements,
+                    channelId: this.spec.channelId,
+                    text: this.spec.text,
+                    type: Button.TYPE
+                } as ISpecification);
                 renderer.render({type: "container", elements: [newButton]}).forEach(e => renderer.appendContent(e));
             });
         }
         return button.unwrap();
     }
 
-    public static cleanupButtons() {
-        // remove left buttons
-        const buttons = document.querySelectorAll(".lto-button.lto-left");
+    public static cleanupButtons(className?: string) {
+        const interactionContent = document.getElementsByClassName(className || "lto-content")[0];
+        if (!interactionContent) return;
+        // remove left buttons from interaction content
+        const buttons = interactionContent.querySelectorAll(".lto-button.lto-left");
         buttons.forEach(element => {
             if (element.classList.contains("lto-persistent")) {
                 (element as HTMLElement).style.pointerEvents = "none";
@@ -80,8 +86,8 @@ export class Button implements IRenderable {
             }
         });
 
-        // remove left submits
-        const submits = document.querySelectorAll(".lto-submit.lto-left");
+        // remove left submits from interaction content
+        const submits = interactionContent.querySelectorAll(".lto-submit.lto-left");
         submits.forEach(element => {
             if (element.classList.contains("lto-persistent")) {
                 (element as HTMLElement).style.pointerEvents = "none";

@@ -1,4 +1,4 @@
-import {MqttConnection} from '../connection/MqttConnection';
+import {Subscription} from "../connection/Subscription";
 
 /**
  * Classes which implement this interface can bind
@@ -7,13 +7,18 @@ import {MqttConnection} from '../connection/MqttConnection';
 export abstract class IBehaviour {
 
     protected readonly target: HTMLElement;
-    protected gateway: MqttConnection | null;
+    protected subscription: Subscription  | null;
     protected bindings: BehaviorBinding[];
+    channelId: string|null = null;
 
     protected constructor(target: HTMLElement, bindings: BehaviorBinding | BehaviorBinding[]) {
         this.target = target;
-        this.gateway = null;
+        this.subscription = null;
         this.bindings = Array.isArray(bindings) ? bindings : [bindings];
+    }
+
+    init(channelId: string) {
+        this.channelId = channelId;
     }
 
     /**
@@ -21,14 +26,17 @@ export abstract class IBehaviour {
      * The user is able to publish a message by
      * clicking the invoker.
      *
-     * @param gateway the {@link MqttConnection}
+     * @param gateway the {@link Subscription}
      */
-    bind(gateway: MqttConnection) {
-        this.gateway = gateway;
+    bind(gateway: Subscription) {
+        this.subscription = gateway;
         this.bindings.forEach(binding => {
             this.target.addEventListener(binding.type, binding.handler, true);
         });
     }
+
+    isValueValid = (value: string) =>
+        this.channelId && this.subscription && value.replace(/^\s+|\s+$/g, "") !== "";
 
     /**
      * Removes the active event listeners

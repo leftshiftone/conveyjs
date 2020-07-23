@@ -1,6 +1,7 @@
 import {Gaia} from './lib/Gaia';
 import {ChannelType} from './lib/support/ChannelType';
 import {OffSwitchListener} from './lib/listener/OffSwitchListener';
+import {MultiTargetRenderer} from './lib/renderer/MultiTargetRenderer';
 import {Defaults} from './lib/support/Defaults';
 import {Navigator} from './lib/support/Navigator';
 import EventStream from "./lib/event/EventStream";
@@ -73,7 +74,6 @@ import {Graph} from './lib/renderable/vis/graph/Graph';
 import GraphOptions from './lib/renderable/vis/graph/GraphOptions';
 import {Bar3D} from './lib/renderable/vis/bar3d/Bar3D';
 import Bar3DOptions from './lib/renderable/vis/bar3d/Bar3DOptions';
-import { MqttConnection } from './lib/connection/MqttConnection';
 import {Trigger} from "./lib/renderable/trigger";
 import {Overlays} from "./lib/renderable/overlays/Overlays";
 import {Overlay} from "./lib/renderable/overlays/Overlay";
@@ -82,11 +82,13 @@ import {SmallDevice} from "./lib/renderable/smallDevice";
 import {Basket} from "./lib/renderable/basket";
 import {SelectionItem} from "./lib/renderable/selectionItem";
 import {Selectable} from "./lib/renderable/selectable";
-
+import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
 export * from './lib/api';
 export {
+    ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
     VoiceBehaviour,
     WebRTCRecorder,
+    MultiTargetRenderer,
     BufferedAudioPlayer,
     NoopRenderer,
     DefaultListener,
@@ -163,7 +165,6 @@ export {
     GraphOptions,
     Bar3D,
     Bar3DOptions,
-    MqttConnection,
     Trigger,
     Overlays,
     Overlay,

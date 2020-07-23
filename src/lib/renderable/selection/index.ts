@@ -3,7 +3,6 @@ import Renderables from '../Renderables';
 import EventStream from "../../event/EventStream";
 import {EventType} from "../../event/EventType";
 import {MessageType} from "../../support/MessageType";
-import {Submit} from "../submit";
 
 /**
  * Implementation of the 'selection' markup element.
@@ -103,16 +102,13 @@ export class Selection implements IRenderable, IStackeable {
     public publish(): void {
         if (!this.isPublished) {
             this.selection.style.pointerEvents = "none";
-            EventStream.emitEvent({
-                type: EventType.PUBLISH,
-                payload: {
-                    type: MessageType.SUBMIT,
-                    attributes: {
-                        type: Submit.TYPE,
-                        value: JSON.stringify({[this.spec.name as string || ""]: this.values})
-                    },
-                }
-            });
+            const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
+            const name = this.spec.name;
+            const type = MessageType.SUBMIT;
+            const payload = {value: this.values, text: this.spec.text};
+            const attributes = {name, value: this.values};
+            EventStream.emit(evType, {type, payload, attributes});
+
             this.isPublished = true;
         }
     }

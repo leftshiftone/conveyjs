@@ -26,4 +26,7 @@ export class NoopRenderer implements IRenderer{
         return [];
     }
 
+    init(channelId?: string) {
+    }
+
 }

@@ -1,8 +1,9 @@
 import {IBehaviour, IRenderer, ISpecification} from '../api';
-import {ChannelType} from '../support/ChannelType';
 import {Defaults} from '../support/Defaults';
 import {Label} from "../renderable/label";
 import {MessageType} from "../support/MessageType";
+import EventStream from "../event/EventStream";
+import {EventType} from "../event/EventType";
 
 /**
  * IBehaviour implementation which listens for a keyup event with code 13 in order to publish
@@ -17,7 +18,7 @@ export class KeyboardBehaviour extends IBehaviour {
         super(target || Defaults.textbox(), { type: 'keyup', handler: (event: Event) => this.handler(event as KeyboardEvent) });
         this.renderer = renderer;
         this.callback = callback;
-        this.gateway = null;
+        this.subscription = null;
     }
 
     protected handler(ev: KeyboardEvent) {
@@ -25,12 +26,16 @@ export class KeyboardBehaviour extends IBehaviour {
             const element = (this.target as HTMLInputElement);
             const value = element.value;
 
-            if (this.gateway && value.replace(/^\s+|\s+$/g, "") !== "") {
-                this.gateway.publish(ChannelType.TEXT, {type: MessageType.UTTERANCE, text: value});
-                element.value = "";
+            if (this.isValueValid(value)) {
+                const evType = EventType.withChannelId(EventType.PUBLISH, this.channelId!);
+                const payload = {};
+                const attributes = {text: value};
+                const type = MessageType.UTTERANCE;
+                EventStream.emit(evType, {type, payload, attributes});
 
-                const payload = {type: Label.TYPE, text: value, position: "right"} as ISpecification;
-                this.renderer.render(payload).forEach(e => this.renderer.appendContent(e));
+                element.value = "";
+                const newElement = {type: Label.TYPE, text: value, position: "right"} as ISpecification;
+                this.renderer.render(newElement).forEach(e => this.renderer.appendContent(e));
 
                 if (this.callback !== undefined) {
                     this.callback();

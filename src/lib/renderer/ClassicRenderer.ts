@@ -14,7 +14,11 @@ export class ClassicRenderer extends AbstractRenderer {
 
     constructor(content?: HTMLElement, suggest?: HTMLElement) {
         super(content || Defaults.content(), suggest || Defaults.suggest());
-        EventStream.addListener(EventType.CAROUSEL, this.handleCarousel.bind(this));
+    }
+
+    init(channelId?: string) {
+        super.init(channelId);
+        EventStream.addListener(EventType.withChannelId(EventType.CAROUSEL, channelId), this.handleCarousel.bind(this));
     }
 
     /**
@@ -41,7 +45,7 @@ export class ClassicRenderer extends AbstractRenderer {
                 } else if (this.scrollStrategy === "container") {
                     this.containerScrollStrategy(this.content);
                 } else {
-                    this.scrollStrategy(this.content)
+                    this.scrollStrategy(this.content);
                 }
             }
         }, 1);
@@ -87,13 +91,13 @@ export class ClassicRenderer extends AbstractRenderer {
      * @param e
      */
     private containerScrollStrategy = (e: HTMLElement) => {
-        let list = e.querySelectorAll(".lto-container");
+        const list = e.querySelectorAll(".lto-container");
         if (!list || list.length == 0) {
             return;
         }
-        let item = list.item(list.length - 1) as HTMLElement;
-        item.scrollIntoView({behavior: "smooth"})
-    };
+        const item = list.item(list.length - 1) as HTMLElement;
+        item.scrollIntoView({behavior: "smooth"});
+    }
 
     /**
      * The scroll strategy is used to define the manner of scroll automation

@@ -107,7 +107,7 @@ export class Carousel implements IRenderable, IStackeable {
 
     private init(current: number) {
         this.resetCells();
-        EventStream.emit(EventType.CAROUSEL, current);
+        EventStream.emit(EventType.withChannelId(EventType.CAROUSEL, this.spec.channelId), current);
         this.cellContainer.children[current].classList.remove("lto-not-visible-item");
         this.cellContainer.children[current].classList.add("lto-center-item");
 
@@ -120,10 +120,10 @@ export class Carousel implements IRenderable, IStackeable {
     }
 
     private next(current: number) {
-        EventStream.emit(EventType.CAROUSEL, current);
+        EventStream.emit(EventType.withChannelId(EventType.CAROUSEL, this.spec.channelId), current);
         this.resetCells();
         current + 1 === this.cellContainer.children.length ? current = 0 : current++;
-        EventStream.emit(EventType.CAROUSEL, current);
+        EventStream.emit(EventType.withChannelId(EventType.CAROUSEL, this.spec.channelId), current);
         if (current > 0) {
             this.cellContainer.children[current - 1].classList.remove("lto-not-visible-item");
             this.cellContainer.children[current - 1].classList.add("lto-previous-item");
@@ -140,7 +140,7 @@ export class Carousel implements IRenderable, IStackeable {
     private previous(current: number) {
         this.resetCells();
         current === 0 ? current = this.cellContainer.children.length - 1 : current--;
-        EventStream.emit(EventType.CAROUSEL, current);
+        EventStream.emit(EventType.withChannelId(EventType.CAROUSEL, this.spec.channelId), current);
         if (current - 1 > -1) {
             this.cellContainer.children[current - 1].classList.remove("lto-not-visible-item");
             this.cellContainer.children[current - 1].classList.add("lto-previous-item");

@@ -52,13 +52,16 @@ Import Convey
 Connect to the G.A.I.A. ecosystem
 ```html
 <script type="text/javascript">
+    const header = new GaiaConvey.QueueHeader("anyIdentityId", "optionalChannelId")
+
     new GaiaConvey.Gaia(
         new GaiaConvey.ContentCentricRenderer(),
         new GaiaConvey.OffSwitchListener()
-    ).connect('wss://DOMAIN_NAME/mqtt', 'IDENTITY_ID')
+    ).connect(new GaiaConvey.QueueOptions('wss://URL/', 8080, "USERNAME", "PASSWORD"))
         .then(connection => {
-            connection.subscribe(GaiaConvey.ChannelType.CONTEXT, (data) => console.log(data));
-            connection.reception();
+            const subscription = connection.subscribe(GaiaConvey.ConversationQueueType.INTERACTION, header, payload => console.debug(`interaction:`, payload));
+            connection.subscribe(GaiaConvey.ConversationQueueType.CONTEXT, header, payload => console.debug(`context:`, payload));
+            subscription.reception({key: "value"});
         });
 </script>
 ```
@@ -66,16 +69,19 @@ Connect to the G.A.I.A. ecosystem
 #### Integrate Convey as NPM package
 Import Convey
 ```javascript
-import {Gaia, ContentCentricRenderer, OffSwitchListener, ChannelType} from "@leftshiftone/convey";
+import {Gaia, ContentCentricRenderer, OffSwitchListener, ConversationQueueType, QueueOptions} from "@leftshiftone/convey";
 ```
 
 Connect to the G.A.I.A. ecosystem
 ```javascript
-new Gaia(new ContentCentricRenderer(), new OffSwitchListener())
-    .connect('wss://DOMAIN_NAME/mqtt', 'IDENTITY_ID')
+const header = new QueueHeader("anyIdentityId", "optionalChannelId")
+
+new Gaia(new ContentCentricRenderer(), new OffSwitchListener()).
+    .connect(new QueueOptions('wss://URL/', 8080, "USERNAME", "PASSWORD"))
     .then(connection => {
-        connection.subscribe(ChannelType.CONTEXT, (data) => console.log(data));
-        connection.reception();
+        const subscription = connection.subscribe(ConversationQueueType.INTERACTION, header, payload => console.debug(`interaction:`, payload));
+        connection.subscribe(ConversationQueueType.CONTEXT, header, payload => console.debug(`context:`, payload));
+        subscription.reception({key: "value"});
     });
 ```
 
@@ -84,29 +90,29 @@ To use the default styling you can import it like the following:
 import '@leftshiftone/convey/dist/convey-all.css';
 ```
 
-## Channels
+## Queues
 
-The communication with G.A.I.A. contains several channels where each one has its own purpose.
+The communication with G.A.I.A. contains several queueTypes where each one has its own purpose.
 
-### TEXT
-The Text channel is the main channel and is responsible for exchanging the elements configured in
-G.A.I.A.. Convey automatically subscribes to this channel by calling `connection.reception()`.
-The messages in this channel are rendered to HTML elements.
+### INTERACTION
+The Interaction queue is the main queue and is responsible for exchanging the elements configured in
+G.A.I.A.. Convey automatically subscribes to this queue by calling `subscription.reception()`.
+The messages in this queue are rendered to HTML elements.
 
 ### CONTEXT
 The Context consists of attributes defined in the G.A.I.A. BPMN process. It can be received by
-subscribing to this channel.
+subscribing to this queue.
 
 ### NOTIFICATION
-Each notification configured in the G.A.I.A. BPMN process can be received if subscribed to this channel.
+Each notification configured in the G.A.I.A. BPMN process can be received if subscribed to this queue.
 
-### LOG
-G.A.I.A. sends logs for certain process executions which can be received by subscribing to this channel.
+### LOGGING
+G.A.I.A. sends logs for certain process executions which can be received by subscribing to this queue.
 
 
 ## Renderer
 
-A Renderer defines how elements, which were received by the 'Text' channel, are rendered in
+A Renderer defines how elements, which were received by the 'Interaction' queue, are rendered in
 the HTML DOM tree. Furthermore, a renderer specifies the layout of an integration project.
 
 ### Classic Renderer
@@ -120,13 +126,29 @@ if possible or displaying interrupting actions like intent cascading by overlayi
 Renderer implementation which is based on the reveal.js library. This renderer supports horizontal
 as well as vertical navigation.
 
+### MultiTargetRenderer
+This renderer can decide which renderer is used for each channel.
+It should be used if you are using multiple channels.
+
+```javascript
+const contentCentricRenderer = new ContentCentricRenderer("lto-content-for-channel-2-and-3")
+const multiTargetRenderer = new MultiTargetRenderer({
+    "channel1": new ContentCentricRenderer(),
+    "channel2": contentCentricRenderer,
+    "channel3": contentCentricRenderer,
+    "channel4": new ClassicRenderer("lto-content-for-channel-4")
+})
+
+new Gaia(multiTargetRenderer).connect(options).then(...)
+```
+__
 ### NoopRenderer
 No-operation dummy renderer. Mainly used for audio only use cases.
 
 
 ## Listener
 
-A listener provides the functionality to react to certain events. Events can be
+A listener provides the functionality to react to certain events. Events can be:
 * Connected
 * ConnectionLost
 * PacketSend
