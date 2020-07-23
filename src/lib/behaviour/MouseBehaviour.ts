@@ -26,8 +26,8 @@ export class MouseBehaviour extends IBehaviour {
     private handler() {
         const value = this.textArea.value;
 
-        if (this.channelId && this.subscription && value.replace(/^\s+|\s+$/g, "") !== "") {
-            const evType = EventType.withChannelId(EventType.PUBLISH, this.channelId);
+        if (this.isValueValid(value)) {
+            const evType = EventType.withChannelId(EventType.PUBLISH, this.channelId!);
             const payload = {};
             const attributes = {text: value};
             const type = MessageType.UTTERANCE;

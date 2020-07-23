@@ -35,6 +35,9 @@ export abstract class IBehaviour {
         });
     }
 
+    isValueValid = (value: string) =>
+        this.channelId && this.subscription && value.replace(/^\s+|\s+$/g, "") !== "";
+
     /**
      * Removes the active event listeners
      */
