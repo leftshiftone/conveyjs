@@ -1,17 +1,14 @@
 // noinspection TsLint
 import * as d3 from "d3";
 import DoughnutOptions from './DoughnutOptions';
-import {getDigit, getLetter} from '../../../support/Strings';
 
 /**
  * Implementation of the 'doughnut' markup element.
  */
 export class Doughnut {
 
-    private options: DoughnutOptions;
-    private radius: number;
-
-    private readonly idMap: Map<string, number> = new Map<string, number>();
+    private readonly options: DoughnutOptions;
+    private readonly radius: number;
 
     constructor(options: DoughnutOptions = new DoughnutOptions()) {
         this.options = options;
@@ -24,21 +21,21 @@ export class Doughnut {
     public render(): HTMLElement {
         const div = document.createElement("div");
         div.classList.add("lto-vis-doughnut");
-        div.innerHTML = '<svg />';
-        div.style.height = this.options.height + "px";
-        div.style.width = (this.options.width + 200) + "px";
+        const width = this.options.width + 200;
+        div.innerHTML = `<svg viewBox="-${width / 2} -${this.options.height / 2} ${width} ${this.options.height}"/>`;
         return div;
     }
 
     public init(element: HTMLElement) {
         const svg = d3.select(element.querySelector("svg")).append("g");
-
         svg.append("g").attr("class", "lto-vis-slices");
         svg.append("g").attr("class", "lto-vis-labels");
         svg.append("g").attr("class", "lto-vis-lines");
-
-        svg.attr("transform", "translate(" + ((this.options.width / 2) + 100) + "," + this.options.height / 2 + ")");
         this.options.data.then(e => this.change(e, svg, element));
+    }
+
+    private getLetter(index: number) {
+        return String.fromCharCode('A'.charCodeAt(0) + (index % 5));
     }
 
     private change(data: any, svg: any, element: HTMLElement) {
@@ -49,10 +46,21 @@ export class Doughnut {
         const key = (d: any) => d.data.label;
         const slice = svg.select(".lto-vis-slices").selectAll("path.lto-vis-slice").data(pie(data), key);
 
+        if (this.options.iconUrl) {
+            const width = this.radius * (this.options.doughnutRatio) * Math.sqrt(2);
+            svg.select("g")
+                .append("image")
+                .attr("xlink:href", this.options.iconUrl)
+                .attr("width", width)
+                .attr("height", width)
+                .attr("x", -width / 2)
+                .attr("y", -width / 2);
+        }
+
         let _current: any;
         slice.enter()
             .insert("path")
-            .attr("class", (d: any) => `lto-vis-${getDigit(this.idMap, d.data.label)} lto-vis-${getLetter(this.idMap, d.data.label)}`)
+            .attr("class", (d: any, index: number) => `lto-vis-${index} lto-vis-${this.getLetter(index)}`)
             .merge(slice)
             .transition().duration(1000)
             .attrTween("d", (d: any) => {
@@ -102,7 +110,7 @@ export class Doughnut {
 
         polyline.enter()
             .append("polyline")
-            .attr("class", (d: any) => `lto-vis-${getDigit(this.idMap, d.data.label)} lto-vis-${getLetter(this.idMap, d.data.label)}`)
+            .attr("class", (d: any, index: number) => `lto-vis-${index} lto-vis-${this.getLetter(index)}`)
             .merge(polyline)
             .transition().duration(1000)
             .attrTween("points", (d: any) => {
