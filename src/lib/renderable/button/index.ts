@@ -72,24 +72,26 @@ export class Button implements IRenderable {
     public static cleanupButtons(className: string) {
         const interactionContent = document.getElementsByClassName(className)[0];
         // remove left buttons from interaction content
-        const buttons = interactionContent.querySelectorAll(".lto-button.lto-left");
-        buttons.forEach(element => {
-            if (element.classList.contains("lto-persistent")) {
-                (element as HTMLElement).style.pointerEvents = "none";
-            } else {
-                element.remove();
-            }
-        });
+        if (interactionContent) {
+            const buttons = interactionContent.querySelectorAll(".lto-button.lto-left");
+            buttons.forEach(element => {
+                if (element.classList.contains("lto-persistent")) {
+                    (element as HTMLElement).style.pointerEvents = "none";
+                } else {
+                    element.remove();
+                }
+            });
 
-        // remove left submits from interaction content
-        const submits = interactionContent.querySelectorAll(".lto-submit.lto-left");
-        submits.forEach(element => {
-            if (element.classList.contains("lto-persistent")) {
-                (element as HTMLElement).style.pointerEvents = "none";
-            } else {
-                element.remove();
-            }
-        });
+            // remove left submits from interaction content
+            const submits = interactionContent.querySelectorAll(".lto-submit.lto-left");
+            submits.forEach(element => {
+                if (element.classList.contains("lto-persistent")) {
+                    (element as HTMLElement).style.pointerEvents = "none";
+                } else {
+                    element.remove();
+                }
+            });
+        }
 
         // remove left suggestions
         const suggestions = document.querySelectorAll(".lto-suggestion.lto-left");
