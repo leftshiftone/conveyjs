@@ -135,6 +135,32 @@ jobs:
       - run: npm run doc
       - run:
           <<: *webhook-failed
+  release-v2x-minor:
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - run:
+          <<: *webhook-created
+      - add_ssh_keys:
+          fingerprints:
+            - "69:70:b1:8b:60:db:83:56:f3:02:32:9e:72:46:99:52"
+      - checkout
+      - run: yarn cleanup-release
+      - run: git config --local user.email "ci@leftshift.one" && git config --local user.name "Continuous Integration"
+      - run: git checkout release/2.x && git pull --tags
+      - restore_cache:
+          key: cache-node-{{ checksum "yarn.lock" }}
+      - run: yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: cache-node-{{ checksum "yarn.lock" }}
+      - run: npm set registry https://registry.npmjs.org/
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      - run: npm run release:minor
+      - run: npm run doc
+      - run:
+          <<: *webhook-failed
   release-patch:
     docker:
       - image: circleci/node:10-browsers
@@ -210,6 +236,23 @@ workflows:
               only: /^release-minor$/
           requires:
             - release-minor
+  release-v2x-minor:
+    jobs:
+      - release-v2x-minor:
+          context: npm
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^release-minor-v2x$/
+      - webhook-completed:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^release-minor-v2x$/
+          requires:
+            - release-v2x-minor
   release-patch:
     jobs:
       - release-patch:
