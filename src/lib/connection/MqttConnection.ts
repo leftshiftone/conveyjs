@@ -17,7 +17,7 @@ export class MqttConnection {
 
     private readonly listener: IListener;
     private readonly renderer: IRenderer;
-    private readonly clientId: string;
+    public readonly clientId: string;
     private readonly identityId: string;
     private readonly userId: string;
     private readonly mqttClient: mqtt.MqttClient;
