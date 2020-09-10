@@ -43,9 +43,11 @@ export default class EventStream {
      */
     public static removeAllListeners(eventType?: string) {
         if (eventType) {
-            delete this.theListeners[eventType];
+            delete EventStream.theListeners[eventType];
         } else {
-            delete this.theListeners
+            Object.keys(EventStream.theListeners).forEach(key => {
+                delete EventStream.theListeners[key];
+            })
         }
     }
 
@@ -54,17 +56,17 @@ export default class EventStream {
      * to remove the listener.
      */
     public static addListener(eventType: EventType | string, listener: (...args: any[]) => void) {
-        if (this.theListeners[eventType]) {
-            this.theListeners[eventType].push(listener);
+        if (EventStream.theListeners[eventType]) {
+            EventStream.theListeners[eventType].push(listener);
         } else {
-            this.theListeners[eventType] = [listener];
+            EventStream.theListeners[eventType] = [listener];
         }
 
         return {
             remove: () => {
-                const index = this.theListeners[eventType].findIndex(e => e === listener);
+                const index = EventStream.theListeners[eventType].findIndex(e => e === listener);
                 if (index >= 0) {
-                    this.theListeners[eventType].splice(index, 1);
+                    EventStream.theListeners[eventType].splice(index, 1);
                 }
             }
         };
