@@ -49,7 +49,7 @@ export class Button implements IRenderable {
                 const name = this.spec.name || "";
                 const value = this.spec.value || "";
 
-                const attributes = {[name]:value};
+                const attributes = {name, value};
                 const payload = {text, name, value};
                 const type = MessageType.BUTTON;
                 const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
