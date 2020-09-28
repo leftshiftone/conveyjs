@@ -109,6 +109,32 @@ jobs:
       - run: npm run doc
       - run:
           <<: *webhook-failed
+  candidate-major:
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - run:
+          <<: *webhook-created
+      - add_ssh_keys:
+          fingerprints:
+            - "69:70:b1:8b:60:db:83:56:f3:02:32:9e:72:46:99:52"
+      - checkout
+      - run: yarn cleanup-release
+      - run: git config --local user.email "ci@leftshift.one" && git config --local user.name "Continuous Integration"
+      - run: git checkout master && git pull --tags
+      - restore_cache:
+          key: cache-node-{{ checksum "yarn.lock" }}
+      - run: yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: cache-node-{{ checksum "yarn.lock" }}
+      - run: npm set registry https://registry.npmjs.org/
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      - run: npm run candidate:major
+      - run: npm run doc
+      - run:
+          <<: *webhook-failed
   release-minor:
     docker:
       - image: circleci/node:10-browsers
@@ -132,6 +158,32 @@ jobs:
       - run: npm set registry https://registry.npmjs.org/
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run: npm run release:minor
+      - run: npm run doc
+      - run:
+          <<: *webhook-failed
+  candidate-minor:
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - run:
+          <<: *webhook-created
+      - add_ssh_keys:
+          fingerprints:
+            - "69:70:b1:8b:60:db:83:56:f3:02:32:9e:72:46:99:52"
+      - checkout
+      - run: yarn cleanup-release
+      - run: git config --local user.email "ci@leftshift.one" && git config --local user.name "Continuous Integration"
+      - run: git checkout master && git pull --tags
+      - restore_cache:
+          key: cache-node-{{ checksum "yarn.lock" }}
+      - run: yarn install
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: cache-node-{{ checksum "yarn.lock" }}
+      - run: npm set registry https://registry.npmjs.org/
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      - run: npm run candidate:minor
       - run: npm run doc
       - run:
           <<: *webhook-failed
@@ -193,6 +245,23 @@ workflows:
               only: /^release-major$/
           requires:
             - release-major
+  candidate-major:
+    jobs:
+      - candidate-major:
+          context: npm
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^candidate-major$/
+      - webhook-completed:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^candidate-major$/
+          requires:
+            - candidate-major
   release-minor:
     jobs:
       - release-minor:
@@ -210,6 +279,23 @@ workflows:
               only: /^release-minor$/
           requires:
             - release-minor
+  candidate-minor:
+    jobs:
+      - candidate-minor:
+          context: npm
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^candidate-minor$/
+      - webhook-completed:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^candidate-minor$/
+          requires:
+            - candidate-minor
   release-patch:
     jobs:
       - release-patch:

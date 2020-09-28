@@ -1,12 +1,12 @@
 {
-    "non-interactive": true,
+    "non-interactive": false,
     "dry-run": false,
     "verbose": true,
     "pkgFiles": [
         "package.json"
     ],
     "increment": "patch",
-    "preReleaseId": null,
+    "preReleaseId": "rc",
     "scripts": {
         "buildCommand": false,
         "afterBump": "yarn build",

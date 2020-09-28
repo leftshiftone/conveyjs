@@ -67,7 +67,7 @@ export class Submit implements IRenderable {
             if (content) content.style.pointerEvents = "none";
             InputContainer.getAll(content as HTMLFormElement, submit).then((attr) => {
                 const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
-                const value = attr;
+                const value = JSON.stringify(attr);
                 const name = this.spec.name;
                 const type = MessageType.SUBMIT;
                 const payload = {value, text};

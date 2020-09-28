@@ -182,8 +182,14 @@ Releases are triggered locally. Just a tag will be pushed to trigger the CI rele
 #### Major
 Run `yarn trigger-release:major` locally.
 
+#### Major RC
+Run `yarn trigger-candidate:major` locally.
+
 #### Minor
 Run `yarn trigger-release:minor` locally.
+
+#### Minor RC
+Run `yarn trigger-candidate:minor` locally.
 
 #### Patch
 Switch to the minor version branch, before performing the release (e.g. `release/1.3.x`) then run `yarn trigger-release:patch` locally.
