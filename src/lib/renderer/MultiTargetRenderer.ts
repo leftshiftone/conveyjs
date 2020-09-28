@@ -39,7 +39,7 @@ export class MultiTargetRenderer implements IRenderer {
     render(message: ISpecification | IRenderable, containerType?: IStackeable): HTMLElement[] {
         const channelId = (message as ISpecification).channelId;
         const renderer = this.resolve(channelId!);
-        return renderer ? renderer.render(message, containerType, ) : [];
+        return renderer ? renderer.render(message, containerType) : [];
     }
 
 }
