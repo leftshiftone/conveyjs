@@ -75,7 +75,7 @@ export class Slider implements IRenderable {
             }
         };
 
-        if (this.spec.values) {
+        if (this.spec.values && this.spec.values.length !== 0) {
             this.slider.value = this.spec.value || "0";
             this.slider.min = "0";
             this.slider.max = (this.spec.values.length - 1).toString();
