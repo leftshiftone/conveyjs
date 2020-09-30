@@ -98,7 +98,7 @@
         "candidate:major": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it major --preRelease=rc --no-git.requireCleanWorkingDir",
         "release:minor": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it minor --no-git.requireCleanWorkingDir",
         "candidate:minor": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it minor --preRelease=rc --no-git.requireCleanWorkingDir",
-        "release:patch": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it patch",
+        "release:patch": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/ && release-it patch --no-git.requireCleanWorkingDir",
         "test": "jest -w 1",
         "doc": "typedoc --options typedoc.json --out docs && zip -r ./docs/typescript-doc.zip ./docs/"
     },
