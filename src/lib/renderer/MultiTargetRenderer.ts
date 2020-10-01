@@ -1,10 +1,14 @@
 import {IRenderer, IRenderable, ISpecification, IStackeable} from "../api";
 
+interface RendererByChannelId {
+    [channelId: string]: IRenderer
+}
+
 export class MultiTargetRenderer implements IRenderer {
 
-    private readonly renderers: Map<string, IRenderer> = new Map();
+    public renderers: RendererByChannelId = {}
 
-    constructor(renderers: Map<string, IRenderer>) {
+    constructor(renderers: RendererByChannelId) {
         this.renderers = renderers;
     }
 
