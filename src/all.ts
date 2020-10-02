@@ -12,6 +12,7 @@ import {NoopRenderer} from "./lib/renderer/NoopRenderer";
 import {DefaultListener} from "./lib/listener/DefaultListener";
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
+import {RatingRenderer} from './lib/renderer/RatingRenderer';
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
 import {KeyboardBehaviour} from './lib/behaviour/KeyboardBehaviour';
@@ -96,6 +97,7 @@ export {
     Map,
     ClassicRenderer,
     ContentCentricRenderer,
+    RatingRenderer,
     RevealJsRenderer,
     Gaia,
     MouseBehaviour,
