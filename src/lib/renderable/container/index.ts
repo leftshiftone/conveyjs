@@ -25,7 +25,7 @@ export class Container implements IRenderable {
     /**
      * @inheritDoc
      */
-    public render(renderer: IRenderer, isNested: boolean): HTMLElement {
+    public render(renderer: IRenderer, isNested: boolean, hasRating: boolean = false): HTMLElement {
         const div = document.createElement("div");
         div.classList.add("lto-container");
 
@@ -37,6 +37,12 @@ export class Container implements IRenderable {
             div.removeChild(suggestion);
             renderer.appendSuggest(suggestion as HTMLElement);
         });
+
+        if (hasRating) {
+            const rating = document.createElement("div");
+            rating.classList.add("lto-rating");
+            div.appendChild(rating);
+        }
 
         return div;
     }
