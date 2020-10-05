@@ -38,18 +38,18 @@ export class RatingRenderer extends ClassicRenderer {
         return (renderable["spec"] !== undefined) ? renderable["spec"].type : null;
     }
 
+    private static getPosition(renderable: IRenderable) {
+        return (renderable["spec"] !== undefined) ? renderable["spec"].position : null;
+    }
+
     private defaultBehaviour(renderable: IRenderable, containerType?: IStackeable) {
-        console.log(renderable);
-        console.log(`qualifier: ${this.qualifier}`);
         if (!containerType) {
             this.qualifier = RatingRenderer.getQualifier(renderable) || this.qualifier;
         }
-        console.log(`qualifier: ${this.qualifier}`);
         const type = RatingRenderer.getType(renderable);
-        console.log(`type: ${type}`);
-
+        const position = RatingRenderer.getPosition(renderable);
         let appendRating = false;
-        if (type === "container") {
+        if (type === "container" && position === "left" && this.qualifier !== null) {
             console.log("Found container element");
             appendRating = true;
         }
