@@ -71,12 +71,12 @@ export class Rating implements IRenderable, IStackeable {
 
         this.buttonLike.onClick((ev: MouseEvent) => {
             ev.preventDefault();
-            this.likeButtonOnClick(RatingButtonType.LIKE);
+            this.ratingButtonOnClick(RatingButtonType.LIKE);
         });
 
         this.buttonDislike.onClick((ev: MouseEvent) => {
             ev.preventDefault();
-            this.likeButtonOnClick(RatingButtonType.DISLIKE);
+            this.ratingButtonOnClick(RatingButtonType.DISLIKE);
         });
 
         submitButton.onClick((ev: MouseEvent) => {
@@ -98,7 +98,7 @@ export class Rating implements IRenderable, IStackeable {
         this.spec[property] = (this.spec[property] === undefined ? value : this.spec[property]);
     }
 
-    private likeButtonOnClick(buttonType: RatingButtonType) {
+    private ratingButtonOnClick(buttonType: RatingButtonType) {
         this.ratingContainer.appendChild(this.commentForm);
 
         // The button that was clicked
