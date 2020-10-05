@@ -24,7 +24,7 @@ export class Rating implements IRenderable, IStackeable {
     private readonly commentForm: INode;
     private readonly buttonLike: INode;
     private readonly buttonDislike: INode;
-    private likeButtons: Map<ButtonType, INode>;
+    private likeButtons: Map<RatingButtonType, RatingButton>;
 
     constructor(message: ISpecification) {
         this.spec = message;
@@ -37,9 +37,17 @@ export class Rating implements IRenderable, IStackeable {
         this.commentForm = node("form");
         this.buttonLike = node("button");
         this.buttonDislike = node("button");
-        this.likeButtons = new Map<ButtonType, INode>();
-        this.likeButtons.set(ButtonType.LIKE, this.buttonLike);
-        this.likeButtons.set(ButtonType.DISLIKE, this.buttonDislike);
+        this.likeButtons = new Map<RatingButtonType, RatingButton>();
+        this.likeButtons.set(RatingButtonType.LIKE, {
+            type: RatingButtonType.LIKE,
+            buttonNode: this.buttonLike,
+            score: 1
+        });
+        this.likeButtons.set(RatingButtonType.DISLIKE, {
+            type: RatingButtonType.DISLIKE,
+            buttonNode: this.buttonDislike,
+            score: 0
+        });
     }
 
     /**
@@ -68,21 +76,16 @@ export class Rating implements IRenderable, IStackeable {
 
         this.buttonLike.onClick((ev: MouseEvent) => {
             ev.preventDefault();
-            this.likeButtonOnClick(ButtonType.LIKE);
+            this.likeButtonOnClick(RatingButtonType.LIKE);
         });
 
         this.buttonDislike.onClick((ev: MouseEvent) => {
             ev.preventDefault();
-            this.likeButtonOnClick(ButtonType.DISLIKE);
+            this.likeButtonOnClick(RatingButtonType.DISLIKE);
         });
 
         submitButton.onClick((ev: MouseEvent) => {
-            let score;
-            if (this.buttonLike.getDataAttribute("clicked")) {
-                score = "1";
-            } else if (this.buttonDislike.getDataAttribute("clicked")) {
-                score = "0";
-            }
+            const score = this.getScoreOfClickedButton();
             const payload = {text, name, score};
             const type = MessageType.RATING;
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
@@ -96,20 +99,33 @@ export class Rating implements IRenderable, IStackeable {
         this.spec[property] = (this.spec[property] === undefined ? value : this.spec[property]);
     }
 
-    private likeButtonOnClick(buttonType: ButtonType) {
+    private likeButtonOnClick(buttonType: RatingButtonType) {
         this.ratingContainer.appendChild(this.commentForm);
         // The other button
-        this.likeButtons.get((buttonType + 1) % ButtonType.__LENGTH)!.addAttributes({disabled: ""});
-        this.likeButtons.get((buttonType + 1) % ButtonType.__LENGTH)!.setStyle({cursor: "not-allowed"});
+        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.buttonNode.addAttributes({disabled: ""});
+        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.buttonNode.setStyle({cursor: "not-allowed"});
         // The button that was clicked
-        this.likeButtons.get(buttonType)!.addDataAttributes({clicked: true});
+        this.likeButtons.get(buttonType)!.buttonNode.addDataAttributes({clicked: true});
+    }
+
+    private getScoreOfClickedButton() : string {
+        if (this.buttonLike.getDataAttribute("clicked")) {
+            return this.likeButtons.get(RatingButtonType.LIKE)!.score.toString();
+        }
+        return this.likeButtons.get(RatingButtonType.DISLIKE)!.score.toString();
     }
 }
 
 Renderables.register("rating", Rating);
 
-enum ButtonType {
+enum RatingButtonType {
     LIKE,
     DISLIKE,
     __LENGTH
+}
+
+interface RatingButton {
+    type: RatingButtonType;
+    buttonNode: INode;
+    score: number;
 }
