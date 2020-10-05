@@ -51,22 +51,35 @@ export class Rating implements IRenderable, IStackeable {
         rating.appendChild(buttonDislike);
         buttonDislike.innerText('👎');
 
+        // Prepare comment form
+        const commentForm = node("form");
+        commentForm.appendChild(node("input").addAttributes({type: "text"}));
+        const submitButton = node("button").innerText("Send rating");
+        commentForm.appendChild(submitButton);
+
         buttonLike.onClick((ev: MouseEvent) => {
             ev.preventDefault();
             console.log("Clicked buttonLike");
-
-            const score = "1";
-            const payload = {text, name, score};
-            const type = MessageType.RATING;
-            const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
-            EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
+            rating.appendChild(commentForm);
+            buttonDislike.addAttributes({disabled: ""});
+            buttonLike.addDataAttributes({clicked: true});
         });
 
         buttonDislike.onClick((ev: MouseEvent) => {
             ev.preventDefault();
             console.log("Clicked buttonDislike");
+            rating.appendChild(commentForm);
+            buttonLike.addAttributes({disabled: ""});
+            buttonDislike.addDataAttributes({clicked: true});
+        });
 
-            const score = "0";
+        submitButton.onClick((ev: MouseEvent) => {
+            let score;
+            if (buttonLike.getDataAttribute("clicked")) {
+                score = "1";
+            } else if (buttonDislike.getDataAttribute("clicked")) {
+                score = "0";
+            }
             const payload = {text, name, score};
             const type = MessageType.RATING;
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
