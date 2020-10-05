@@ -8,7 +8,7 @@ export abstract class AbstractRenderer implements IRenderer {
 
     protected readonly content: HTMLElement;
     protected readonly suggest: HTMLElement;
-    private channelId?: string;
+    protected channelId?: string;
 
     protected constructor(content: HTMLElement, suggest: HTMLElement) {
         this.content = content;

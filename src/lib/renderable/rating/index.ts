@@ -1,6 +1,11 @@
 import {IRenderer, ISpecification, IRenderable, IStackeable} from '../../api';
 import Renderables from '../Renderables';
-import {Timestamp} from '../timestamp';
+import node from "../../support/node";
+import {Specification} from "../../support/Specification";
+import {MessageType} from "../../support/MessageType";
+import {EventType} from "../../event/EventType";
+import EventStream from "../../event/EventStream";
+import {IEventPayload} from "../../api/IEvent";
 
 /**
  * TODO: Update doc
@@ -13,37 +18,66 @@ import {Timestamp} from '../timestamp';
  */
 export class Rating implements IRenderable, IStackeable {
 
+    public static readonly TYPE = "rating";
     private readonly spec: ISpecification;
 
     constructor(message: ISpecification) {
         this.spec = message;
+        this.setSpecPropertyIfNotDefined("type", "rating");
+        this.setSpecPropertyIfNotDefined("name", "rating");
+        this.setSpecPropertyIfNotDefined("position", "left");
+        this.setSpecPropertyIfNotDefined("timestamp", new Date().getTime().toString());
     }
 
     /**
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        const position = this.spec.position || 'left';
-        const block = document.createElement('div');
-        block.classList.add('lto-block', "lto-" + position);
-        block.setAttribute("name", this.spec.name || "");
+        const text = this.spec.text || "";
+        const name = this.spec.name || "";
+        const value = this.spec.value || "";
+        const attributes = {name, value};
 
-        if (this.spec.id !== undefined) {
-            block.id = this.spec.id;
-        }
-        if (this.spec.class !== undefined) {
-            this.spec.class.split(" ").forEach(e => block.classList.add(e));
-        }
+        // Div for both buttons
+        const rating = node("div");
+        new Specification(this.spec).initNode(rating, "lto-rating");
+        rating.addAttributes({type: Rating.TYPE});
 
-        block.appendChild(Timestamp.render());
+        // Add like and dislike buttons
+        const buttonLike = node("button");
+        buttonLike.innerText('👍');
+        rating.appendChild(buttonLike);
+        const buttonDislike = node("button");
+        rating.appendChild(buttonDislike);
+        buttonDislike.innerText('👎');
 
-        const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
-        elements.forEach(e => e.forEach(x => block.appendChild(x)));
+        buttonLike.onClick((ev: MouseEvent) => {
+            ev.preventDefault();
+            console.log("Clicked buttonLike");
 
-        if (isNested) {
-            block.classList.add('lto-nested');
-        }
-        return block;
+            const score = "1";
+            const payload = {text, name, score};
+            const type = MessageType.RATING;
+            const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
+            EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
+        });
+
+        buttonDislike.onClick((ev: MouseEvent) => {
+            ev.preventDefault();
+            console.log("Clicked buttonDislike");
+
+            const score = "0";
+            const payload = {text, name, score};
+            const type = MessageType.RATING;
+            const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
+            EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
+        });
+
+        return rating.unwrap();
+    }
+
+    private setSpecPropertyIfNotDefined(property: string, value: string) {
+        this.spec[property] = (this.spec[property] === undefined ? value : this.spec[property]);
     }
 }
 

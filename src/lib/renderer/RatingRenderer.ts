@@ -53,6 +53,8 @@ export class RatingRenderer extends ClassicRenderer {
             console.log("Found container element");
             appendRating = true;
         }
+
+        console.log(renderable);
         return super.renderElement(renderable, containerType, appendRating);
     }
 

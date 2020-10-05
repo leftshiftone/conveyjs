@@ -38,12 +38,6 @@ export class Container implements IRenderable {
             renderer.appendSuggest(suggestion as HTMLElement);
         });
 
-        if (hasRating) {
-            const rating = document.createElement("div");
-            rating.classList.add("lto-rating");
-            div.appendChild(rating);
-        }
-
         return div;
     }
 
