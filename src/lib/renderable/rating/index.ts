@@ -35,6 +35,7 @@ export class Rating implements IRenderable, IStackeable {
         this.commentForm = node("form").addClasses("lto-form");
         this.buttonLike = node("button").addClasses("lto-button");
         this.buttonDislike = node("button").addClasses("lto-button");
+
         this.likeButtons = new Map<RatingButtonType, RatingButton>();
         this.likeButtons.set(RatingButtonType.LIKE, {
             type: RatingButtonType.LIKE,
@@ -52,20 +53,16 @@ export class Rating implements IRenderable, IStackeable {
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        const text = this.spec.text || "";
-        const name = this.spec.name || "";
-        const value = this.spec.value || "";
-        const attributes = {name, value};
 
         // Div for both buttons
         new Specification(this.spec).initNode(this.ratingContainer, "lto-rating");
         this.ratingContainer.addAttributes({type: Rating.TYPE});
 
-        // Add like and dislike buttons
+        // Like and dislike buttons
         this.buttonLike.innerText('👍');
         this.ratingContainer.appendChild(this.buttonLike);
-        this.ratingContainer.appendChild(this.buttonDislike);
         this.buttonDislike.innerText('👎');
+        this.ratingContainer.appendChild(this.buttonDislike);
 
         // Prepare comment form
         this.commentForm.appendChild(node("input").addAttributes({type: "text"}));
@@ -84,7 +81,11 @@ export class Rating implements IRenderable, IStackeable {
 
         submitButton.onClick((ev: MouseEvent) => {
             const score = this.getScoreOfClickedButton();
-            const payload = {text, name, score};
+            const payload = {score};
+
+            const commentText = (<HTMLInputElement> this.commentForm.unwrap().firstChild).value;
+            const attributes = {commentText};
+
             const type = MessageType.RATING;
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
             EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
@@ -97,6 +98,8 @@ export class Rating implements IRenderable, IStackeable {
         this.spec[property] = (this.spec[property] === undefined ? value : this.spec[property]);
     }
 
+    // TODO: Don't disable button, make it so that last clicked button is the one that counts
+    // TODO: Add css class for last clicked button (lto-something), but don't style it
     private likeButtonOnClick(buttonType: RatingButtonType) {
         this.ratingContainer.appendChild(this.commentForm);
         // The other button
@@ -126,4 +129,5 @@ interface RatingButton {
     type: RatingButtonType;
     buttonNode: INode;
     score: number;
+    clicked?: boolean;
 }

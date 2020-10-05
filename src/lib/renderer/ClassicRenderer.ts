@@ -32,7 +32,7 @@ export class ClassicRenderer extends AbstractRenderer {
 
         // Append rating buttons to allow feedback
         if (hasRating) {
-            const r : Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
+            const r: Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
             element = r.render(this, false);
         }
         array.push(element);
