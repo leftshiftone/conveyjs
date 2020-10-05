@@ -27,8 +27,7 @@ export class ClassicRenderer extends AbstractRenderer {
      */
     protected renderElement(renderable: IRenderable, containerType?: IStackeable, hasRating: boolean = false): HTMLElement[] {
         const array = [];
-        let element;
-        element = renderable.render(this, containerType !== undefined);
+        let element = renderable.render(this, containerType !== undefined);
         array.push(element);
 
         // Append rating buttons to allow feedback

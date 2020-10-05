@@ -8,10 +8,8 @@ import EventStream from "../../event/EventStream";
 import {IEventPayload} from "../../api/IEvent";
 
 /**
- * TODO: Update doc
- * Implementation of the 'block' markup element. A div HTML element
- * is created and the and the classes lto-block is added to
- * allow CSS modifications.
+ * Implementation of the 'rating' markup element. A div HTML element
+ * is created and the class lto-rating is added to allow CSS modifications.
  *
  * @see {@link IRenderable}
  * @see {@link IStackeable}
@@ -34,9 +32,9 @@ export class Rating implements IRenderable, IStackeable {
         this.setSpecPropertyIfNotDefined("timestamp", new Date().getTime().toString());
 
         this.ratingContainer = node("div");
-        this.commentForm = node("form");
-        this.buttonLike = node("button");
-        this.buttonDislike = node("button");
+        this.commentForm = node("form").addClasses("lto-form");
+        this.buttonLike = node("button").addClasses("lto-button");
+        this.buttonDislike = node("button").addClasses("lto-button");
         this.likeButtons = new Map<RatingButtonType, RatingButton>();
         this.likeButtons.set(RatingButtonType.LIKE, {
             type: RatingButtonType.LIKE,
@@ -71,7 +69,7 @@ export class Rating implements IRenderable, IStackeable {
 
         // Prepare comment form
         this.commentForm.appendChild(node("input").addAttributes({type: "text"}));
-        const submitButton = node("button").innerText("Send rating");
+        const submitButton = node("button").innerText("Send rating").addClasses("lto-button");
         this.commentForm.appendChild(submitButton);
 
         this.buttonLike.onClick((ev: MouseEvent) => {

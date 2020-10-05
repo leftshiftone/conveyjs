@@ -4,9 +4,10 @@ import EventStream from '../event/EventStream';
 import {EventType} from "../event/EventType";
 
 /**
- * TODO: Update doc
- * The content centric renderer tries to maximize the time a content is visible by updating
- * the content if possible or displaying interrupting actions like intent cascading by overlaying the content.
+ * The rating renderer adds two rating buttons (like, dislike)
+ * after each system conversation output,
+ * to allow users to give feedback.
+ * Based on the content centric renderer.
  */
 export class RatingRenderer extends ClassicRenderer {
 
@@ -50,11 +51,8 @@ export class RatingRenderer extends ClassicRenderer {
         const position = RatingRenderer.getPosition(renderable);
         let appendRating = false;
         if (type === "container" && position === "left" && this.qualifier !== null) {
-            console.log("Found container element");
             appendRating = true;
         }
-
-        console.log(renderable);
         return super.renderElement(renderable, containerType, appendRating);
     }
 
