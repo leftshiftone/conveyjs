@@ -98,22 +98,26 @@ export class Rating implements IRenderable, IStackeable {
         this.spec[property] = (this.spec[property] === undefined ? value : this.spec[property]);
     }
 
-    // TODO: Don't disable button, make it so that last clicked button is the one that counts
-    // TODO: Add css class for last clicked button (lto-something), but don't style it
     private likeButtonOnClick(buttonType: RatingButtonType) {
         this.ratingContainer.appendChild(this.commentForm);
-        // The other button
-        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.buttonNode.addAttributes({disabled: ""});
-        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.buttonNode.setStyle({cursor: "not-allowed"});
+
         // The button that was clicked
-        this.likeButtons.get(buttonType)!.buttonNode.addDataAttributes({clicked: true});
+        this.likeButtons.get(buttonType)!.clicked = true;
+        this.likeButtons.get(buttonType)!.buttonNode.addClasses("lto-button-last-clicked");
+
+        // The other button
+        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.buttonNode.removeClasses("lto-button-last-clicked");
+        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.clicked = false;
     }
 
     private getScoreOfClickedButton() : string {
-        if (this.buttonLike.getDataAttribute("clicked")) {
-            return this.likeButtons.get(RatingButtonType.LIKE)!.score.toString();
+        for (const entry of Array.from(this.likeButtons.entries())) {
+            const value = entry[1];
+            if (value.clicked) {
+                return value.score.toString();
+            }
         }
-        return this.likeButtons.get(RatingButtonType.DISLIKE)!.score.toString();
+        return "";
     }
 }
 
