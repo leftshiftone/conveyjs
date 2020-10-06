@@ -1,7 +1,5 @@
 import {ClassicRenderer} from './ClassicRenderer';
 import {IRenderable, IStackeable} from '../api';
-import EventStream from '../event/EventStream';
-import {EventType} from "../event/EventType";
 
 /**
  * The rating renderer adds two rating buttons (like, dislike)
@@ -20,8 +18,6 @@ export class RatingRenderer extends ClassicRenderer {
 
     public init(channelId?: string) {
         super.init(channelId);
-        EventStream.addListener(EventType.withChannelId(EventType.PUBLISH, channelId), (e) => {
-        });
     }
 
     /**

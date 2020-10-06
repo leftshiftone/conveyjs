@@ -25,7 +25,7 @@ export class Container implements IRenderable {
     /**
      * @inheritDoc
      */
-    public render(renderer: IRenderer, isNested: boolean, hasRating: boolean = false): HTMLElement {
+    public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const div = document.createElement("div");
         div.classList.add("lto-container");
 

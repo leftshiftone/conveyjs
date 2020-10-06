@@ -19,105 +19,92 @@ export class Rating implements IRenderable, IStackeable {
     public static readonly TYPE = "rating";
     private readonly spec: ISpecification;
     private readonly ratingContainer: INode;
-    private readonly commentForm: INode;
-    private readonly buttonLike: INode;
-    private readonly buttonDislike: INode;
-    private likeButtons: Map<RatingButtonType, RatingButton>;
+    private ratingButtons: Map<RatingButtonType, RatingButton>;
+    private selectedRatingButtonType: RatingButtonType;
 
     constructor(message: ISpecification) {
         this.spec = message;
-        this.setSpecPropertyIfNotDefined("type", "rating");
-        this.setSpecPropertyIfNotDefined("name", "rating");
-        this.setSpecPropertyIfNotDefined("position", "left");
-        this.setSpecPropertyIfNotDefined("timestamp", new Date().getTime().toString());
-
         this.ratingContainer = node("div");
-        this.commentForm = node("form").addClasses("lto-form");
-        this.buttonLike = node("button").addClasses("lto-button");
-        this.buttonDislike = node("button").addClasses("lto-button");
-
-        this.likeButtons = new Map<RatingButtonType, RatingButton>();
-        this.likeButtons.set(RatingButtonType.LIKE, {
-            type: RatingButtonType.LIKE,
-            buttonNode: this.buttonLike,
-            score: 1
-        });
-        this.likeButtons.set(RatingButtonType.DISLIKE, {
-            type: RatingButtonType.DISLIKE,
-            buttonNode: this.buttonDislike,
-            score: 0
-        });
+        this.ratingButtons = new Map<RatingButtonType, RatingButton>();
+        this.selectedRatingButtonType = RatingButtonType.NOT_YET_SELECTED;
     }
 
     /**
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
-
         // Div for both buttons
         new Specification(this.spec).initNode(this.ratingContainer, "lto-rating");
         this.ratingContainer.addAttributes({type: Rating.TYPE});
 
+        this.renderRatingButton();
+
+        return this.ratingContainer.unwrap();
+    }
+
+    private renderRatingButton() {
         // Like and dislike buttons
-        this.buttonLike.innerText('👍');
-        this.ratingContainer.appendChild(this.buttonLike);
-        this.buttonDislike.innerText('👎');
-        this.ratingContainer.appendChild(this.buttonDislike);
+        const buttonLike = node("button").addClasses("lto-button");
+        const buttonDislike = node("button").addClasses("lto-button");
+        buttonLike.innerText('👍');
+        this.ratingContainer.appendChild(buttonLike);
+        buttonDislike.innerText('👎');
+        this.ratingContainer.appendChild(buttonDislike);
 
-        // Prepare comment form
-        this.commentForm.appendChild(node("input").addAttributes({type: "text"}));
-        const submitButton = node("button").innerText("Send rating").addClasses("lto-button");
-        this.commentForm.appendChild(submitButton);
-
-        this.buttonLike.onClick((ev: MouseEvent) => {
-            ev.preventDefault();
-            this.ratingButtonOnClick(RatingButtonType.LIKE);
+        this.ratingButtons.set(RatingButtonType.LIKE, {
+            type: RatingButtonType.LIKE,
+            buttonNode: buttonLike,
+            score: 1
+        });
+        this.ratingButtons.set(RatingButtonType.DISLIKE, {
+            type: RatingButtonType.DISLIKE,
+            buttonNode: buttonDislike,
+            score: 0
         });
 
-        this.buttonDislike.onClick((ev: MouseEvent) => {
+        // Comment form to be appended after rating button is clicked
+        const commentForm = node("form").addClasses("lto-form");
+        commentForm.appendChild(node("input").addAttributes({type: "text"}));
+        const submitButton = node("button").innerText("Send rating").addClasses("lto-button");
+        commentForm.appendChild(submitButton);
+
+        // Click events
+        buttonLike.onClick((ev: MouseEvent) => {
             ev.preventDefault();
-            this.ratingButtonOnClick(RatingButtonType.DISLIKE);
+            this.ratingButtonOnClick(RatingButtonType.LIKE, commentForm);
+        });
+
+        buttonDislike.onClick((ev: MouseEvent) => {
+            ev.preventDefault();
+            this.ratingButtonOnClick(RatingButtonType.DISLIKE, commentForm);
         });
 
         submitButton.onClick((ev: MouseEvent) => {
+            ev.preventDefault();
             const score = this.getScoreOfClickedButton();
             const payload = {score};
 
-            const comment = (<HTMLInputElement> this.commentForm.unwrap().firstChild).value;
+            const comment = (<HTMLInputElement>commentForm.unwrap().firstChild).value;
             const attributes = {comment};
 
             const type = MessageType.RATING;
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
             EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
         });
-
-        return this.ratingContainer.unwrap();
     }
 
-    private setSpecPropertyIfNotDefined(property: string, value: string) {
-        this.spec[property] = (this.spec[property] === undefined ? value : this.spec[property]);
-    }
-
-    private ratingButtonOnClick(buttonType: RatingButtonType) {
-        this.ratingContainer.appendChild(this.commentForm);
+    private ratingButtonOnClick(buttonType: RatingButtonType, commentForm: INode) {
+        this.ratingContainer.appendChild(commentForm);
+        this.selectedRatingButtonType = buttonType;
 
         // The button that was clicked
-        this.likeButtons.get(buttonType)!.clicked = true;
-        this.likeButtons.get(buttonType)!.buttonNode.addClasses("lto-button-last-clicked");
-
+        this.ratingButtons.get(buttonType)!.buttonNode.addClasses("lto-button-last-clicked");
         // The other button
-        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.buttonNode.removeClasses("lto-button-last-clicked");
-        this.likeButtons.get((buttonType + 1) % RatingButtonType.__LENGTH)!.clicked = false;
+        this.ratingButtons.get((buttonType + 1) % 2)!.buttonNode.removeClasses("lto-button-last-clicked");
     }
 
-    private getScoreOfClickedButton() : string {
-        for (const entry of Array.from(this.likeButtons.entries())) {
-            const value = entry[1];
-            if (value.clicked) {
-                return value.score.toString();
-            }
-        }
-        return "";
+    private getScoreOfClickedButton(): string {
+        return this.ratingButtons.get(this.selectedRatingButtonType)!.score.toString();
     }
 }
 
@@ -126,12 +113,11 @@ Renderables.register("rating", Rating);
 enum RatingButtonType {
     LIKE,
     DISLIKE,
-    __LENGTH
+    NOT_YET_SELECTED
 }
 
 interface RatingButton {
     type: RatingButtonType;
     buttonNode: INode;
     score: number;
-    clicked?: boolean;
 }
