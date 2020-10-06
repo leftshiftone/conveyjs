@@ -83,8 +83,8 @@ export class Rating implements IRenderable, IStackeable {
             const score = this.getScoreOfClickedButton();
             const payload = {score};
 
-            const commentText = (<HTMLInputElement> this.commentForm.unwrap().firstChild).value;
-            const attributes = {commentText};
+            const comment = (<HTMLInputElement> this.commentForm.unwrap().firstChild).value;
+            const attributes = {comment};
 
             const type = MessageType.RATING;
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
