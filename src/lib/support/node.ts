@@ -36,13 +36,6 @@ export interface INode {
     addDataAttributes(map: {}): INode;
 
     /**
-     * Returns the data attribute value
-     *
-     * @param qualifier the data attribute qualifier
-     */
-    getDataAttribute(qualifier: string): string | null;
-
-    /**
      * Adds the given classes to the node.
      *
      * @param classes the classes to add
@@ -149,10 +142,6 @@ class Node implements INode {
 
     public getAttribute(qualifier: string): string | null {
         return this.node.getAttribute(qualifier);
-    }
-
-    public getDataAttribute(qualifier: string): string | null {
-        return this.node.getAttribute("data-" + qualifier);
     }
 
     public addClasses(...classes: string[]): INode {
