@@ -12,5 +12,6 @@ export enum MessageType {
     UTTERANCE = "utterance",
     BUTTON = "button",
     SUBMIT = "submit",
-    SUGGESTION = "suggestion"
+    SUGGESTION = "suggestion",
+    RATING = "rating"
 }

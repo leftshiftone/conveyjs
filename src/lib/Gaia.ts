@@ -1,7 +1,7 @@
 import {IListener, IRenderer} from './api';
 import {DefaultListener} from './listener/DefaultListener';
 import {Connection} from "./connection/Connection";
-import {QueueOptions} from "@leftshiftone/gaia-sdk/dist"
+import {QueueOptions} from "@leftshiftone/gaia-sdk/dist";
 
 export class Gaia {
 
