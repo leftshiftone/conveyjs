@@ -6,6 +6,7 @@ import EventStream from "../event/EventStream";
 import {EventType} from "../event/EventType";
 import {IEventPayload} from "../api/IEvent";
 import {MultiTargetRenderer} from "../renderer/MultiTargetRenderer";
+import {MessageType} from "../support/MessageType";
 
 export class Subscription {
     public type: ConversationQueueType;
@@ -53,7 +54,7 @@ export class Subscription {
             this.bind(new KeyboardBehaviour(this.renderer));
             this.bind(new MouseBehaviour(this.renderer));
         }
-        this.mqttSensorQueue.publishConvInteraction(this.header, attributes);
+        this.mqttSensorQueue.publishConvInteraction(this.header, {attributes, payload: {}, type: MessageType.RECEPTION});
     }
 
     public onMessage(message: object) {
