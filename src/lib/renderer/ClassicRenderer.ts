@@ -27,15 +27,15 @@ export class ClassicRenderer extends AbstractRenderer {
      */
     protected renderElement(renderable: IRenderable, containerType?: IStackeable, hasRating: boolean = false): HTMLElement[] {
         const array = [];
-        let element = renderable.render(this, containerType !== undefined);
+        const element = renderable.render(this, containerType !== undefined);
         array.push(element);
 
         // Append rating buttons to allow feedback
         if (hasRating) {
             const r: Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
-            element = r.render(this, false);
+            const ratingElement = r.render(this, false);
+            array.push(ratingElement);
         }
-        array.push(element);
 
         if (containerType === undefined) {
             if (this.needsSeparator(renderable)) {
