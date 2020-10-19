@@ -320,10 +320,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@leftshiftone/gaia-sdk@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@leftshiftone/gaia-sdk/-/gaia-sdk-2.0.3.tgz#7bc841280f21986098349e796fb6837672d1d7f8"
-  integrity sha512-6ZfNSxL0Zhj+54552uXv8kzpRnHldd4UHG7c7eCHMf4guCWvgMYNivf+AC7EF0IukpqKS58HqFvlY8cxFuf34A==
+"@leftshiftone/gaia-sdk@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@leftshiftone/gaia-sdk/-/gaia-sdk-2.1.0.tgz#1237f8d785434fb4e390645ec85d6e395b1eb2f1"
+  integrity sha512-pyx/7I/UJaUo/t6UYB9eXUXuMXVXki7HndbVcnwgKgNETtw9Mn61JnL2cvcYrtVY9YlG5ydvn1UUzGUCU8UFyw==
   dependencies:
     "@types/mqtt" "^2.5.0"
     axios "^0.19.2"
