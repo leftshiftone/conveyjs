@@ -90,6 +90,9 @@ export class Rating implements IRenderable, IStackeable {
             const type = MessageType.RATING;
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
             EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
+
+            // Possibility to hide the rating container once it has been submitted
+            this.ratingContainer.addClasses("lto-rating-submitted");
         });
     }
 
