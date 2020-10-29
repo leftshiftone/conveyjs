@@ -1,6 +1,6 @@
 {
     "name": "@leftshiftone/convey",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "description": "JavaScript connector to the G.A.I.A. ecosystem.",
     "main": "./dist/convey-std.js",
     "module": "./dist/esm5/all.js",
@@ -12,7 +12,7 @@
     "license": "MIT",
     "author": "Leftshift One Software GmbH <core-devs@leftshift.one>",
     "dependencies": {
-        "@leftshiftone/gaia-sdk": "^2.1.0",
+        "@leftshiftone/gaia-sdk": "^3.0.0",
         "@zxing/library": "^0.12.4",
         "browser-image-compression": "^1.0.6",
         "d3": "^5.8.0",
