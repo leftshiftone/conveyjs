@@ -2,6 +2,7 @@ import {Gaia} from './lib/Gaia';
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
 import {MultiTargetRenderer} from './lib/renderer/MultiTargetRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
+import {RatingRenderer} from './lib/renderer/RatingRenderer';
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
 import {KeyboardBehaviour} from './lib/behaviour/KeyboardBehaviour';
@@ -60,6 +61,7 @@ export {
     MultiTargetRenderer,
     ClassicRenderer,
     ContentCentricRenderer,
+    RatingRenderer,
     RevealJsRenderer,
     Gaia,
     MouseBehaviour,
