@@ -64,7 +64,7 @@ export class Rating implements IRenderable, IStackeable {
 
         // Comment form to be appended after rating button is clicked
         const commentForm = node("form").addClasses("lto-form");
-        commentForm.appendChild(node("input").addAttributes({type: "text"}));
+        commentForm.appendChild(node("input").addAttributes({type: "text"}).addAttributes({placeholder: "optional"}));
         const submitButton = node("button").innerText("Send rating").addClasses("lto-button");
         commentForm.appendChild(submitButton);
 
