@@ -92,7 +92,7 @@ export class Selection implements IRenderable, IStackeable {
         if (this.spec.countdownInSec !== 0) {
             setTimeout(() => {
                 this.setFinished();
-                this.publish()
+                this.publish();
             }, this.spec.countdownInSec as number * 1000);
         }
 
@@ -105,8 +105,10 @@ export class Selection implements IRenderable, IStackeable {
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
 
             // Workaround since a map with contains a map which contains an array of maps (this.values)
-            // cannot be serialized. This also removes the need to reduceToMap in the onComplete of
-            // the prompt
+            // cannot be serialized. (Failed to deserialize message from [akka://HeimdallActorSystem@127.0.0.1:25520]
+            // with serializer id [6] and manifest []. java.io.NotSerializableException: cannot handle datatype
+            // dynabuffers.ast.datatype.MapType@712d5ed4
+            // This also removes the need to reduceToMap in the onComplete of the prompt
             // Take the array of maps (selection items and choice) and convert it to single map
             // Contained in a map that has as key the selection form name
             const selectionMap = {};
