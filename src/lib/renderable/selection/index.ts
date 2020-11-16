@@ -31,6 +31,7 @@ export class Selection implements IRenderable, IStackeable {
 
     constructor(message: ISpecification) {
         this.spec = message;
+        console.log("Selection ctor this.spec", this.spec);
         this.numOfBlocks = this.spec.elements!.length;
         this.selection = document.createElement('div');
     }
@@ -103,11 +104,32 @@ export class Selection implements IRenderable, IStackeable {
         if (!this.isPublished) {
             this.selection.style.pointerEvents = "none";
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
-            const name = this.spec.name;
-            const type = MessageType.SUBMIT;
-            const payload = {value: this.values, text: this.spec.text};
-            const attributes = {name, value: this.values};
-            EventStream.emit(evType, {type, payload, attributes});
+
+            // Workaround since a map with contains a map which contains an array of maps (this.values)
+            // cannot be serialized. This also removes the need to reduceToMap in the onComplete of
+            // the prompt
+            // Take the array of maps (selection items and choice) and convert it to single map
+            // Contained in a map that has as key the selection form name
+            const selectionMap = {};
+            selectionMap[this.spec.name!!] = {};
+            for (const selectionItemAndChoice of this.values) {
+                selectionMap[this.spec.name!!][Object.keys(selectionItemAndChoice)[0]] =
+                    selectionItemAndChoice[Object.keys(selectionItemAndChoice)[0]];
+            }
+
+            const payload = {
+                type: MessageType.SUBMIT,
+                attributes: {
+                    name: this.spec.name,
+                    value: JSON.stringify(selectionMap)
+                },
+                payload: {
+                    text: this.spec.name, // Used to be this.spec.text, which is undefined
+                    value: JSON.stringify(selectionMap)
+                }
+            };
+
+            EventStream.emit(evType, payload);
 
             this.isPublished = true;
         }
