@@ -31,7 +31,6 @@ export class Selection implements IRenderable, IStackeable {
 
     constructor(message: ISpecification) {
         this.spec = message;
-        console.log("Selection ctor this.spec", this.spec);
         this.numOfBlocks = this.spec.elements!.length;
         this.selection = document.createElement('div');
     }
