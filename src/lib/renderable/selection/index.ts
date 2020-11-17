@@ -92,7 +92,7 @@ export class Selection implements IRenderable, IStackeable {
         if (this.spec.countdownInSec !== 0) {
             setTimeout(() => {
                 this.setFinished();
-                this.publish()
+                this.publish();
             }, this.spec.countdownInSec as number * 1000);
         }
 
@@ -103,11 +103,34 @@ export class Selection implements IRenderable, IStackeable {
         if (!this.isPublished) {
             this.selection.style.pointerEvents = "none";
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
-            const name = this.spec.name;
-            const type = MessageType.SUBMIT;
-            const payload = {value: this.values, text: this.spec.text};
-            const attributes = {name, value: this.values};
-            EventStream.emit(evType, {type, payload, attributes});
+
+            // Workaround since a map with contains a map which contains an array of maps (this.values)
+            // cannot be serialized. (Failed to deserialize message from [akka://HeimdallActorSystem@127.0.0.1:25520]
+            // with serializer id [6] and manifest []. java.io.NotSerializableException: cannot handle datatype
+            // dynabuffers.ast.datatype.MapType@712d5ed4
+            // This also removes the need to reduceToMap in the onComplete of the prompt
+            // Take the array of maps (selection items and choice) and convert it to single map
+            // Contained in a map that has as key the selection form name
+            const selectionMap = {};
+            selectionMap[this.spec.name!!] = {};
+            for (const selectionItemAndChoice of this.values) {
+                selectionMap[this.spec.name!!][Object.keys(selectionItemAndChoice)[0]] =
+                    selectionItemAndChoice[Object.keys(selectionItemAndChoice)[0]];
+            }
+
+            const payload = {
+                type: MessageType.SUBMIT,
+                attributes: {
+                    name: this.spec.name,
+                    value: JSON.stringify(selectionMap)
+                },
+                payload: {
+                    text: this.spec.name, // Used to be this.spec.text, which is undefined
+                    value: JSON.stringify(selectionMap)
+                }
+            };
+
+            EventStream.emit(evType, payload);
 
             this.isPublished = true;
         }
