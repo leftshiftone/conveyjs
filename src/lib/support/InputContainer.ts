@@ -84,7 +84,7 @@ export class InputContainer {
                 }
                 container.classList.remove("lto-error");
             } else {
-                if (!container.classList.contains("lto-error") {
+                if (!container.classList.contains("lto-error")) {
                     container.classList.add("lto-error");
                 }
                 const span = node("span");
