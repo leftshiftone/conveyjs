@@ -81,7 +81,7 @@ export class OffSwitchListener implements IListener {
         } else {
             this.txt.focus();
             this.txt.disabled = false;
-            this.txt.disabled = false;
+            this.btn.disabled = false;
         }
     }
 
