@@ -60,7 +60,7 @@ export class InputContainer {
                 if (required && required === "true") {
                     const basketName = this.getNormalOrDataAttribute(basket as HTMLElement, "name");
                     if (!basketName || !attributes[basketName]) {
-                        state = SubmitState.SUBMIT_REQUIRED_ERROR
+                        state = SubmitState.SUBMIT_REQUIRED_ERROR;
                     }
                 }
             });
@@ -82,7 +82,11 @@ export class InputContainer {
                     attributes = {} as Attr;
                     InputContainer.addValuesToAttributes(container, attributes);
                 }
+                container.classList.remove("lto-error");
             } else {
+                if (!container.classList.contains("lto-error")) {
+                    container.classList.add("lto-error");
+                }
                 const span = node("span");
                 span.addClasses("lto-submit-error", "lto-" + state);
                 submit.classList.add("lto-error", "lto-" + state);
