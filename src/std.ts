@@ -2,7 +2,9 @@ import {Gaia} from './lib/Gaia';
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
 import {MultiTargetRenderer} from './lib/renderer/MultiTargetRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
-import {RatingRenderer} from './lib/renderer/RatingRenderer';
+import {RatingDecorator} from './lib/renderer/decorator/RatingDecorator';
+import {AutocompleteDecorator} from "./lib/renderer/decorator/AutocompleteDecorator";
+import {IntentProvider} from "./lib/renderer/decorator/autocomplete/IntentProvider";
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
 import {KeyboardBehaviour} from './lib/behaviour/KeyboardBehaviour';
@@ -61,7 +63,9 @@ export {
     MultiTargetRenderer,
     ClassicRenderer,
     ContentCentricRenderer,
-    RatingRenderer,
+    RatingDecorator,
+    AutocompleteDecorator,
+    IntentProvider,
     RevealJsRenderer,
     Gaia,
     MouseBehaviour,

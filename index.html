@@ -25,19 +25,17 @@
 
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-        const identityId = "f007f007-f007-f007-f007-f007f007f007"
+    document.addEventListener('DOMContentLoaded', async function () {
+        const identityId = "ac6519fc-89d2-4e97-86f8-6625b5e0efbe"
         const header = new GaiaConvey.QueueHeader(identityId, "channel1")
         const renderer = new GaiaConvey.MultiTargetRenderer({
-            "channel1": new GaiaConvey.ContentCentricRenderer(),
-            "channel2": new GaiaConvey.ContentCentricRenderer()
+            "channel1": new GaiaConvey.AutocompleteDecorator(new GaiaConvey.ContentCentricRenderer(), new GaiaConvey.IntentProvider(identityId))
         })
 
-        const listener = new GaiaConvey.OffSwitchListener();
+        const listener = new GaiaConvey.DefaultListener();
 
         let gaia = new GaiaConvey.Gaia(renderer, listener);
-        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '8082', "heimdall", "admin"))
+        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "heimdall", "admin"))
             .then(connection => {
                 const subscription = connection.subscribe(GaiaConvey.ConversationQueueType.INTERACTION, header, (payload) => console.log(`1 interaction:`, payload));
                 connection.subscribe(GaiaConvey.ConversationQueueType.NOTIFICATION, header, (payload) => console.log('1 Notification:', payload));
