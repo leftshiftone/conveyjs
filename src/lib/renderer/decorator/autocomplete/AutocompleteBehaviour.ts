@@ -7,11 +7,11 @@ import {Subscription} from "../../../connection/Subscription";
 /**
  * Configuration for enabling Autocompletion for the text input field.
  *
- * @member {IAutocompleteElementProvider} elementProvider is used to load all possible autocomplete values initially.
- * @member {HTMLTextAreaElement} textInput is used as basis for the search for fitting auto completions.
- * Per default the first element with class lto-textbox is used.
+ * @member {(() => Promise<string[]>)[]} elements is used to load all possible autocomplete values initially. To enable
+ * async loading of elements, the function expects a lists of Promise factory functions.
  * @member {HTMLDivElement} dropdownElement is used as container to render the autocompletion dropdown.
  * Per default the first element with class lto-autocomplete is used.
+ * @member {HTMLButtonElement} invokerElement is clicked when an autocomplete suggestion is clicked.
  * @member {number} maxNumberOfResults is used to determine the max elements displayed in the autocomplete dropdown.
  * Default is 5.
  * @member {IIndex} index is used to store and search for autocompletion elements.
