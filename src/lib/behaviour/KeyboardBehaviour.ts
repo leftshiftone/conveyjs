@@ -34,6 +34,8 @@ export class KeyboardBehaviour extends IBehaviour {
                 EventStream.emit(evType, {type, payload: value, attributes});
 
                 element.value = "";
+                element.dispatchEvent(new Event("input", {}));
+
                 const newElement = {type: Label.TYPE, text: value, position: "right", channelId: this.channelId} as ISpecification;
                 this.renderer.render(newElement).forEach(e => {
                     this.renderer instanceof MultiTargetRenderer ?

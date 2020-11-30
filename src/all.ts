@@ -13,8 +13,7 @@ import {DefaultListener} from "./lib/listener/DefaultListener";
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
 import {RatingDecorator} from './lib/renderer/decorator/RatingDecorator';
-import {AutocompleteDecorator} from "./lib/renderer/decorator/AutocompleteDecorator";
-import {IntentProvider} from "./lib/renderer/decorator/autocomplete/IntentProvider";
+import {AutocompleteBehaviour} from "./lib/renderer/decorator/autocomplete/AutocompleteBehaviour";
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
 import {KeyboardBehaviour} from './lib/behaviour/KeyboardBehaviour';
@@ -103,8 +102,7 @@ export {
     ClassicRenderer,
     ContentCentricRenderer,
     RatingDecorator,
-    AutocompleteDecorator,
-    IntentProvider,
+    AutocompleteBehaviour,
     RevealJsRenderer,
     Gaia,
     MouseBehaviour,
