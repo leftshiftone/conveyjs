@@ -86,7 +86,7 @@
         "webpack:dev-build": "webpack --mode=development",
         "clean": "shx rm -rf dist esm5 esm2015",
         "deps": "ndc .",
-        "build": "tsc && tsc -m es2015 --outDir ./dist/esm2015 && yarn run webpack:build && yarn run copy-scss",
+        "build": "tsc && tsc -m es2015 --outDir ./dist/esm2015 && npm run webpack:build && npm run copy-scss",
         "lint": "tslint src/**/*.ts",
         "sonarqube": "jest -w 1  --env=jsdom --coverage && sonar-scanner -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.projectKey=one.leftshift.conveyjs",
         "trigger-release:major": "git pull --tags && git tag release-major && git push --tags && git tag -d release-major",
