@@ -16,7 +16,7 @@ export class RatingDecorator extends AbstractDecorator {
     /**
      * @inheritDoc
      */
-    protected renderElement(renderable: IRenderable, containerType?: IStackeable): HTMLElement[] {
+    render(renderable: IRenderable, containerType?: IStackeable): HTMLElement[] {
         const result = super.render(renderable, containerType);
 
         if (!containerType) {
@@ -37,15 +37,15 @@ export class RatingDecorator extends AbstractDecorator {
     }
 
     private static getQualifier(renderable: IRenderable) {
-        return (renderable["spec"] !== undefined) ? renderable["spec"].qualifier : null;
+        return (renderable !== undefined) ? renderable["qualifier"] : null;
     }
 
     private static getType(renderable: IRenderable) {
-        return (renderable["spec"] !== undefined) ? renderable["spec"].type : null;
+        return (renderable !== undefined) ? renderable["type"] : null;
     }
 
     private static getPosition(renderable: IRenderable) {
-        return (renderable["spec"] !== undefined) ? renderable["spec"].position : null;
+        return (renderable !== undefined) ? renderable["position"] : null;
     }
 
 }
