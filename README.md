@@ -145,9 +145,19 @@ __
 ### NoopRenderer
 No-operation dummy renderer. Mainly used for audio only use cases.
 
+### RatingDecorator
+The Rating Decorator cannot be used as standalone renderer, but instead wraps any of the previous renderers.
+It adds a rating element with thumbs up / thumbs down and comment field to every incoming message.
+On click the rating is sent and stored in the backend.
+```javascript
+const multiTargetRenderer = new MultiTargetRenderer({
+    "channel1": new RatingDecorator(new ContentCentricRenderer())
+})
+
+new Gaia(multiTargetRenderer).connect(options).then(...)
+```
 
 ## Listener
-
 A listener provides the functionality to react to certain events. Events can be:
 * Connected
 * ConnectionLost
@@ -161,6 +171,37 @@ Acts as the base listener.
 
 ### OffSwitch Listener
 If an input text area should only be visible when a input is required, this is the listener to be used.
+
+## Behaviour
+A behaviour adds event listeners to UI elements for a specific subscription.
+
+### AutocompleteBehaviour
+The autocomplete behaviour adds autocomplete suggestions for a given textarea (or the default textarea with class
+"lto-textbox") to a given div (or the default div with class "lto-autocomplete").
+As argument, it needs a provider for autocomplete candidates called elements.
+
+Required html structure:
+```html
+<div style="position: absolute">
+    <textarea title="" class="lto-textbox"></textarea>
+    <div class="lto-autocomplete"></div>
+    <button class="lto-invoker"></button>
+</div>
+```
+
+```javascript
+        const autocompleteBehaviour = new GaiaConvey.AutocompleteBehaviour({
+            elements : [() => Promise.resolve(["hello", "world", "hello world"])], // Autocomplete element provider
+            maxNumberOfResults : 3
+        })
+
+        let gaia = new GaiaConvey.Gaia(renderer, listener);
+        gaia.connect(...)
+            .then(connection => {
+                const subscription = connection.subscribe(...);
+                autocompleteBehaviour.bind(subscription);
+            });
+```
 
 
 ## Modules
