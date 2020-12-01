@@ -6,7 +6,6 @@ import {Defaults} from '../support/Defaults';
 import {Suggestion} from '../renderable/suggestion';
 import EventStream from '../event/EventStream';
 import {EventType} from "../event/EventType";
-import {Rating} from "../renderable/rating";
 
 /**
  * The classic renderer renders the G.A.I.A. messages in a classic top-down manner.
@@ -25,17 +24,10 @@ export class ClassicRenderer extends AbstractRenderer {
     /**
      * @inheritDoc
      */
-    protected renderElement(renderable: IRenderable, containerType?: IStackeable, hasRating: boolean = false): HTMLElement[] {
+    protected renderElement(renderable: IRenderable, containerType?: IStackeable): HTMLElement[] {
         const array = [];
         const element = renderable.render(this, containerType !== undefined);
         array.push(element);
-
-        // Append rating buttons to allow feedback
-        if (hasRating) {
-            const r: Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
-            const ratingElement = r.render(this, false);
-            array.push(ratingElement);
-        }
 
         if (containerType === undefined) {
             if (this.needsSeparator(renderable)) {

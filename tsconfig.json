@@ -12,6 +12,7 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noImplicitAny": true,
+        "skipLibCheck": true,
         "strict": true,
         "suppressImplicitAnyIndexErrors": true,
         "noUnusedLocals": true,
@@ -31,5 +32,5 @@
         "./src/aud.ts",
         "./src/cod.ts"
     ],
-    "compileOnSave": false,
+    "compileOnSave": false
 }

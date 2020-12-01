@@ -6,9 +6,15 @@
     <link rel="stylesheet" href="dist/convey-all.css">
     <script src="dist/convey-all.js"></script>
     <style>
-        .lto-upload {
-            background: green;
-            width: 50px;
+        .lto-dropdirection-down {
+            position: absolute;
+            margin-top: 1px;
+        }
+
+        .lto-dropdirection-up {
+            position: absolute;
+            margin-top: 1px;
+            bottom: 100%;
         }
     </style>
 </head>
@@ -27,20 +33,23 @@
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
         const identityId = "f007f007-f007-f007-f007-f007f007f007"
-        const header = new GaiaConvey.QueueHeader(identityId, "channel1")
+
+        const autocompleteBehaviour = new GaiaConvey.AutocompleteBehaviour({
+            elements : [() => Promise.resolve(["hello", "world", "hello world"])], // Autocomplete elements
+            maxNumberOfResults : 3
+        })
+
         const renderer = new GaiaConvey.MultiTargetRenderer({
             "channel1": new GaiaConvey.ContentCentricRenderer()
         })
 
         const listener = new GaiaConvey.DefaultListener();
-
+        const header = new GaiaConvey.QueueHeader(identityId, "channel1")
         let gaia = new GaiaConvey.Gaia(renderer, listener);
         gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "heimdall", "admin"))
             .then(connection => {
                 const subscription = connection.subscribe(GaiaConvey.ConversationQueueType.INTERACTION, header, (payload) => console.log(`1 interaction:`, payload));
-                connection.subscribe(GaiaConvey.ConversationQueueType.NOTIFICATION, header, (payload) => console.log('1 Notification:', payload));
-                connection.subscribe(GaiaConvey.ConversationQueueType.LOGGING, header, (payload) => console.log('1 Log:', payload))
-                connection.subscribe(GaiaConvey.ConversationQueueType.CONTEXT, header, (payload) => console.log('1 context:', payload))
+                autocompleteBehaviour.bind(subscription);
                 subscription.reception({"abc": "abc"});
             });
     });

@@ -2,7 +2,7 @@ import {Gaia} from './lib/Gaia';
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
 import {MultiTargetRenderer} from './lib/renderer/MultiTargetRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
-import {RatingRenderer} from './lib/renderer/RatingRenderer';
+import {RatingDecorator} from './lib/renderer/decorator/RatingDecorator';
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
 import {KeyboardBehaviour} from './lib/behaviour/KeyboardBehaviour';
@@ -54,6 +54,7 @@ import {Basket} from "./lib/renderable/basket";
 import {SelectionItem} from './lib/renderable/selectionItem';
 import {Selectable} from './lib/renderable/selectable';
 import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
+import { AutocompleteBehaviour } from './lib/renderer/decorator/autocomplete/AutocompleteBehaviour';
 
 export * from './lib/api';
 export {
@@ -61,7 +62,8 @@ export {
     MultiTargetRenderer,
     ClassicRenderer,
     ContentCentricRenderer,
-    RatingRenderer,
+    RatingDecorator,
+    AutocompleteBehaviour,
     RevealJsRenderer,
     Gaia,
     MouseBehaviour,
