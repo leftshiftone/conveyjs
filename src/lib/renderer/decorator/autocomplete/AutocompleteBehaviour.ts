@@ -25,8 +25,9 @@ interface AutocompleteConfig {
 }
 
 /**
- * The autocomplete decorator adds an autocomplete mechanism
- * for the user input.
+ * The autocomplete behaviour adds an autocomplete mechanism
+ * for the user input. The possible autocomplete entries
+ * need to be provided via config.
  */
 export class AutocompleteBehaviour extends IBehaviour {
     private readonly index: IIndex;

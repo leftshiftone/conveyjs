@@ -1,4 +1,4 @@
-import {IRenderable, IRenderer, IStackeable} from '../../api';
+import { IRenderer, ISpecification, IStackeable} from '../../api';
 import {AbstractDecorator} from "./AbstractDecorator";
 import {Rating} from "../../renderable/rating";
 
@@ -16,7 +16,7 @@ export class RatingDecorator extends AbstractDecorator {
     /**
      * @inheritDoc
      */
-    render(renderable: IRenderable, containerType?: IStackeable): HTMLElement[] {
+    render(renderable: ISpecification, containerType?: IStackeable): HTMLElement[] {
         const result = super.render(renderable, containerType);
 
         if (!containerType) {
@@ -36,16 +36,15 @@ export class RatingDecorator extends AbstractDecorator {
         return result;
     }
 
-    private static getQualifier(renderable: IRenderable) {
+    private static getQualifier(renderable: ISpecification) {
         return (renderable !== undefined) ? renderable["qualifier"] : null;
     }
 
-    private static getType(renderable: IRenderable) {
+    private static getType(renderable: ISpecification) {
         return (renderable !== undefined) ? renderable["type"] : null;
     }
 
-    private static getPosition(renderable: IRenderable) {
+    private static getPosition(renderable: ISpecification) {
         return (renderable !== undefined) ? renderable["position"] : null;
     }
-
 }
