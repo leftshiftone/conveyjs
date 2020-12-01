@@ -178,7 +178,7 @@ A behaviour adds event listeners to UI elements for a specific subscription.
 ### AutocompleteBehaviour
 The autocomplete behaviour adds autocomplete suggestions for a given textarea (or the default textarea with class
 "lto-textbox") to a given div (or the default div with class "lto-autocomplete").
-As argument, it needs a provider for autocomplete candidates called elements.
+Provide the autocomplete elements through the add-method.
 
 Required html structure:
 ```html
@@ -191,9 +191,9 @@ Required html structure:
 
 ```javascript
         const autocompleteBehaviour = new GaiaConvey.AutocompleteBehaviour({
-            elements : [() => Promise.resolve(["hello", "world", "hello world"])], // Autocomplete element provider
             maxNumberOfResults : 3
         })
+        ["hello", "world", "hello world", "hello1", "hello 123"].forEach(e => autocompleteBehaviour.add(e));
 
         let gaia = new GaiaConvey.Gaia(renderer, listener);
         gaia.connect(...)

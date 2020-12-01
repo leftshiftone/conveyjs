@@ -1,5 +1,5 @@
 import {Index} from "flexsearch";
-import {IIndex} from "../../../../api";
+import {IIndex} from "../../../api";
 
 interface IDocument {
     text: string;
