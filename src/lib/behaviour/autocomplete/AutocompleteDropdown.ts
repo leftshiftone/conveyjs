@@ -1,4 +1,4 @@
-import node from "../../../support/node";
+import node from "../../support/node";
 
 export class AutocompleteDropdown {
     readonly dropdownElement: HTMLDivElement;
@@ -24,7 +24,7 @@ export class AutocompleteDropdown {
         if (elements.length > 0) {
             elements.forEach(element => {
                 const elementNode = node("div").addClasses("dropdown-item").innerText(element).unwrap();
-                elementNode.addEventListener("click", this.onClickCallback.bind(this));
+                elementNode.addEventListener("click", this.onClickCallback);
                 this.dropdownElement.appendChild(elementNode);
             });
             this.toggleDropDirection();
@@ -37,7 +37,7 @@ export class AutocompleteDropdown {
     }
 
     private clearElements() {
-        this.dropdownElement.childNodes.forEach(node => node.removeEventListener("click", this.onClickCallback.bind(this)));
+        this.dropdownElement.childNodes.forEach(node => node.removeEventListener("click", this.onClickCallback));
         this.dropdownElement.innerHTML = "";
     }
 

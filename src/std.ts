@@ -54,7 +54,7 @@ import {Basket} from "./lib/renderable/basket";
 import {SelectionItem} from './lib/renderable/selectionItem';
 import {Selectable} from './lib/renderable/selectable';
 import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
-import { AutocompleteBehaviour } from './lib/renderer/decorator/autocomplete/AutocompleteBehaviour';
+import { AutocompleteBehaviour } from './lib/behaviour/AutocompleteBehaviour';
 
 export * from './lib/api';
 export {

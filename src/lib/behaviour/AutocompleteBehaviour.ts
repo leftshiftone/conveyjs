@@ -1,14 +1,12 @@
-import {Defaults} from "../../../support/Defaults";
-import {IIndex, IBehaviour} from "../../../api";
-import {FlexSearchIndex} from "./index/FlexSearchIndex";
-import {AutocompleteDropdown} from "./AutocompleteDropdown";
-import {Subscription} from "../../../connection/Subscription";
+import {Defaults} from "../support/Defaults";
+import {IIndex, IBehaviour} from "../api";
+import {FlexSearchIndex} from "./autocomplete/index/FlexSearchIndex";
+import {AutocompleteDropdown} from "./autocomplete/AutocompleteDropdown";
+import {Subscription} from "../connection/Subscription";
 
 /**
  * Configuration for enabling Autocompletion for the text input field.
  *
- * @member {(() => Promise<string[]>)[]} elements is used to load all possible autocomplete values initially. To enable
- * async loading of elements, the function expects a lists of Promise factory functions.
  * @member {HTMLDivElement} dropdownElement is used as container to render the autocompletion dropdown.
  * Per default the first element with class lto-autocomplete is used.
  * @member {HTMLButtonElement} invokerElement is clicked when an autocomplete suggestion is clicked.
@@ -17,7 +15,6 @@ import {Subscription} from "../../../connection/Subscription";
  * @member {IIndex} index is used to store and search for autocompletion elements.
  */
 interface AutocompleteConfig {
-    elements: (() => Promise<string[]>)[];
     dropdownElement?: HTMLDivElement;
     invokerElement?: HTMLButtonElement;
     maxNumberOfResults?: number;
@@ -27,7 +24,7 @@ interface AutocompleteConfig {
 /**
  * The autocomplete behaviour adds an autocomplete mechanism
  * for the user input. The possible autocomplete entries
- * need to be provided via config.
+ * need to be added via add method.
  */
 export class AutocompleteBehaviour extends IBehaviour {
     private readonly index: IIndex;
@@ -44,15 +41,10 @@ export class AutocompleteBehaviour extends IBehaviour {
             textbox.value = (event.currentTarget as HTMLElement).innerText;
             (config.invokerElement || Defaults.invoker()).click();
         });
-        this.addElements(config.elements);
     }
 
-    private addElements(elementFactories: (() => Promise<string[]>)[]) {
-        let addElementsPromise = Promise.resolve();
-        elementFactories.forEach(promiseFactory => {
-            addElementsPromise = addElementsPromise.then(promiseFactory)
-                .then(elements => elements.forEach(utterance => this.index.add(utterance)));
-        });
+    public add(element: string) {
+        this.index.add(element);
     }
 
     bind(gateway: Subscription) {

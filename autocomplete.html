@@ -34,10 +34,8 @@
     document.addEventListener('DOMContentLoaded', async function () {
         const identityId = "f007f007-f007-f007-f007-f007f007f007"
 
-        const autocompleteBehaviour = new GaiaConvey.AutocompleteBehaviour({
-            elements : [() => Promise.resolve(["hello", "world", "hello world"])], // Autocomplete elements
-            maxNumberOfResults : 3
-        })
+        const autocompleteBehaviour = new GaiaConvey.AutocompleteBehaviour({maxNumberOfResults: 3});
+        ["hello", "world", "hello world", "hello1", "hello 123", "test1"].forEach(e => autocompleteBehaviour.add(e));
 
         const renderer = new GaiaConvey.MultiTargetRenderer({
             "channel1": new GaiaConvey.ContentCentricRenderer()
