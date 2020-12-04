@@ -34,5 +34,13 @@ describe("FlexSearchIndex test", () => {
                 .then(result => expect(result.length).toEqual(2));
         });
 
+
+    it("configuration affects index", () => {
+        const index = new FlexSearchIndex({encode: "extra"});
+        index.add("test ok yes");
+
+        return index.search("tst k yes", 5)
+            .then(result => expect(result.length).toEqual(1));
+    });
     }
 );

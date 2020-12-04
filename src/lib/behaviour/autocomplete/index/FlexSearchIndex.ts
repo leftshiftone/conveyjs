@@ -1,4 +1,4 @@
-import {Index} from "flexsearch";
+import {CreateOptions, Index} from "flexsearch";
 import {IIndex} from "../../../api";
 
 interface IDocument {
@@ -9,9 +9,8 @@ export class FlexSearchIndex implements IIndex {
 
     readonly flexSearch: Index<IDocument>;
 
-    constructor() {
-        const flexsearch = require('flexsearch');
-        this.flexSearch = flexsearch.create({
+    constructor(customConfig: CreateOptions = {}) {
+        const config = Object.assign({
             encode: "advanced",
             tokenize: "reverse",
             suggest: true,
@@ -20,7 +19,10 @@ export class FlexSearchIndex implements IIndex {
                 id: "text",
                 field: ["text"]
             }
-        });
+        }, customConfig);
+
+        const flexsearch = require('flexsearch');
+        this.flexSearch = flexsearch.create(config);
     }
 
     add(element: string): void {
@@ -29,11 +31,11 @@ export class FlexSearchIndex implements IIndex {
 
     search(query: string, limit: number = 10): Promise<string[]> {
         return new Promise<IDocument[]>((resolve, reject) =>
-        this.flexSearch.search({
-            query,
-            field: "text",
-            limit
-        }, result => resolve(result)))
+            this.flexSearch.search({
+                query,
+                field: "text",
+                limit
+            }, result => resolve(result)))
             .then(result => result.map(element => element.text));
     }
 
