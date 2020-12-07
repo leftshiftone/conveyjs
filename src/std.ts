@@ -55,6 +55,7 @@ import {SelectionItem} from './lib/renderable/selectionItem';
 import {Selectable} from './lib/renderable/selectable';
 import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
 import { AutocompleteBehaviour } from './lib/behaviour/AutocompleteBehaviour';
+import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIndex';
 
 export * from './lib/api';
 export {
@@ -63,6 +64,7 @@ export {
     ClassicRenderer,
     ContentCentricRenderer,
     RatingDecorator,
+    FlexSearchIndex,
     AutocompleteBehaviour,
     RevealJsRenderer,
     Gaia,

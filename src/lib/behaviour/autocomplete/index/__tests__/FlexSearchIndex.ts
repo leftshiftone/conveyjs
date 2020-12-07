@@ -42,5 +42,15 @@ describe("FlexSearchIndex test", () => {
         return index.search("tst k yes", 5)
             .then(result => expect(result.length).toEqual(1));
     });
+
+    it("clear removes all elements", () => {
+        const index = new FlexSearchIndex();
+        index.add("abc");
+        index.add("abcd");
+        index.clear();
+
+        return index.search("abc", 10)
+            .then(result => expect(result.length).toEqual(0));
+    });
     }
 );
