@@ -88,6 +88,7 @@ import {Rating} from './lib/renderable/rating';
 import {Connection} from './lib/connection/Connection';
 import {Subscription} from './lib/connection/Subscription';
 import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
+import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIndex';
 export * from './lib/api';
 export {
     ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
@@ -102,6 +103,7 @@ export {
     ClassicRenderer,
     ContentCentricRenderer,
     RatingDecorator,
+    FlexSearchIndex,
     AutocompleteBehaviour,
     RevealJsRenderer,
     Gaia,

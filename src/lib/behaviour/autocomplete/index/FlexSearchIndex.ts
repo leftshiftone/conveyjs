@@ -39,4 +39,7 @@ export class FlexSearchIndex implements IIndex {
             .then(result => result.map(element => element.text));
     }
 
+    clear(): void {
+        this.flexSearch.clear();
+    }
 }

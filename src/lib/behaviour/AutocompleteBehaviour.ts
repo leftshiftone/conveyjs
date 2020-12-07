@@ -47,6 +47,10 @@ export class AutocompleteBehaviour extends IBehaviour {
         this.index.add(element);
     }
 
+    public clear() {
+        this.index.clear();
+    }
+
     bind(gateway: Subscription) {
         super.bind(gateway);
         this.autocompleteDropdown.bind();
@@ -55,6 +59,7 @@ export class AutocompleteBehaviour extends IBehaviour {
     unbind() {
         super.unbind();
         this.autocompleteDropdown.unbind();
+        this.clear();
     }
 
     private onKeydown(textbox: HTMLTextAreaElement) {
