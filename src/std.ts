@@ -1,6 +1,5 @@
 import {Gaia} from './lib/Gaia';
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
-import {MultiTargetRenderer} from './lib/renderer/MultiTargetRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
 import {RatingDecorator} from './lib/renderer/decorator/RatingDecorator';
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
@@ -56,11 +55,15 @@ import {Selectable} from './lib/renderable/selectable';
 import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
 import { AutocompleteBehaviour } from './lib/behaviour/AutocompleteBehaviour';
 import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIndex';
+import {Connection} from "./lib/connection/Connection";
+import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
+import {NotificationSubscription, LoggingSubscription, ContextSubscription} from "./lib/connection/Subscription";
 
 export * from './lib/api';
 export {
+    Connection,
+    NotificationSubscription, LoggingSubscription, ContextSubscription, InteractionSubscription,
     ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
-    MultiTargetRenderer,
     ClassicRenderer,
     ContentCentricRenderer,
     RatingDecorator,

@@ -4,7 +4,6 @@ import {MessageType} from "../support/MessageType";
 import {Label} from "../renderable/label";
 import EventStream from "../event/EventStream";
 import {EventType} from "../event/EventType";
-import {MultiTargetRenderer} from "../renderer/MultiTargetRenderer";
 
 /**
  * IBehaviour implementation which listens for a mouse click event in order to publish
@@ -38,9 +37,7 @@ export class MouseBehaviour extends IBehaviour {
 
             const newElement = {type: Label.TYPE, text: value, position: "right", channelId: this.channelId} as ISpecification;
             this.renderer.render(newElement).forEach(e => {
-                this.renderer instanceof MultiTargetRenderer ?
-                    this.renderer.appendContent(e, this.channelId!) :
-                    this.renderer.appendContent(e);
+                this.renderer.appendContent(e);
             });
 
             if (this.callback !== undefined) {

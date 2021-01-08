@@ -1,33 +1,21 @@
 import {ConversationQueueType, MqttSensorQueue, QueueCallback, QueueHeader} from "@leftshiftone/gaia-sdk/dist";
-import {KeyboardBehaviour} from "../behaviour/KeyboardBehaviour";
-import {MouseBehaviour} from "../behaviour/MouseBehaviour";
-import {IBehaviour, IRenderer, ISpecification} from "../api";
-import EventStream from "../event/EventStream";
-import {EventType} from "../event/EventType";
+import {IBehaviour} from "../api";
 import {IEventPayload} from "../api/IEvent";
-import {MultiTargetRenderer} from "../renderer/MultiTargetRenderer";
-import {MessageType} from "../support/MessageType";
 
-export class Subscription {
+export abstract class Subscription {
     public type: ConversationQueueType;
     public header: QueueHeader;
     public callback: QueueCallback;
     public mqttSensorQueue: MqttSensorQueue;
-    public renderer: IRenderer;
-    private readonly behaviourBind: Array<IBehaviour> = [];
+    public behaviourBind: Array<IBehaviour> = [];
 
-    constructor(type: ConversationQueueType, header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue, renderer: IRenderer) {
+    protected constructor(type: ConversationQueueType, header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
         this.type = type;
         this.header = header;
         this.callback = callback;
-        this.renderer = renderer;
         this.mqttSensorQueue = mqttSensorQueue;
 
         this.mqttSensorQueue.subscribe(type, header, callback);
-        if (this.type === ConversationQueueType.INTERACTION) {
-            const ev = EventType.withChannelId(EventType.PUBLISH, this.header.channelId);
-            EventStream.addListener(ev, (e:IEventPayload) => this.publish(e[0]));
-        }
     }
 
     /**
@@ -47,32 +35,6 @@ export class Subscription {
         this.mqttSensorQueue.publish(this.type, this.header, payload.payload, payload.attributes, payload.type)
 
     /**
-     * Initial request to make the system aware that the user is listening.
-     */
-    public reception(attributes: object) {
-        if (this.behaviourBind.length === 0) {
-            this.bind(new KeyboardBehaviour(this.renderer));
-            this.bind(new MouseBehaviour(this.renderer));
-        }
-        this.mqttSensorQueue.publishConvInteraction(this.header, {attributes, payload: {}, type: MessageType.RECEPTION});
-    }
-
-    public onMessage(message: object) {
-        if (this.type === ConversationQueueType.INTERACTION) {
-            let spec = message as ISpecification;
-            if (spec.type !== "reception" && spec.elements) {
-                spec = Object.assign(spec, {position: 'left', channelId: this.header.channelId});
-                this.renderer.render(spec).forEach(element => {
-                    this.renderer instanceof MultiTargetRenderer ?
-                        this.renderer.appendContent(element, this.header.channelId) :
-                        this.renderer.appendContent(element);
-                });
-            }
-        }
-        this.mqttSensorQueue.callback(this.getTopic(), message);
-    }
-
-    /**
      * Binds the given IBehaviour to the Subscription.
      *
      * @param behaviour
@@ -83,6 +45,27 @@ export class Subscription {
         this.behaviourBind.push(behaviour);
     }
 
-    private getTopic = () => this.mqttSensorQueue.getTopic(this.type, this.header);
+    public onMessage(message: object) {
+        this.mqttSensorQueue.callback(this.getTopic(), message);
+    }
 
+    public getTopic = () => this.mqttSensorQueue.getTopic(this.type, this.header);
+}
+
+export class ContextSubscription extends Subscription {
+    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
+        super(ConversationQueueType.CONTEXT, header, callback, mqttSensorQueue);
+    }
+}
+
+export class NotificationSubscription extends Subscription {
+    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
+        super(ConversationQueueType.NOTIFICATION, header, callback, mqttSensorQueue);
+    }
+}
+
+export class LoggingSubscription extends Subscription {
+    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
+        super(ConversationQueueType.LOGGING, header, callback, mqttSensorQueue);
+    }
 }
