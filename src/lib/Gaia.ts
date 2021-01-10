@@ -12,7 +12,7 @@ export class Gaia {
     }
 
     /**
-     * Connect the client to the G.A.I.A ecosystem.
+     * Connect the client to AIOS.
      *
      * @param options the ID of the identity
      */

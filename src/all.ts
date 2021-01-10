@@ -1,5 +1,4 @@
 import {Gaia} from './lib/Gaia';
-import {ChannelType} from './lib/support/ChannelType';
 import {OffSwitchListener} from './lib/listener/OffSwitchListener';
 import {Defaults} from './lib/support/Defaults';
 import {Navigator} from './lib/support/Navigator';
@@ -108,7 +107,6 @@ export {
     Gaia,
     MouseBehaviour,
     KeyboardBehaviour,
-    ChannelType,
     OffSwitchListener,
     Defaults,
     Navigator,

@@ -4,9 +4,11 @@
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/leftshiftone/conveyjs.svg?style=flat-square)](https://github.com/leftshiftone/conveyjs)
 [![npm (scoped)](https://img.shields.io/npm/v/@leftshiftone/convey?style=flat-square)](https://www.npmjs.com/package/@leftshiftone/convey)
 
-Convey is a JavaScript Framework for connecting to processes created with [G.A.I.A.](https://www.leftshift.one/produkt/gaia-services/).
+Convey is a JavaScript Framework for connecting to processes created
+with [AIOS](https://www.leftshiftone.com/product/ai-operating-system/).
 
-The framework ist compatible with all major Browsers and can be used standalone as well as in conjunction with React, Angular or Vue.
+The framework ist compatible with all major Browsers and can be used
+standalone as well as in conjunction with React, Angular or Vue.
 
 ### Prerequisites
 [//]: <> (TODO: Create sample project to demonstrate integration)
@@ -49,7 +51,7 @@ Import Convey
 </head>
 ```
 
-Connect to the G.A.I.A. ecosystem
+Connect to AIOS
 ```html
 <script type="text/javascript">
     const header = new GaiaConvey.QueueHeader("anyIdentityId", "optionalChannelId")
@@ -72,7 +74,7 @@ Import Convey
 import {Gaia, ContentCentricRenderer, OffSwitchListener, ConversationQueueType, QueueOptions} from "@leftshiftone/convey";
 ```
 
-Connect to the G.A.I.A. ecosystem
+Connect to AIOS
 ```javascript
 const header = new QueueHeader("anyIdentityId", "optionalChannelId")
 
@@ -94,22 +96,22 @@ import '@leftshiftone/convey/dist/convey-all.css';
 
 ## Queues
 
-The communication with G.A.I.A. contains several queueTypes where each one has its own purpose.
+The communication with AIOS contains several queueTypes where each one has its own purpose.
 
 ### INTERACTION
 The Interaction queue is the main queue and is responsible for exchanging the elements configured in
-G.A.I.A.. Convey automatically subscribes to this queue by calling `interactionSubscription.reception()`.
+AIOS. Convey automatically subscribes to this queue by calling `interactionSubscription.reception()`.
 The messages in this queue are rendered to HTML elements.
 
 ### CONTEXT
-The Context consists of attributes defined in the G.A.I.A. BPMN process. It can be received by
+The Context consists of attributes defined in the AIOS BPMN process. It can be received by
 subscribing to this queue.
 
 ### NOTIFICATION
-Each notification configured in the G.A.I.A. BPMN process can be received if subscribed to this queue.
+Each notification configured in the AIOS BPMN process can be received if subscribed to this queue.
 
 ### LOGGING
-G.A.I.A. sends logs for certain process executions which can be received by subscribing to this queue.
+AIOS sends logs for certain process executions which can be received by subscribing to this queue.
 
 
 ## Renderer
@@ -128,7 +130,7 @@ new Gaia().connect( ... )
 ```
 
 ### Classic Renderer
-The classic renderer renders the G.A.I.A. messages in a classic top-down manner.
+The classic renderer renders the messages in a classic top-down manner.
 
 ### Content Centric Renderer
 The content centric renderer tries to maximize the time a content is visible by updating the content
@@ -168,7 +170,7 @@ A listener provides the functionality to react to certain events. Events can be:
 Acts as the base listener.
 
 ### OffSwitch Listener
-If an input text area should only be visible when a input is required, this is the listener to be used.
+If an input text area should only be visible when an input is required, this is the listener to be used.
 
 
 ## Behaviour

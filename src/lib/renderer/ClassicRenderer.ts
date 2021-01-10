@@ -8,7 +8,7 @@ import EventStream from '../event/EventStream';
 import {EventType} from "../event/EventType";
 
 /**
- * The classic renderer renders the G.A.I.A. messages in a classic top-down manner.
+ * The classic renderer renders the AIOS messages in a classic top-down manner.
  */
 export class ClassicRenderer extends AbstractRenderer {
 

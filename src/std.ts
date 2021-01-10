@@ -5,7 +5,6 @@ import {RatingDecorator} from './lib/renderer/decorator/RatingDecorator';
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
 import {KeyboardBehaviour} from './lib/behaviour/KeyboardBehaviour';
-import {ChannelType} from './lib/support/ChannelType';
 import {OffSwitchListener} from './lib/listener/OffSwitchListener';
 import {Defaults} from './lib/support/Defaults';
 import {Block} from './lib/renderable/block';
@@ -73,7 +72,6 @@ export {
     Gaia,
     MouseBehaviour,
     KeyboardBehaviour,
-    ChannelType,
     OffSwitchListener,
     Defaults,
     Renderables,
