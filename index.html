@@ -32,7 +32,7 @@
         const listener = new GaiaConvey.DefaultListener();
 
         let gaia = new GaiaConvey.Gaia(listener);
-        gaia.connect(new GaiaConvey.QueueOptions('url', 'port', "username", "password"))
+        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "heimdall", "admin"))
             .then(connection => {
                 const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer());
                 connection.subscribeNotification(header, (payload) => console.log('Notification:', payload));
