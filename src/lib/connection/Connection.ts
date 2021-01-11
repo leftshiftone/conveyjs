@@ -1,12 +1,13 @@
 import {
-    QueueHeader,
-    QueueOptions,
+    ConversationQueueType,
     MqttSensorQueue,
     QueueCallback,
+    QueueHeader,
+    QueueOptions,
 } from "@leftshiftone/gaia-sdk/dist";
 import {IListener, IPacket, IRenderer, ISpecification} from "../api";
 import EventStream from "../event/EventStream";
-import {ContextSubscription, LoggingSubscription, NotificationSubscription, Subscription} from "./Subscription";
+import {Subscription} from "./Subscription";
 import {InteractionSubscription} from "./InteractionSubscription";
 
 export class Connection {
@@ -27,7 +28,7 @@ export class Connection {
      * @param callback the callback function
      */
     public subscribeContext(header: QueueHeader, callback: QueueCallback) {
-        const subscription = new ContextSubscription(header, callback, this.mqttSensorQueue);
+        const subscription = new Subscription(ConversationQueueType.CONTEXT, header, callback, this.mqttSensorQueue);
         this.setSubscription(subscription);
         return subscription;
     }
@@ -39,7 +40,7 @@ export class Connection {
      * @param callback the callback function
      */
     public subscribeNotification(header: QueueHeader, callback: QueueCallback) {
-        const subscription = new NotificationSubscription(header, callback, this.mqttSensorQueue);
+        const subscription = new Subscription(ConversationQueueType.NOTIFICATION, header, callback, this.mqttSensorQueue);
         this.setSubscription(subscription);
         return subscription;
     }
@@ -51,7 +52,7 @@ export class Connection {
      * @param callback the callback function
      */
     public subscribeLogging(header: QueueHeader, callback: QueueCallback) {
-        const subscription = new LoggingSubscription(header, callback, this.mqttSensorQueue);
+        const subscription = new Subscription(ConversationQueueType.LOGGING, header, callback, this.mqttSensorQueue);
         this.setSubscription(subscription);
         return subscription;
     }

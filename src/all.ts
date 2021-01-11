@@ -84,7 +84,7 @@ import {SelectionItem} from "./lib/renderable/selectionItem";
 import {Selectable} from "./lib/renderable/selectable";
 import {Rating} from './lib/renderable/rating';
 import {Connection} from './lib/connection/Connection';
-import {NotificationSubscription, LoggingSubscription, ContextSubscription} from './lib/connection/Subscription';
+import {Subscription} from './lib/connection/Subscription';
 import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
 import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
 import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIndex';
@@ -182,7 +182,5 @@ export {
     Rating,
     Connection,
     InteractionSubscription,
-    ContextSubscription,
-    NotificationSubscription,
-    LoggingSubscription
+    Subscription
 };

@@ -2,14 +2,14 @@ import {ConversationQueueType, MqttSensorQueue, QueueCallback, QueueHeader} from
 import {IBehaviour} from "../api";
 import {IEventPayload} from "../api/IEvent";
 
-export abstract class Subscription {
+export class Subscription {
     public type: ConversationQueueType;
     public header: QueueHeader;
     public callback: QueueCallback;
     public mqttSensorQueue: MqttSensorQueue;
     public behaviourBind: Array<IBehaviour> = [];
 
-    protected constructor(type: ConversationQueueType, header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
+    constructor(type: ConversationQueueType, header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
         this.type = type;
         this.header = header;
         this.callback = callback;
@@ -50,22 +50,4 @@ export abstract class Subscription {
     }
 
     public getTopic = () => this.mqttSensorQueue.getTopic(this.type, this.header);
-}
-
-export class ContextSubscription extends Subscription {
-    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
-        super(ConversationQueueType.CONTEXT, header, callback, mqttSensorQueue);
-    }
-}
-
-export class NotificationSubscription extends Subscription {
-    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
-        super(ConversationQueueType.NOTIFICATION, header, callback, mqttSensorQueue);
-    }
-}
-
-export class LoggingSubscription extends Subscription {
-    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
-        super(ConversationQueueType.LOGGING, header, callback, mqttSensorQueue);
-    }
 }

@@ -56,12 +56,13 @@ import { AutocompleteBehaviour } from './lib/behaviour/AutocompleteBehaviour';
 import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIndex';
 import {Connection} from "./lib/connection/Connection";
 import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
-import {NotificationSubscription, LoggingSubscription, ContextSubscription} from "./lib/connection/Subscription";
+import {Subscription} from "./lib/connection/Subscription";
 
 export * from './lib/api';
 export {
     Connection,
-    NotificationSubscription, LoggingSubscription, ContextSubscription, InteractionSubscription,
+    Subscription,
+    InteractionSubscription,
     ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
     ClassicRenderer,
     ContentCentricRenderer,
