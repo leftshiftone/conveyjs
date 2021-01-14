@@ -1,4 +1,4 @@
-import { IRenderer, ISpecification, IStackeable} from '../../api';
+import {IRenderer, ISpecification, IStackeable} from '../../api';
 import {AbstractDecorator} from "./AbstractDecorator";
 import {Rating} from "../../renderable/rating";
 
@@ -24,12 +24,13 @@ export class RatingDecorator extends AbstractDecorator {
 
             const type = RatingDecorator.getType(renderable);
             const position = RatingDecorator.getPosition(renderable);
+            const childType = (renderable.elements || [{type: undefined}])[0].type;
 
-            if (type === "container" && position === "left" && qualifier !== null) {
+            if (type === "container" && position === "left" && qualifier !== null && childType === "rating") {
                 // Append rating buttons to allow feedback
                 const r: Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
                 const ratingElement = r.render(this, false);
-                result.splice(1, 0, ratingElement);
+                result.push(ratingElement);
             }
         }
 
