@@ -8,44 +8,44 @@ import {Rating} from "../../renderable/rating";
  * to allow users to give feedback.
  */
 export class RatingDecorator extends AbstractDecorator {
+    private readonly ratingsEnabledByDefault: boolean;
 
-    constructor(renderer: IRenderer) {
+    constructor(renderer: IRenderer, ratingsEnabledByDefault = true) {
         super(renderer);
+        this.ratingsEnabledByDefault = ratingsEnabledByDefault;
     }
 
     /**
-     * @inheritDoc
+     * Appends a rating to eligible interaction root containers. A container is eligible for rating rendering if
+     * the rating markup element is specified and the enabled attribute is not set to false. A container is also
+     * eligible for rating rendering if no rating markup element is specified and ratingsEnabledByDefault is set to
+     * true.
+     *
+     * @param renderable the renderable specification which was received
+     * @param containerType the parent container of the current renderable
      */
     render(renderable: ISpecification, containerType?: IStackeable): HTMLElement[] {
         const result = super.render(renderable, containerType);
 
-        if (!containerType) {
-            const qualifier = RatingDecorator.getQualifier(renderable);
-
-            const type = RatingDecorator.getType(renderable);
-            const position = RatingDecorator.getPosition(renderable);
-            const childType = (renderable.elements || [{type: undefined}])[0].type;
-
-            if (type === "container" && position === "left" && qualifier !== null && childType === "rating") {
-                // Append rating buttons to allow feedback
-                const r: Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
-                const ratingElement = r.render(this, false);
-                result.push(ratingElement);
-            }
+        if (!containerType && this.shouldRenderRatingFor(renderable)) {
+            // Append rating buttons to allow feedback
+            const r: Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
+            const ratingElement = r.render(this, false);
+            result.push(ratingElement);
         }
-
         return result;
     }
 
-    private static getQualifier(renderable: ISpecification) {
-        return (renderable !== undefined) ? renderable["qualifier"] : null;
+    private shouldRenderRatingFor(renderable: ISpecification): boolean {
+        if (!RatingDecorator.isRootContainerOfInteraction(renderable)) return false;
+        const child = (renderable.elements || [{type: undefined, enabled: undefined}])[0];
+        return (child.type === "rating" && child.enabled === true) || (this.ratingsEnabledByDefault && child.enabled !== false);
+
     }
 
-    private static getType(renderable: ISpecification) {
-        return (renderable !== undefined) ? renderable["type"] : null;
-    }
-
-    private static getPosition(renderable: ISpecification) {
-        return (renderable !== undefined) ? renderable["position"] : null;
+    private static isRootContainerOfInteraction(renderable: ISpecification) {
+        return renderable["type"] === "container"
+            && renderable["position"] === "left"
+            && renderable["qualifier"] !== null;
     }
 }
