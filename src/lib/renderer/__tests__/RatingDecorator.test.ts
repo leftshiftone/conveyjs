@@ -4,7 +4,7 @@ import {Container} from "../../renderable/container";
 import {Block} from "../../renderable/block";
 import {NoopRating} from "../../renderable/rating/NoopRating";
 import each from "jest-each";
-import {RatingDecorator} from "../decorator/RatingDecorator";
+import {RatingDecorator, RatingRenderStrategy} from "../decorator/RatingDecorator";
 import {ContentCentricRenderer} from "../ContentCentricRenderer";
 import {ISpecification} from "../../api";
 
@@ -34,11 +34,11 @@ describe("RatingDecorator test", () => {
     });
 
     each([
-        ["rating markup is used & ratings are enabled by default", true, true],
-        ["rating markup is used & ratings are disabled by default", true, false],
-        ["rating markup is not used & ratings are enabled by default", false, true],
-    ]).it("render rating if %s", (title: string, withRatingMarkup: boolean, ratingsEnabledByDefault: boolean) => {
-        const renderer = new RatingDecorator(new ContentCentricRenderer(), ratingsEnabledByDefault);
+        ["rating markup is used & ratings are enabled by default", true, RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS],
+        ["rating markup is used & ratings are disabled by default", true, RatingRenderStrategy.ONLY_ENABLED_RATINGS],
+        ["rating markup is not used & ratings are enabled by default", false, RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS],
+    ]).it("render rating if %s", (title: string, withRatingMarkup: boolean, ratingRenderStrategy: RatingRenderStrategy) => {
+        const renderer = new RatingDecorator(new ContentCentricRenderer(), ratingRenderStrategy);
         const specification = RatingTestSpecGenerator.generate(withRatingMarkup, true);
 
         const rendered = renderer.render(specification);
@@ -47,10 +47,10 @@ describe("RatingDecorator test", () => {
     });
 
     each([
-        ["rating markup is used, explicitly set to disabled & ratings are enabled by default", true, true],
-        ["rating markup is not used & ratings are disabled by default", false, false],
-    ]).it("do not render rating if %s", (title: string, withRatingMarkup: boolean, ratingsEnabledByDefault: boolean) => {
-        const renderer = new RatingDecorator(new ContentCentricRenderer(), ratingsEnabledByDefault);
+        ["rating markup is used, explicitly set to disabled & ratings are enabled by default", true, RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS],
+        ["rating markup is not used & ratings are disabled by default", false, RatingRenderStrategy.ONLY_ENABLED_RATINGS],
+    ]).it("do not render rating if %s", (title: string, withRatingMarkup: boolean, ratingRenderStrategy: RatingRenderStrategy) => {
+        const renderer = new RatingDecorator(new ContentCentricRenderer(), ratingRenderStrategy);
         const specification = RatingTestSpecGenerator.generate(withRatingMarkup, false);
 
         const rendered = renderer.render(specification);

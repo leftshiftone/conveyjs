@@ -156,6 +156,15 @@ new Gaia().connect( ... )
     });
 ```
 
+The rating decorator takes the RatingRenderStrategy as an optional argument. Possible options are
+* ALL_EXCEPT_DISABLED_RATINGS (default): Render ratings for all interactions except the ones with rating markup where enabled is set to false.
+* ONLY_ENABLED_RATINGS: Only render ratings for interactions for rating markup with enabled set to true.
+
+Example usage:
+
+```javascript
+new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ONLY_ENABLED_RATINGS)
+```
 
 ## Listener
 A listener provides the functionality to react to certain events. Events can be:

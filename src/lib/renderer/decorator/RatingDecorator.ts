@@ -8,11 +8,11 @@ import {Rating} from "../../renderable/rating";
  * to allow users to give feedback.
  */
 export class RatingDecorator extends AbstractDecorator {
-    private readonly ratingsEnabledByDefault: boolean;
+    private readonly renderStrategy: RatingRenderStrategy;
 
-    constructor(renderer: IRenderer, ratingsEnabledByDefault = true) {
+    constructor(renderer: IRenderer, renderStrategy = RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS) {
         super(renderer);
-        this.ratingsEnabledByDefault = ratingsEnabledByDefault;
+        this.renderStrategy = renderStrategy;
     }
 
     /**
@@ -39,7 +39,8 @@ export class RatingDecorator extends AbstractDecorator {
     private shouldRenderRatingFor(renderable: ISpecification): boolean {
         if (!RatingDecorator.isRootContainerOfInteraction(renderable)) return false;
         const child = (renderable.elements || [{type: undefined, enabled: undefined}])[0];
-        return (child.type === "rating" && child.enabled === true) || (this.ratingsEnabledByDefault && child.enabled !== false);
+        return (child.type === "rating" && child.enabled === true)
+            || (this.renderStrategy === RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS && child.enabled !== false);
 
     }
 
@@ -48,4 +49,9 @@ export class RatingDecorator extends AbstractDecorator {
             && renderable["position"] === "left"
             && renderable["qualifier"] !== null;
     }
+}
+
+export enum RatingRenderStrategy {
+    ALL_EXCEPT_DISABLED_RATINGS,
+    ONLY_ENABLED_RATINGS
 }
