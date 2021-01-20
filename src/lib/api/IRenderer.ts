@@ -11,7 +11,7 @@ export interface IRenderer {
      * Renders an element
      *
      * @param message the message which was received
-     * @param containerType
+     * @param containerType the parent container of the given message
      */
     render(message: ISpecification | IRenderable, containerType?: IStackeable): HTMLElement[];
 

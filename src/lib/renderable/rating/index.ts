@@ -1,11 +1,12 @@
 import {IRenderer, ISpecification, IRenderable, IStackeable} from '../../api';
-import Renderables from '../Renderables';
 import node, {INode} from "../../support/node";
 import {Specification} from "../../support/Specification";
 import {MessageType} from "../../support/MessageType";
 import {EventType} from "../../event/EventType";
 import EventStream from "../../event/EventStream";
 import {IEventPayload} from "../../api/IEvent";
+import Renderables from "../Renderables";
+import {NoopRating} from "./NoopRating";
 
 /**
  * Implementation of the 'rating' markup element. A div HTML element
@@ -111,8 +112,6 @@ export class Rating implements IRenderable, IStackeable {
     }
 }
 
-Renderables.register("rating", Rating);
-
 enum RatingButtonType {
     LIKE,
     DISLIKE,
@@ -124,3 +123,5 @@ interface RatingButton {
     buttonNode: INode;
     score: number;
 }
+
+Renderables.register("rating", NoopRating);
