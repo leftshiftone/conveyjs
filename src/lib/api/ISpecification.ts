@@ -1,6 +1,8 @@
 /**
  * This interface is used to specify an incoming message
  */
+import {IImpulseHeader} from "./IImpulseHeader";
+
 export interface ISpecification {
     type: string;
     elements?: ISpecification[];
@@ -54,4 +56,5 @@ export interface ISpecification {
     channelId?: string;
     interactionContentClassName?: string;
     enabled?: boolean;
+    header?: IImpulseHeader;
 }

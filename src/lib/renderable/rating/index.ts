@@ -7,7 +7,6 @@ import EventStream from "../../event/EventStream";
 import {IEventPayload} from "../../api/IEvent";
 import Renderables from "../Renderables";
 import {NoopRating} from "./NoopRating";
-import {ProcessNode} from "./ProcessNode";
 
 /**
  * Implementation of the 'rating' markup element. A div HTML element
@@ -23,11 +22,11 @@ export class Rating implements IRenderable, IStackeable {
     private readonly ratingContainer: INode;
     private ratingButtons: Map<RatingButtonType, RatingButton>;
     private selectedRatingButtonType: RatingButtonType;
-    private readonly ratedProcessNode: ProcessNode;
+    private readonly cortexExecutionId: string;
 
-    constructor(message: ISpecification, ratedProcessNode: ProcessNode) {
+    constructor(message: ISpecification, currentNodeCortexExecutionId: string) {
         this.spec = message;
-        this.ratedProcessNode = ratedProcessNode;
+        this.cortexExecutionId = currentNodeCortexExecutionId;
         this.ratingContainer = node("div");
         this.ratingButtons = new Map<RatingButtonType, RatingButton>();
         this.selectedRatingButtonType = RatingButtonType.NOT_YET_SELECTED;
@@ -86,7 +85,7 @@ export class Rating implements IRenderable, IStackeable {
         submitButton.onClick((ev: MouseEvent) => {
             ev.preventDefault();
             const score = this.getScoreOfClickedButton();
-            const payload = Object.assign(this.ratedProcessNode, {score});
+            const payload = {cortexExecutionId: this.cortexExecutionId, score};
 
             const comment = (<HTMLInputElement>commentForm.unwrap().firstChild).value;
             const attributes = {comment};

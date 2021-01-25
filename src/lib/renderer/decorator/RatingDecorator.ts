@@ -1,6 +1,5 @@
 import {IRenderer, ISpecification, IStackeable} from '../../api';
 import {AbstractDecorator} from "./AbstractDecorator";
-import {ProcessNode} from "../../renderable/rating/ProcessNode";
 import {Rating} from "../../renderable/rating";
 
 /**
@@ -28,14 +27,14 @@ export class RatingDecorator extends AbstractDecorator {
     render(renderable: ISpecification, parentContainer?: IStackeable): HTMLElement[] {
         const result = super.render(renderable, parentContainer);
         if (!this.shouldRenderRatingFor(renderable, parentContainer)) return result;
-        const processNode = RatingDecorator.getProcessNode(renderable);
-        if (processNode === null) return result;
+        const cortexExecutionId = RatingDecorator.getCortexExecutionId(renderable);
+        if (cortexExecutionId == null) return result;
 
         // Append rating buttons to allow feedback
         const r: Rating = new Rating({
             type: Rating.TYPE,
             channelId: this.channelId
-        }, processNode);
+        }, cortexExecutionId);
         const ratingElement = r.render(this, false);
         result.push(ratingElement);
 
@@ -58,10 +57,9 @@ export class RatingDecorator extends AbstractDecorator {
             && renderable["qualifier"] !== null;
     }
 
-    private static getProcessNode(renderable: ISpecification): ProcessNode | null {
-        const enriched = renderable["enriched"];
-        if (enriched === null) return null;
-        return ProcessNode.parse(enriched);
+    private static getCortexExecutionId(renderable: ISpecification): string | undefined {
+        if (renderable.header == null) return undefined;
+        return renderable.header.cortexExecutionId;
     }
 }
 

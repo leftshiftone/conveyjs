@@ -10,6 +10,7 @@ import EventStream from "../event/EventStream";
 import {Subscription} from "./Subscription";
 import {InteractionSubscription} from "./InteractionSubscription";
 import {ContentCentricRenderer} from "../renderer/ContentCentricRenderer";
+import {IImpulse} from "../api/IImpulse";
 
 export class Connection {
 
@@ -115,9 +116,23 @@ export class Connection {
     }
 
     private onMessage(topic: string, message: any) {
-        const payload = JSON.parse(message) as ISpecification;
-        this.listener.onMessage(payload);
-        this.subscriptions.get(topic)!.onMessage(payload);
+        const subscription = this.subscriptions.get(topic)!;
+        const spec = this.parseMessage(message, subscription.type);
+        this.listener.onMessage(spec);
+        subscription.onMessage(spec);
     }
 
+    private parseMessage(message: any, queueType: ConversationQueueType) {
+        const impulse = JSON.parse(message) as IImpulse;
+        let spec;
+        if (typeof impulse.payload === "string") {
+            spec = JSON.parse(atob(impulse.payload as string)) as ISpecification;
+        } else {
+            spec = impulse.payload as ISpecification;
+        }
+        if (queueType === ConversationQueueType.INTERACTION) {
+            spec.header = impulse.header;
+        }
+        return spec;
+    }
 }

@@ -6,7 +6,7 @@ import {NoopRating} from "../../renderable/rating/NoopRating";
 import each from "jest-each";
 import {RatingDecorator, RatingRenderStrategy} from "../decorator/RatingDecorator";
 import {ContentCentricRenderer} from "../ContentCentricRenderer";
-import {RatingTestSpecGenerator} from "./RatingTestSpecGenerator";
+import {ISpecification} from "../../api";
 
 
 describe("RatingDecorator test", () => {
@@ -58,20 +58,10 @@ describe("RatingDecorator test", () => {
         expectNotToBeRatingElement(rendered.pop());
     });
 
-    it("do not render rating if enriched is incomplete", () => {
+    it("do not render rating if header does not exist", () => {
         const renderer = new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS);
         const specification = RatingTestSpecGenerator.generate(true, true);
-        delete specification["enriched"].nodeId;
-
-        const rendered = renderer.render(specification);
-
-        expectNotToBeRatingElement(rendered.pop());
-    });
-
-    it("do not render rating if enriched does not exist", () => {
-        const renderer = new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS);
-        const specification = RatingTestSpecGenerator.generate(true, true);
-        delete specification["enriched"];
+        delete specification["header"];
 
         const rendered = renderer.render(specification);
 
@@ -99,3 +89,44 @@ describe("RatingDecorator test", () => {
 });
 
 
+class RatingTestSpecGenerator {
+    static generate(withRatingMarkup: boolean, ratingEnabled: boolean) {
+        const content = [{
+            class: "some-class",
+            type: "block",
+            elements: [
+                {
+                    class: "uppercase bold",
+                    text: "Some very informative text",
+                    type: "label"
+                },
+                {
+                    text: "More very informative text",
+                    type: "label"
+                }
+            ]
+        }];
+
+        if (withRatingMarkup) {
+            return RatingTestSpecGenerator.wrapInContainer([{
+                type: "rating",
+                enabled: ratingEnabled,
+                elements: content
+            }]);
+        }
+
+        return RatingTestSpecGenerator.wrapInContainer(content);
+    }
+
+    private static wrapInContainer(elements: ISpecification[]) {
+        return {
+            type: "container",
+            qualifier: "prompt:next",
+            position: "left",
+            header: {
+                cortexExecutionId: "asdf-1234"
+            },
+            elements
+        } as ISpecification;
+    }
+}
