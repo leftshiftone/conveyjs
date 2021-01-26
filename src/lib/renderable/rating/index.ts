@@ -1,4 +1,4 @@
-import {IRenderer, ISpecification, IRenderable, IStackeable} from '../../api';
+import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import node, {INode} from "../../support/node";
 import {Specification} from "../../support/Specification";
 import {MessageType} from "../../support/MessageType";
@@ -7,6 +7,7 @@ import EventStream from "../../event/EventStream";
 import {IEventPayload} from "../../api/IEvent";
 import Renderables from "../Renderables";
 import {NoopRating} from "./NoopRating";
+import {ProcessNode} from "./ProcessNode";
 
 /**
  * Implementation of the 'rating' markup element. A div HTML element
@@ -22,9 +23,11 @@ export class Rating implements IRenderable, IStackeable {
     private readonly ratingContainer: INode;
     private ratingButtons: Map<RatingButtonType, RatingButton>;
     private selectedRatingButtonType: RatingButtonType;
+    private readonly ratedProcessNode: ProcessNode;
 
-    constructor(message: ISpecification) {
+    constructor(message: ISpecification, ratedProcessNode: ProcessNode) {
         this.spec = message;
+        this.ratedProcessNode = ratedProcessNode;
         this.ratingContainer = node("div");
         this.ratingButtons = new Map<RatingButtonType, RatingButton>();
         this.selectedRatingButtonType = RatingButtonType.NOT_YET_SELECTED;
@@ -83,7 +86,7 @@ export class Rating implements IRenderable, IStackeable {
         submitButton.onClick((ev: MouseEvent) => {
             ev.preventDefault();
             const score = this.getScoreOfClickedButton();
-            const payload = {score};
+            const payload = Object.assign(this.ratedProcessNode, {score});
 
             const comment = (<HTMLInputElement>commentForm.unwrap().firstChild).value;
             const attributes = {comment};

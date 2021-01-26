@@ -58,6 +58,26 @@ describe("RatingDecorator test", () => {
         expectNotToBeRatingElement(rendered.pop());
     });
 
+    it("do not render rating if enriched is incomplete", () => {
+        const renderer = new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS);
+        const specification = RatingTestSpecGenerator.generate(true, true);
+        delete specification["enriched"].nodeId;
+
+        const rendered = renderer.render(specification);
+
+        expectNotToBeRatingElement(rendered.pop());
+    });
+
+    it("do not render rating if enriched does not exist", () => {
+        const renderer = new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS);
+        const specification = RatingTestSpecGenerator.generate(true, true);
+        delete specification["enriched"];
+
+        const rendered = renderer.render(specification);
+
+        expectNotToBeRatingElement(rendered.pop());
+    });
+
     function expectToBeRatingElement(element?: HTMLElement) {
         expect(element).not.toBeNull();
         // @ts-ignore
@@ -112,9 +132,14 @@ class RatingTestSpecGenerator {
             type: "container",
             qualifier: "prompt:next",
             position: "left",
+            enriched: {
+                executionGroupId: "123-executionGroupId",
+                processId: "123-processId",
+                identityId: "123-identityId",
+                nodeId: "123-nodeId"
+            },
             elements
         } as ISpecification;
     }
 }
-
 
