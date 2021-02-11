@@ -63,17 +63,19 @@ export class Selection implements IRenderable, IStackeable {
             this.selection.appendChild(items);
         }));
 
-        this.selection.querySelectorAll(".lto-selection-item").forEach(items => {
-            items.addEventListener("click", ev => {
+        this.selection.querySelectorAll(".lto-selection-item").forEach(item => {
+            const onClick = (ev: Event) => {
+                item.removeEventListener("click", onClick);
                 //@ts-ignore
                 if (ev.target.getAttribute("class") === "lto-selection-left") {
-                    items.classList.add("lto-animate-left");
-                    this.values.push({[items.getAttribute("name") || ""]: "left"});
+                    item.classList.add("lto-animate-left");
+                    this.values.push({[item.getAttribute("name") || ""]: "left"});
                 } else {
-                    items.classList.add("lto-animate-right");
-                    this.values.push({[items.getAttribute("name") || ""]: "right"});
+                    item.classList.add("lto-animate-right");
+                    this.values.push({[item.getAttribute("name") || ""]: "right"});
                 }
-                setTimeout(() => (items as HTMLElement).style.display = "none", this.animationDuration);
+
+                setTimeout(() => (item as HTMLElement).style.display = "none", this.animationDuration);
 
                 if (++publishedBlocks === this.numOfBlocks) {
                     // wait till animation is finished
@@ -82,7 +84,9 @@ export class Selection implements IRenderable, IStackeable {
                         this.publish();
                     }, this.animationDuration);
                 }
-            })
+            };
+
+            item.addEventListener("click", onClick);
         });
 
         if (isNested) {
