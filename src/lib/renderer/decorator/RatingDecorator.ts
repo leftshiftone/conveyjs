@@ -46,7 +46,8 @@ export class RatingDecorator extends AbstractDecorator {
         if (parentContainer) return false;
         if (!RatingDecorator.isRootContainerOfInteraction(renderable)) return false;
 
-        const child = (renderable.elements || [{type: undefined, enabled: undefined}])[0];
+        const child = (renderable.elements || [undefined])[0] || {type: undefined, enabled: undefined};
+
         return (child.type === "rating" && child.enabled === true)
             || (this.renderStrategy === RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS && child.enabled !== false);
 
