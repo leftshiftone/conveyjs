@@ -58,6 +58,16 @@ describe("RatingDecorator test", () => {
         expectNotToBeRatingElement(rendered.pop());
     });
 
+    it("do not render rating if elements is empty", () => {
+        const renderer = new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ONLY_ENABLED_RATINGS);
+        const specification = RatingTestSpecGenerator.generate(false, false);
+        specification["elements"] = [];
+
+        const rendered = renderer.render(specification);
+
+        expectNotToBeRatingElement(rendered.pop());
+    });
+
     it("do not render rating if enriched is incomplete", () => {
         const renderer = new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS);
         const specification = RatingTestSpecGenerator.generate(true, true);
