@@ -12,7 +12,7 @@
     "license": "MIT",
     "author": "Leftshift One Software GmbH <core-devs@leftshift.one>",
     "dependencies": {
-        "@leftshiftone/gaia-sdk": "^3.2.0",
+        "@leftshiftone/gaia-sdk": "^3.2.1",
         "@zxing/library": "^0.12.4",
         "browser-image-compression": "^1.0.6",
         "d3": "^5.8.0",
