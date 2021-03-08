@@ -59,7 +59,6 @@ export class AutocompleteBehaviour extends IBehaviour {
     unbind() {
         super.unbind();
         this.autocompleteDropdown.unbind();
-        this.clear();
     }
 
     private onKeydown(textbox: HTMLTextAreaElement) {
