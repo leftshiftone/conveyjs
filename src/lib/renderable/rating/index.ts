@@ -1,13 +1,12 @@
 import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import node, {INode} from "../../support/node";
 import {Specification} from "../../support/Specification";
-import {MessageType} from "../../support/MessageType";
 import {EventType} from "../../event/EventType";
 import EventStream from "../../event/EventStream";
-import {IEventPayload} from "../../api/IEvent";
 import Renderables from "../Renderables";
 import {NoopRating} from "./NoopRating";
 import {ProcessNode} from "./ProcessNode";
+import {EventPayloadFactory} from "../../event/EventPayloadFactory";
 
 /**
  * Implementation of the 'rating' markup element. A div HTML element
@@ -86,19 +85,19 @@ export class Rating implements IRenderable, IStackeable {
         submitButton.onClick((ev: MouseEvent) => {
             ev.preventDefault();
             const score = this.getScoreOfClickedButton();
-            const payload = Object.assign(this.ratedProcessNode, {score});
-
             const comment = (<HTMLInputElement>commentForm.unwrap().firstChild).value;
             const attributes = {comment};
 
-            const type = MessageType.RATING;
+            const ratingEvent = EventPayloadFactory.getRatingEventPayload(this.ratedProcessNode, score, attributes);
+
             const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
-            EventStream.emit(evType, {attributes, type, payload} as IEventPayload);
+            EventStream.emit(evType, ratingEvent);
 
             // Possibility to hide the rating container once it has been submitted
             this.ratingContainer.addClasses("lto-rating-submitted");
         });
     }
+
 
     private ratingButtonOnClick(buttonType: RatingButtonType, commentForm: INode) {
         this.ratingContainer.appendChild(commentForm);

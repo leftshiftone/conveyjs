@@ -88,6 +88,7 @@ import {Subscription} from './lib/connection/Subscription';
 import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
 import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
 import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIndex';
+import { EventPayloadFactory } from './lib/event/EventPayloadFactory';
 export * from './lib/api';
 export {
     ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
@@ -113,6 +114,7 @@ export {
     Navigator,
     Renderables,
     Properties,
+    EventPayloadFactory,
     EventStream,
     Block,
     Bold,

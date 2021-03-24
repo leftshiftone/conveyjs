@@ -51,12 +51,19 @@ import {SmallDevice} from "./lib/renderable/smallDevice";
 import {Basket} from "./lib/renderable/basket";
 import {SelectionItem} from './lib/renderable/selectionItem';
 import {Selectable} from './lib/renderable/selectable';
-import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
-import { AutocompleteBehaviour } from './lib/behaviour/AutocompleteBehaviour';
-import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIndex';
+import {
+    ConversationQueueType,
+    MqttSensorQueue,
+    QueueCallback,
+    QueueHeader,
+    QueueOptions
+} from "@leftshiftone/gaia-sdk/dist";
+import {AutocompleteBehaviour} from './lib/behaviour/AutocompleteBehaviour';
+import {FlexSearchIndex} from './lib/behaviour/autocomplete/index/FlexSearchIndex';
 import {Connection} from "./lib/connection/Connection";
 import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
 import {Subscription} from "./lib/connection/Subscription";
+import {EventPayloadFactory} from "./lib/event/EventPayloadFactory";
 
 export * from './lib/api';
 export {
@@ -78,6 +85,7 @@ export {
     Defaults,
     Renderables,
     Properties,
+    EventPayloadFactory,
     EventStream,
     Block,
     Bold,
