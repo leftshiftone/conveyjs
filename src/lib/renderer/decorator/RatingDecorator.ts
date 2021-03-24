@@ -28,7 +28,7 @@ export class RatingDecorator extends AbstractDecorator {
     render(renderable: ISpecification, parentContainer?: IStackeable): HTMLElement[] {
         const result = super.render(renderable, parentContainer);
         if (!this.shouldRenderRatingFor(renderable, parentContainer)) return result;
-        const processNode = RatingDecorator.getProcessNode(renderable);
+        const processNode = ProcessNode.createFromSpecification(renderable);
         if (processNode === null) return result;
 
         // Append rating buttons to allow feedback
@@ -57,12 +57,6 @@ export class RatingDecorator extends AbstractDecorator {
         return renderable["type"] === "container"
             && renderable["position"] === "left"
             && renderable["qualifier"] !== null;
-    }
-
-    private static getProcessNode(renderable: ISpecification): ProcessNode | null {
-        const enriched = renderable["enriched"];
-        if (enriched === null) return null;
-        return ProcessNode.parse(enriched);
     }
 }
 

@@ -3,7 +3,7 @@ import {Slider, ClassicRenderer} from "../../../../std";
 import {fireEvent} from "@testing-library/dom"
 
 describe("Slider", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("slider", Slider);
     });
 

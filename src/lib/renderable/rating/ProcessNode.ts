@@ -1,3 +1,5 @@
+import {ISpecification} from "../../api";
+
 export class ProcessNode {
     executionGroupId: string;
     identityId: string;
@@ -20,8 +22,10 @@ export class ProcessNode {
             && object["nodeId"];
     }
 
-    static parse(object: any): ProcessNode | null {
-        if (!this.isCurrentProcessNode(object)) return null;
-        return new ProcessNode(object.executionGroupId, object.identityId, object.processId, object.nodeId);
+    static createFromSpecification(spec: ISpecification): ProcessNode | null {
+        const enriched = spec.enriched;
+        if (enriched === null) return null;
+        if (!this.isCurrentProcessNode(enriched)) return null;
+        return new ProcessNode(enriched.executionGroupId, enriched.identityId, enriched.processId, enriched.nodeId);
     }
 }

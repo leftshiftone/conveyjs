@@ -3,7 +3,7 @@ import Renderables from "../../Renderables";
 import {Basket, Form, Text, Submit} from "../../../../std";
 
 describe("Basket", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("text", Text);
         Renderables.register("basket", Basket);
         Renderables.register("submit", Submit);

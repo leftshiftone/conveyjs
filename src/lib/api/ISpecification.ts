@@ -54,4 +54,5 @@ export interface ISpecification {
     channelId?: string;
     interactionContentClassName?: string;
     enabled?: boolean;
+    enriched?: any;
 }

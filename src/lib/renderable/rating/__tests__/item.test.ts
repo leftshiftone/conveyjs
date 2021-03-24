@@ -4,14 +4,7 @@ import EventStream from "../../../event/EventStream";
 import {EventType} from "../../../event/EventType";
 
 describe("RatingTest", () => {
-    const newRating = () => new Rating({type: "rating"}, {
-        executionGroupId: "123-executionGroupId",
-        processId: "123-processId",
-        identityId: "123-identityId",
-        nodeId: "123-nodeId"
-    });
-
-    it("beforeAll", () => {
+    beforeAll(() => {
         document.body.innerHTML = `<div class="lto-gaia lto-content lto-suggest"/>`;
     });
 
@@ -42,5 +35,12 @@ describe("RatingTest", () => {
         expect(data).not.toBeUndefined();
         expect(data["attributes"]["comment"]).toEqual("test comment");
         expect(data["payload"]["score"]).toEqual("1");
+    });
+
+    const newRating = () => new Rating({type: "rating"}, {
+        executionGroupId: "123-executionGroupId",
+        processId: "123-processId",
+        identityId: "123-identityId",
+        nodeId: "123-nodeId"
     });
 });

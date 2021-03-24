@@ -2,7 +2,7 @@ import Renderables from "../../Renderables";
 import { ClassicRenderer, Overlays, Overlay} from "../../../../std";
 
 describe("Overlays", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("overlays", Overlays);
         Renderables.register("overlay", Overlay)
     });

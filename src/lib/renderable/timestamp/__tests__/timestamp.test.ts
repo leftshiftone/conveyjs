@@ -2,7 +2,7 @@ import Renderables from "../../Renderables";
 import {Timestamp} from "../index";
 
 describe("Timestamp", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("timestamp", Timestamp);
     });
 
