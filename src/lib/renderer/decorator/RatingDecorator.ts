@@ -2,6 +2,7 @@ import {IRenderer, ISpecification, IStackeable} from '../../api';
 import {AbstractDecorator} from "./AbstractDecorator";
 import {ProcessNode} from "../../renderable/rating/ProcessNode";
 import {Rating} from "../../renderable/rating";
+import {EventFactory} from "../../event/EventFactory";
 
 /**
  * The rating decorator adds two rating buttons (like, dislike)
@@ -35,7 +36,7 @@ export class RatingDecorator extends AbstractDecorator {
         const r: Rating = new Rating({
             type: Rating.TYPE,
             channelId: this.channelId
-        }, processNode);
+        }, processNode, new EventFactory(this.channelId));
         const ratingElement = r.render(this, false);
         result.push(ratingElement);
 

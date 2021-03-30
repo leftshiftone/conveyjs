@@ -1,12 +1,12 @@
 import {IRenderable, IRenderer, ISpecification, IStackeable} from '../../api';
 import node, {INode} from "../../support/node";
 import {Specification} from "../../support/Specification";
-import {EventType} from "../../event/EventType";
 import EventStream from "../../event/EventStream";
 import Renderables from "../Renderables";
 import {NoopRating} from "./NoopRating";
 import {ProcessNode} from "./ProcessNode";
-import {EventPayloadFactory} from "../../event/EventPayloadFactory";
+import {EventFactory} from "../../event/EventFactory";
+
 
 /**
  * Implementation of the 'rating' markup element. A div HTML element
@@ -18,18 +18,22 @@ import {EventPayloadFactory} from "../../event/EventPayloadFactory";
 export class Rating implements IRenderable, IStackeable {
 
     public static readonly TYPE = "rating";
+
     private readonly spec: ISpecification;
+    private readonly ratedProcessNode: ProcessNode;
+    private readonly eventFactory: EventFactory;
+
     private readonly ratingContainer: INode;
     private ratingButtons: Map<RatingButtonType, RatingButton>;
     private selectedRatingButtonType: RatingButtonType;
-    private readonly ratedProcessNode: ProcessNode;
 
-    constructor(message: ISpecification, ratedProcessNode: ProcessNode) {
+    constructor(message: ISpecification, ratedProcessNode: ProcessNode, eventFactory: EventFactory) {
         this.spec = message;
         this.ratedProcessNode = ratedProcessNode;
         this.ratingContainer = node("div");
         this.ratingButtons = new Map<RatingButtonType, RatingButton>();
         this.selectedRatingButtonType = RatingButtonType.NOT_YET_SELECTED;
+        this.eventFactory = eventFactory;
     }
 
     /**
@@ -88,10 +92,9 @@ export class Rating implements IRenderable, IStackeable {
             const comment = (<HTMLInputElement>commentForm.unwrap().firstChild).value;
             const attributes = {comment};
 
-            const ratingEvent = EventPayloadFactory.getRatingEventPayload(this.ratedProcessNode, score, attributes);
+            const ratingEvent = this.eventFactory.getRatingEvent(this.ratedProcessNode, score, attributes);
 
-            const evType = EventType.withChannelId(EventType.PUBLISH, this.spec.channelId);
-            EventStream.emit(evType, ratingEvent);
+            EventStream.emitEvent(ratingEvent);
 
             // Possibility to hide the rating container once it has been submitted
             this.ratingContainer.addClasses("lto-rating-submitted");

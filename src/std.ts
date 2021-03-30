@@ -63,7 +63,8 @@ import {FlexSearchIndex} from './lib/behaviour/autocomplete/index/FlexSearchInde
 import {Connection} from "./lib/connection/Connection";
 import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
 import {Subscription} from "./lib/connection/Subscription";
-import {EventPayloadFactory} from "./lib/event/EventPayloadFactory";
+import {EventFactory} from "./lib/event/EventFactory";
+import { EventType } from './lib/event/EventType';
 
 export * from './lib/api';
 export {
@@ -85,8 +86,9 @@ export {
     Defaults,
     Renderables,
     Properties,
-    EventPayloadFactory,
+    EventFactory,
     EventStream,
+    EventType,
     Block,
     Bold,
     Break,

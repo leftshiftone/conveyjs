@@ -2,6 +2,7 @@ import {ContentCentricRenderer} from "../../../renderer/ContentCentricRenderer";
 import {Rating} from "../index";
 import EventStream from "../../../event/EventStream";
 import {EventType} from "../../../event/EventType";
+import {EventFactory} from "../../../event/EventFactory";
 
 describe("RatingTest", () => {
     beforeAll(() => {
@@ -42,5 +43,5 @@ describe("RatingTest", () => {
         processId: "123-processId",
         identityId: "123-identityId",
         nodeId: "123-nodeId"
-    });
+    }, new EventFactory());
 });
