@@ -2,7 +2,7 @@ import {Items} from "../index";
 import {ClassicRenderer} from "../../../renderer/ClassicRenderer";
 
 describe("ItemsTest", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         document.body.innerHTML = `<div class="lto-gaia lto-content lto-suggest"/>`
     });
 
