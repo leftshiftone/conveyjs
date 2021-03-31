@@ -3,7 +3,7 @@ import Renderables from "../../Renderables";
 import {Form, Button} from "../../../../std";
 
 describe("Button", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("button", Button);
     });
     it("render <button><label>Test Button</label></button>", () => {

@@ -56,8 +56,8 @@ Connect to AIOS
 <script type="text/javascript">
     const header = new GaiaConvey.QueueHeader("anyIdentityId", "optionalChannelId")
 
-    new GaiaConvey.Gaia(new GaiaConvey.OffSwitchListener())
-        .connect(new GaiaConvey.QueueOptions('wss://URL/', 8080, "USERNAME", "PASSWORD"))
+    new GaiaConvey.Gaia(new GaiaConvey.DefaultListener())
+        .connect(new GaiaConvey.QueueOptions('wss://URL/mqtt', 443, "MQTT_USERNAME", "MQTT_PASSWORD"))
         .then(connection => {
             const interactionSubscription = connection.subscribeInteraction(header, payload => console.debug(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer());
             connection.subscribeNotification(header, payload => console.debug('Notification:', payload));

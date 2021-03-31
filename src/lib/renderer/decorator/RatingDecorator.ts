@@ -1,6 +1,8 @@
 import {IRenderer, ISpecification, IStackeable} from '../../api';
 import {AbstractDecorator} from "./AbstractDecorator";
+import {ProcessNode} from "../../renderable/rating/ProcessNode";
 import {Rating} from "../../renderable/rating";
+import {EventFactory} from "../../event/EventFactory";
 
 /**
  * The rating decorator adds two rating buttons (like, dislike)
@@ -22,23 +24,31 @@ export class RatingDecorator extends AbstractDecorator {
      * true.
      *
      * @param renderable the renderable specification which was received
-     * @param containerType the parent container of the current renderable
+     * @param parentContainer the parent container of the current renderable
      */
-    render(renderable: ISpecification, containerType?: IStackeable): HTMLElement[] {
-        const result = super.render(renderable, containerType);
+    render(renderable: ISpecification, parentContainer?: IStackeable): HTMLElement[] {
+        const result = super.render(renderable, parentContainer);
+        if (!this.shouldRenderRatingFor(renderable, parentContainer)) return result;
+        const processNode = ProcessNode.createFromSpecification(renderable);
+        if (processNode === null) return result;
 
-        if (!containerType && this.shouldRenderRatingFor(renderable)) {
-            // Append rating buttons to allow feedback
-            const r: Rating = new Rating({type: Rating.TYPE, channelId: this.channelId});
-            const ratingElement = r.render(this, false);
-            result.push(ratingElement);
-        }
+        // Append rating buttons to allow feedback
+        const r: Rating = new Rating({
+            type: Rating.TYPE,
+            channelId: this.channelId
+        }, processNode, new EventFactory(this.channelId));
+        const ratingElement = r.render(this, false);
+        result.push(ratingElement);
+
         return result;
     }
 
-    private shouldRenderRatingFor(renderable: ISpecification): boolean {
+    private shouldRenderRatingFor(renderable: ISpecification, parentContainer?: IStackeable): boolean {
+        if (parentContainer) return false;
         if (!RatingDecorator.isRootContainerOfInteraction(renderable)) return false;
-        const child = (renderable.elements || [{type: undefined, enabled: undefined}])[0];
+
+        const child = (renderable.elements || [undefined])[0] || {type: undefined, enabled: undefined};
+
         return (child.type === "rating" && child.enabled === true)
             || (this.renderStrategy === RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS && child.enabled !== false);
 
