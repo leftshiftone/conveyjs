@@ -71,6 +71,7 @@ describe("RatingDecorator test", () => {
     it("do not render rating if enriched is incomplete", () => {
         const renderer = new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ALL_EXCEPT_DISABLED_RATINGS);
         const specification = RatingTestSpecGenerator.generate({withRatingMarkup: true, ratingEnabled: true});
+        // @ts-ignore
         delete specification["enriched"].nodeId;
 
         const rendered = renderer.render(specification);
