@@ -3,7 +3,7 @@ import Renderables from "../../Renderables";
 import {Form, Text, Phone, Email, Submit} from "../../../../std";
 
 describe("Input", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("form", Form);
         Renderables.register("text", Text);
         Renderables.register("email", Email);

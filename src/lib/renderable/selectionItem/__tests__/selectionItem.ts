@@ -2,7 +2,7 @@ import {SelectionItem} from "../index";
 import {ContentCentricRenderer} from "../../../renderer/ContentCentricRenderer";
 
 describe("SelectionItemTest", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         document.body.innerHTML = `<div class="lto-gaia lto-content lto-suggest"/>`
     });
 
