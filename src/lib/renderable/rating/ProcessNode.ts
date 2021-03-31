@@ -14,7 +14,7 @@ export class ProcessNode {
         this.nodeId = nodeId;
     }
 
-    static isCurrentProcessNode(object: any): boolean {
+    static isCurrentProcessNode(object: object): boolean {
         return object
             && object["executionGroupId"]
             && object["processId"]
@@ -24,8 +24,8 @@ export class ProcessNode {
 
     static createFromSpecification(spec: ISpecification): ProcessNode | null {
         const enriched = spec.enriched;
-        if (enriched === null) return null;
+        if (enriched === null || enriched === undefined) return null;
         if (!this.isCurrentProcessNode(enriched)) return null;
-        return new ProcessNode(enriched.executionGroupId, enriched.identityId, enriched.processId, enriched.nodeId);
+        return new ProcessNode(enriched["executionGroupId"], enriched["identityId"], enriched["processId"], enriched["nodeId"]);
     }
 }

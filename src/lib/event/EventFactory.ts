@@ -10,7 +10,7 @@ export class EventFactory {
         this.channelId = channelId;
     }
 
-    public getRatingEvent(nodeToBeRated: ProcessNode, score: string, attributes: any): IEvent {
+    public getRatingEvent(nodeToBeRated: ProcessNode, score: string, attributes: object): IEvent {
         const eventType = EventType.withChannelId(EventType.PUBLISH, this.channelId);
         const payload = Object.assign(nodeToBeRated, {score});
         const type = MessageType.RATING;
