@@ -2,6 +2,7 @@ import {IRenderer, ISpecification, IStackeable} from '../../api';
 import {AbstractDecorator} from "./AbstractDecorator";
 import {ProcessNode} from "../../renderable/rating/ProcessNode";
 import {Rating} from "../../renderable/rating";
+import {EventFactory} from "../../event/EventFactory";
 
 /**
  * The rating decorator adds two rating buttons (like, dislike)
@@ -28,14 +29,14 @@ export class RatingDecorator extends AbstractDecorator {
     render(renderable: ISpecification, parentContainer?: IStackeable): HTMLElement[] {
         const result = super.render(renderable, parentContainer);
         if (!this.shouldRenderRatingFor(renderable, parentContainer)) return result;
-        const processNode = RatingDecorator.getProcessNode(renderable);
+        const processNode = ProcessNode.createFromSpecification(renderable);
         if (processNode === null) return result;
 
         // Append rating buttons to allow feedback
         const r: Rating = new Rating({
             type: Rating.TYPE,
             channelId: this.channelId
-        }, processNode);
+        }, processNode, new EventFactory(this.channelId));
         const ratingElement = r.render(this, false);
         result.push(ratingElement);
 
@@ -57,12 +58,6 @@ export class RatingDecorator extends AbstractDecorator {
         return renderable["type"] === "container"
             && renderable["position"] === "left"
             && renderable["qualifier"] !== null;
-    }
-
-    private static getProcessNode(renderable: ISpecification): ProcessNode | null {
-        const enriched = renderable["enriched"];
-        if (enriched === null) return null;
-        return ProcessNode.parse(enriched);
     }
 }
 
