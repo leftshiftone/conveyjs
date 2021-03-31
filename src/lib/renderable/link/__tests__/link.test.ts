@@ -2,7 +2,7 @@ import {Link} from "../index";
 import {ContentCentricRenderer} from "../../../renderer/ContentCentricRenderer";
 
 describe("LinkTest", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         document.body.innerHTML = `<div class="lto-gaia lto-content lto-suggest"/>`
     });
 

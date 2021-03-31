@@ -14,6 +14,16 @@ export class Defaults {
     }
 
     /**
+     * @return the default autocomplete dropdown: .lto-autocomplete
+     */
+    public static autocomplete(): HTMLDivElement {
+        if (document.getElementsByClassName("lto-autocomplete").length === 0) {
+            throw new Error("no default element with class 'lto-autocomplete' found");
+        }
+        return document.getElementsByClassName("lto-autocomplete")[0] as HTMLDivElement;
+    }
+
+    /**
      * @return the default invoker: .lto-invoker
      */
     public static invoker(): HTMLButtonElement {

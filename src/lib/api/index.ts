@@ -5,3 +5,4 @@ export { IRenderer } from './IRenderer';
 export { IStackeable } from './IStackeable';
 export { ISpecification } from './ISpecification';
 export { IPacket } from './IPacket';
+export { IIndex } from './IIndex';

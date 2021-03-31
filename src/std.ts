@@ -1,12 +1,10 @@
 import {Gaia} from './lib/Gaia';
 import {ClassicRenderer} from './lib/renderer/ClassicRenderer';
-import {MultiTargetRenderer} from './lib/renderer/MultiTargetRenderer';
 import {ContentCentricRenderer} from './lib/renderer/ContentCentricRenderer';
-import {RatingRenderer} from './lib/renderer/RatingRenderer';
+import {RatingDecorator, RatingRenderStrategy} from './lib/renderer/decorator/RatingDecorator';
 import {RevealJsRenderer} from './lib/renderer/RevealJsRenderer';
 import {MouseBehaviour} from './lib/behaviour/MouseBehaviour';
 import {KeyboardBehaviour} from './lib/behaviour/KeyboardBehaviour';
-import {ChannelType} from './lib/support/ChannelType';
 import {OffSwitchListener} from './lib/listener/OffSwitchListener';
 import {Defaults} from './lib/support/Defaults';
 import {Block} from './lib/renderable/block';
@@ -53,25 +51,44 @@ import {SmallDevice} from "./lib/renderable/smallDevice";
 import {Basket} from "./lib/renderable/basket";
 import {SelectionItem} from './lib/renderable/selectionItem';
 import {Selectable} from './lib/renderable/selectable';
-import {ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback} from "@leftshiftone/gaia-sdk/dist";
+import {
+    ConversationQueueType,
+    MqttSensorQueue,
+    QueueCallback,
+    QueueHeader,
+    QueueOptions
+} from "@leftshiftone/gaia-sdk/dist";
+import {AutocompleteBehaviour} from './lib/behaviour/AutocompleteBehaviour';
+import {FlexSearchIndex} from './lib/behaviour/autocomplete/index/FlexSearchIndex';
+import {Connection} from "./lib/connection/Connection";
+import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
+import {Subscription} from "./lib/connection/Subscription";
+import {EventFactory} from "./lib/event/EventFactory";
+import { EventType } from './lib/event/EventType';
 
 export * from './lib/api';
 export {
+    Connection,
+    Subscription,
+    InteractionSubscription,
     ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
-    MultiTargetRenderer,
     ClassicRenderer,
     ContentCentricRenderer,
-    RatingRenderer,
+    RatingDecorator,
+    RatingRenderStrategy,
+    FlexSearchIndex,
+    AutocompleteBehaviour,
     RevealJsRenderer,
     Gaia,
     MouseBehaviour,
     KeyboardBehaviour,
-    ChannelType,
     OffSwitchListener,
     Defaults,
     Renderables,
     Properties,
+    EventFactory,
     EventStream,
+    EventType,
     Block,
     Bold,
     Break,

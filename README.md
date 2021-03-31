@@ -4,9 +4,11 @@
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/leftshiftone/conveyjs.svg?style=flat-square)](https://github.com/leftshiftone/conveyjs)
 [![npm (scoped)](https://img.shields.io/npm/v/@leftshiftone/convey?style=flat-square)](https://www.npmjs.com/package/@leftshiftone/convey)
 
-Convey is a JavaScript Framework for connecting to processes created with [G.A.I.A.](https://www.leftshift.one/produkt/gaia-services/).
+Convey is a JavaScript Framework for connecting to processes created
+with [AIOS](https://www.leftshiftone.com/product/ai-operating-system/).
 
-The framework ist compatible with all major Browsers and can be used standalone as well as in conjunction with React, Angular or Vue.
+The framework ist compatible with all major Browsers and can be used
+standalone as well as in conjunction with React, Angular or Vue.
 
 ### Prerequisites
 [//]: <> (TODO: Create sample project to demonstrate integration)
@@ -49,19 +51,19 @@ Import Convey
 </head>
 ```
 
-Connect to the G.A.I.A. ecosystem
+Connect to AIOS
 ```html
 <script type="text/javascript">
     const header = new GaiaConvey.QueueHeader("anyIdentityId", "optionalChannelId")
 
-    new GaiaConvey.Gaia(
-        new GaiaConvey.ContentCentricRenderer(),
-        new GaiaConvey.OffSwitchListener()
-    ).connect(new GaiaConvey.QueueOptions('wss://URL/', 8080, "USERNAME", "PASSWORD"))
+    new GaiaConvey.Gaia(new GaiaConvey.DefaultListener())
+        .connect(new GaiaConvey.QueueOptions('wss://URL/mqtt', 443, "MQTT_USERNAME", "MQTT_PASSWORD"))
         .then(connection => {
-            const subscription = connection.subscribe(GaiaConvey.ConversationQueueType.INTERACTION, header, payload => console.debug(`interaction:`, payload));
-            connection.subscribe(GaiaConvey.ConversationQueueType.CONTEXT, header, payload => console.debug(`context:`, payload));
-            subscription.reception({key: "value"});
+            const interactionSubscription = connection.subscribeInteraction(header, payload => console.debug(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer());
+            connection.subscribeNotification(header, payload => console.debug('Notification:', payload));
+            connection.subscribeLogging(header, payload => console.debug('Logging:', payload))
+            connection.subscribeContext(header, payload => console.debug('context:', payload))
+            interactionSubscription.reception({initialMessage: "value"});
         });
 </script>
 ```
@@ -72,16 +74,18 @@ Import Convey
 import {Gaia, ContentCentricRenderer, OffSwitchListener, ConversationQueueType, QueueOptions} from "@leftshiftone/convey";
 ```
 
-Connect to the G.A.I.A. ecosystem
+Connect to AIOS
 ```javascript
 const header = new QueueHeader("anyIdentityId", "optionalChannelId")
 
-new Gaia(new ContentCentricRenderer(), new OffSwitchListener()).
+new Gaia(new OffSwitchListener())
     .connect(new QueueOptions('wss://URL/', 8080, "USERNAME", "PASSWORD"))
     .then(connection => {
-        const subscription = connection.subscribe(ConversationQueueType.INTERACTION, header, payload => console.debug(`interaction:`, payload));
-        connection.subscribe(ConversationQueueType.CONTEXT, header, payload => console.debug(`context:`, payload));
-        subscription.reception({key: "value"});
+        const interactionSubscription = connection.subscribeInteraction(header, payload => console.debug(`Interaction:`, payload), new ContentCentricRenderer());
+        connection.subscribeNotification(header, payload => console.debug('Notification:', payload));
+        connection.subscribeLogging(header, payload => console.debug('Logging:', payload))
+        connection.subscribeContext(header, payload => console.debug('context:', payload))
+        interactionSubscription.reception({initialMessage: "value"});
     });
 ```
 
@@ -92,31 +96,41 @@ import '@leftshiftone/convey/dist/convey-all.css';
 
 ## Queues
 
-The communication with G.A.I.A. contains several queueTypes where each one has its own purpose.
+The communication with AIOS contains several queueTypes where each one has its own purpose.
 
 ### INTERACTION
 The Interaction queue is the main queue and is responsible for exchanging the elements configured in
-G.A.I.A.. Convey automatically subscribes to this queue by calling `subscription.reception()`.
+AIOS. Convey automatically subscribes to this queue by calling `interactionSubscription.reception()`.
 The messages in this queue are rendered to HTML elements.
 
 ### CONTEXT
-The Context consists of attributes defined in the G.A.I.A. BPMN process. It can be received by
+The Context consists of attributes defined in the AIOS BPMN process. It can be received by
 subscribing to this queue.
 
 ### NOTIFICATION
-Each notification configured in the G.A.I.A. BPMN process can be received if subscribed to this queue.
+Each notification configured in the AIOS BPMN process can be received if subscribed to this queue.
 
 ### LOGGING
-G.A.I.A. sends logs for certain process executions which can be received by subscribing to this queue.
+AIOS sends logs for certain process executions which can be received by subscribing to this queue.
 
 
 ## Renderer
 
 A Renderer defines how elements, which were received by the 'Interaction' queue, are rendered in
 the HTML DOM tree. Furthermore, a renderer specifies the layout of an integration project.
+You can define a renderer by passing it to `connection.subscribeInteraction`.
+
+```javascript
+const header = new QueueHeader("anyIdentityId", "optionalChannelId")
+
+new Gaia().connect( ... )
+    .then(connection => {
+        const interactionSubscription  = connection.subscribeInteraction(header, payload => console.debug(`Interaction:`, payload), new ContentCentricRenderer());
+    });
+```
 
 ### Classic Renderer
-The classic renderer renders the G.A.I.A. messages in a classic top-down manner.
+The classic renderer renders the messages in a classic top-down manner.
 
 ### Content Centric Renderer
 The content centric renderer tries to maximize the time a content is visible by updating the content
@@ -126,28 +140,33 @@ if possible or displaying interrupting actions like intent cascading by overlayi
 Renderer implementation which is based on the reveal.js library. This renderer supports horizontal
 as well as vertical navigation.
 
-### MultiTargetRenderer
-This renderer can decide which renderer is used for each channel.
-It should be used if you are using multiple channels.
-
-```javascript
-const contentCentricRenderer = new ContentCentricRenderer("lto-content-for-channel-2-and-3")
-const multiTargetRenderer = new MultiTargetRenderer({
-    "channel1": new ContentCentricRenderer(),
-    "channel2": contentCentricRenderer,
-    "channel3": contentCentricRenderer,
-    "channel4": new ClassicRenderer("lto-content-for-channel-4")
-})
-
-new Gaia(multiTargetRenderer).connect(options).then(...)
-```
-__
 ### NoopRenderer
 No-operation dummy renderer. Mainly used for audio only use cases.
 
+### RatingDecorator
+The Rating Decorator cannot be used as standalone renderer, but instead wraps any of the previous renderers.
+It adds a rating element with thumbs up / thumbs down and comment field to every incoming message.
+On click the rating is sent and stored in the backend.
+```javascript
+const header = new QueueHeader("anyIdentityId", "optionalChannelId")
+
+new Gaia().connect( ... )
+    .then(connection => {
+        const interactionSubscription  = connection.subscribeInteraction(header, payload => console.debug(`Interaction:`, payload), new RatingDecorator(new ContentCentricRenderer()));
+    });
+```
+
+The rating decorator takes the RatingRenderStrategy as an optional argument. Possible options are
+* ALL_EXCEPT_DISABLED_RATINGS (default): Render ratings for all interactions except the ones with rating markup where enabled is set to false.
+* ONLY_ENABLED_RATINGS: Only render ratings for interactions for rating markup with enabled set to true.
+
+Example usage:
+
+```javascript
+new RatingDecorator(new ContentCentricRenderer(), RatingRenderStrategy.ONLY_ENABLED_RATINGS)
+```
 
 ## Listener
-
 A listener provides the functionality to react to certain events. Events can be:
 * Connected
 * ConnectionLost
@@ -160,7 +179,39 @@ A listener provides the functionality to react to certain events. Events can be:
 Acts as the base listener.
 
 ### OffSwitch Listener
-If an input text area should only be visible when a input is required, this is the listener to be used.
+If an input text area should only be visible when an input is required, this is the listener to be used.
+
+
+## Behaviour
+A behaviour adds event listeners to UI elements for a specific subscription.
+
+### AutocompleteBehaviour
+The autocomplete behaviour adds autocomplete suggestions for a given textarea (or the default textarea with class
+"lto-textbox") to a given div (or the default div with class "lto-autocomplete").
+Provide the autocomplete elements through the add-method.
+
+Required html structure:
+```html
+<div style="position: absolute">
+    <textarea title="" class="lto-textbox"></textarea>
+    <div class="lto-autocomplete"></div>
+    <button class="lto-invoker"></button>
+</div>
+```
+
+```javascript
+        const autocompleteBehaviour = new GaiaConvey.AutocompleteBehaviour({
+            maxNumberOfResults : 3
+        })
+        ["hello", "world", "hello world", "hello1", "hello 123"].forEach(e => autocompleteBehaviour.add(e));
+
+        let gaia = new GaiaConvey.Gaia(renderer, listener);
+        gaia.connect(...)
+            .then(connection => {
+                const subscription = connection.subscribe(...);
+                autocompleteBehaviour.bind(subscription);
+            });
+```
 
 
 ## Modules

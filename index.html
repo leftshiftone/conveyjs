@@ -13,36 +13,31 @@
     </style>
 </head>
 <body>
-
 <div class="lto-gaia">
     <div class="lto-content"></div>
     <div class="lto-suggest"></div>
-    <div>
+    <div style="position: absolute">
         <textarea title="" class="lto-textbox"></textarea>
+        <div class="lto-autocomplete"></div>
         <button class="lto-invoker"></button>
     </div>
 </div>
 
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', async function () {
+        const identityId = "identityId"
+        const header = new GaiaConvey.QueueHeader(identityId, "channelId")
 
-        const identityId = "f007f007-f007-f007-f007-f007f007f007"
-        const header = new GaiaConvey.QueueHeader(identityId, "channel1")
-        const renderer = new GaiaConvey.MultiTargetRenderer({
-            "channel1": new GaiaConvey.ContentCentricRenderer(),
-            "channel2": new GaiaConvey.ContentCentricRenderer()
-        })
+        const listener = new GaiaConvey.DefaultListener();
 
-        const listener = new GaiaConvey.OffSwitchListener();
-
-        let gaia = new GaiaConvey.Gaia(renderer, listener);
-        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '8082', "heimdall", "admin"))
+        let gaia = new GaiaConvey.Gaia(listener);
+        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "heimdall", "admin"))
             .then(connection => {
-                const subscription = connection.subscribe(GaiaConvey.ConversationQueueType.INTERACTION, header, (payload) => console.log(`1 interaction:`, payload));
-                connection.subscribe(GaiaConvey.ConversationQueueType.NOTIFICATION, header, (payload) => console.log('1 Notification:', payload));
-                connection.subscribe(GaiaConvey.ConversationQueueType.LOGGING, header, (payload) => console.log('1 Log:', payload))
-                connection.subscribe(GaiaConvey.ConversationQueueType.CONTEXT, header, (payload) => console.log('1 context:', payload))
+                const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer());
+                connection.subscribeNotification(header, (payload) => console.log('Notification:', payload));
+                connection.subscribeLogging(header, (payload) => console.log('Logging:', payload))
+                connection.subscribeContext(header, (payload) => console.log('context:', payload))
                 subscription.reception({"abc": "abc"});
             });
     });

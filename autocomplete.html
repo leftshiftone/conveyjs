@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>@leftshiftone/convey</title>
+    <link rel="stylesheet" href="dist/convey-all.css">
+    <script src="dist/convey-all.js"></script>
+    <style>
+        .lto-dropdirection-down {
+            position: absolute;
+            margin-top: 1px;
+        }
+
+        .lto-dropdirection-up {
+            position: absolute;
+            margin-top: 1px;
+            bottom: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="lto-gaia">
+    <div class="lto-content"></div>
+    <div class="lto-suggest"></div>
+    <div style="position: absolute">
+        <textarea title="" class="lto-textbox"></textarea>
+        <div class="lto-autocomplete"></div>
+        <button class="lto-invoker"></button>
+    </div>
+</div>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const identityId = "f007f007-f007-f007-f007-f007f007f007"
+
+        const autocompleteBehaviour = new GaiaConvey.AutocompleteBehaviour({maxNumberOfResults: 3});
+        ["hello", "world", "hello world", "hello1", "hello 123", "test1"].forEach(e => autocompleteBehaviour.add(e));
+
+        const renderer = new GaiaConvey.MultiTargetRenderer({
+            "channel1": new GaiaConvey.ContentCentricRenderer()
+        })
+
+        const listener = new GaiaConvey.DefaultListener();
+        const header = new GaiaConvey.QueueHeader(identityId, "channel1")
+        let gaia = new GaiaConvey.Gaia(renderer, listener);
+        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "heimdall", "admin"))
+            .then(connection => {
+                const subscription = connection.subscribe(GaiaConvey.ConversationQueueType.INTERACTION, header, (payload) => console.log(`1 interaction:`, payload));
+                autocompleteBehaviour.bind(subscription);
+                subscription.reception({"abc": "abc"});
+            });
+    });
+</script>
+</html>

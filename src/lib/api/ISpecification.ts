@@ -53,4 +53,6 @@ export interface ISpecification {
     routeStartIcon?: string;
     channelId?: string;
     interactionContentClassName?: string;
+    enabled?: boolean;
+    enriched?: object;
 }

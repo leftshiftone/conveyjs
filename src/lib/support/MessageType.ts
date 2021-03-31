@@ -1,5 +1,5 @@
 /**
- * Supported G.A.I.A. message types:
+ * Supported AIOS message types:
  * RECEPTION
  * UTTERANCE
  * BUTTON
