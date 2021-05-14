@@ -1,6 +1,6 @@
 {
     "name": "@leftshiftone/convey",
-    "version": "3.8.0-rc.0",
+    "version": "3.8.0",
     "description": "JavaScript connector to AIOS.",
     "main": "./dist/convey-std.js",
     "module": "./dist/esm5/all.js",
