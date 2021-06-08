@@ -73,7 +73,10 @@ export class GoogleMap extends AbstractMap {
     initMap (wrapper: INode) {
         const map = new google.maps.Map(wrapper.find(".lto-map-container").unwrap(), {center: {lat: 0, lng: 0}, zoom: 8});
         map.setCenter(this.getCenter());
-        map.setZoom(this.getZoom());
+        if (this.spec.zoomByRadius) {
+            const bounds = new google.maps.Circle({center: map.getCenter(), radius: this.spec.zoomByRadius}).getBounds();
+            map.fitBounds(bounds);
+        } else map.setZoom(this.getZoom());
         return map;
     }
 

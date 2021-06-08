@@ -55,4 +55,5 @@ export interface ISpecification {
     interactionContentClassName?: string;
     enabled?: boolean;
     enriched?: object;
+    zoomByRadius?: number;
 }
