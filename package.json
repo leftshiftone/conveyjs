@@ -82,7 +82,7 @@
     },
     "scripts": {
         "copy-scss": "copyfiles -u 1 ./src/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/*.scss ./dist/esm2015 && copyfiles -u 1 ./src/**/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/**/*.scss ./dist/esm2015 && copyfiles -u 1 ./src/**/**/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/**/**/*.scss ./dist/esm2015 && copyfiles -u 1 ./src/**/**/**/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/**/**/**/*.scss ./dist/esm2015",
-        "webpack:dev": "webpack-dev-server --open --mode=development",
+        "dev": "webpack-dev-server --open --mode=development",
         "webpack:build": "webpack --mode=production",
         "webpack:dev-build": "webpack --mode=development",
         "clean": "shx rm -rf dist esm5 esm2015",
