@@ -7,9 +7,9 @@ import {IEventPayload} from "../api/IEvent";
 import {KeyboardBehaviour} from "../behaviour/KeyboardBehaviour";
 import {MouseBehaviour} from "../behaviour/MouseBehaviour";
 import {MessageType} from "../support/MessageType";
-import {ConvInteraction} from "../../../../gaia-sdk/gaia-sdk-javascript/src/mqtt/MqttSensorQueue";
 import {InteractionInterceptor} from "./interceptor/InteractionInterceptor";
 import {DefaultConvInteractionInterceptor} from "./interceptor/DefaultConvInteractionInterceptor";
+import {ConvInteraction} from "@leftshiftone/gaia-sdk/dist/mqtt/MqttSensorQueue";
 
 export class InteractionSubscription extends Subscription {
 

@@ -65,6 +65,8 @@ export {
     Connection,
     Subscription,
     InteractionSubscription,
+    LanguageInteractionInterceptor,
+    InteractionInterceptor,
     ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
     ClassicRenderer,
     ContentCentricRenderer,
@@ -125,6 +127,5 @@ export {
     Basket,
     SelectionItem,
     Selectable,
-    LanguageInteractionInterceptor,
-    InteractionInterceptor
+
 };

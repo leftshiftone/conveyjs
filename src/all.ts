@@ -184,8 +184,8 @@ export {
     Selectable,
     Rating,
     Connection,
+    InteractionInterceptor,
+    LanguageInteractionInterceptor,
     InteractionSubscription,
     Subscription,
-    InteractionInterceptor,
-    LanguageInteractionInterceptor
 };

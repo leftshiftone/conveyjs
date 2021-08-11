@@ -83,9 +83,8 @@
     },
     "scripts": {
         "copy-scss": "copyfiles -u 1 ./src/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/*.scss ./dist/esm2015 && copyfiles -u 1 ./src/**/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/**/*.scss ./dist/esm2015 && copyfiles -u 1 ./src/**/**/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/**/**/*.scss ./dist/esm2015 && copyfiles -u 1 ./src/**/**/**/**/*.scss ./dist/esm5 && copyfiles -u 1 ./src/**/**/**/**/*.scss ./dist/esm2015",
-        "use:local": "CONVERSATION_LANGUAGE=it",
         "webpack:dev": "webpack-dev-server --open --mode=development",
-        "dev:local": "yarn use:local yarn webpack:dev",
+        "dev:local": "yarn webpack:dev --define process.env.CONVERSATION_LANGUAGE='\"de\"'",
         "webpack:build": "webpack --mode=production",
         "webpack:dev-build": "webpack --mode=development",
         "clean": "shx rm -rf dist esm5 esm2015",

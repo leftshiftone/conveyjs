@@ -37,11 +37,11 @@
         const header = new GaiaConvey.QueueHeader(identityId, "channelId")
 
         const listener = new GaiaConvey.DefaultListener();
-
+        const language=  new GaiaConvey.LanguageInteractionInterceptor("en")
         let gaia = new GaiaConvey.Gaia(listener);
         gaia.connect(new GaiaConvey.QueueOptions('ws://api.aios.local/mqtt', '80', "default", "default"))
             .then(connection => {
-                const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer(), new LanguageInteractionInterceptor("en"));
+                const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer());
                 connection.subscribeNotification(header, (payload) => console.log('Notification:', payload));
                 connection.subscribeLogging(header, (payload) => console.log('Logging:', payload))
                 connection.subscribeContext(header, (payload) => console.log('context:', payload))
