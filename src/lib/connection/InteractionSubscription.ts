@@ -21,7 +21,6 @@ export class InteractionSubscription extends Subscription {
         this.renderer = renderer;
         this.renderer.init(header.channelId);
         this.interactionInterceptor = interactionInterceptor;
-        console.log("nombre del interceptor " + this.interactionInterceptor.name());
 
         const ev = EventType.withChannelId(EventType.PUBLISH, this.header.channelId);
         EventStream.addListener(ev, (e:IEventPayload) => this.publish((this.interactionInterceptor.execute(new ConvInteractionAdapter(e[0])) as ConvInteractionAdapter).toIPayloadEvent()));
