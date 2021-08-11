@@ -57,6 +57,8 @@ import { FlexSearchIndex } from './lib/behaviour/autocomplete/index/FlexSearchIn
 import {Connection} from "./lib/connection/Connection";
 import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
 import {Subscription} from "./lib/connection/Subscription";
+import {InteractionInterceptor} from './lib/connection/interceptor/InteractionInterceptor';
+import {LanguageInteractionInterceptor} from './lib/connection/interceptor/LanguageInteractionInterceptor';
 
 export * from './lib/api';
 export {
@@ -123,4 +125,6 @@ export {
     Basket,
     SelectionItem,
     Selectable,
+    LanguageInteractionInterceptor,
+    InteractionInterceptor
 };

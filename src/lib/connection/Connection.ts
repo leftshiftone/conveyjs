@@ -10,6 +10,7 @@ import EventStream from "../event/EventStream";
 import {Subscription} from "./Subscription";
 import {InteractionSubscription} from "./InteractionSubscription";
 import {ContentCentricRenderer} from "../renderer/ContentCentricRenderer";
+import {InteractionInterceptor} from "./interceptor/InteractionInterceptor";
 
 export class Connection {
 
@@ -85,9 +86,10 @@ export class Connection {
      * @param header the destination header
      * @param callback the callback function
      * @param renderer the renderer
+     * @param interactionInterceptor intercepts the interaction
      */
-    public subscribeInteraction(header: QueueHeader, callback: QueueCallback, renderer: IRenderer) {
-        const subscription = new InteractionSubscription(header, callback, this.mqttSensorQueue, renderer);
+    public subscribeInteraction(header: QueueHeader, callback: QueueCallback, renderer: IRenderer, interactionInterceptor?: InteractionInterceptor) {
+        const subscription = new InteractionSubscription(header, callback, this.mqttSensorQueue, renderer, interactionInterceptor);
         this.setSubscription(subscription);
         return subscription;
     }

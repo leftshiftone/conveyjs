@@ -20,21 +20,28 @@
         <textarea title="" class="lto-textbox"></textarea>
         <div class="lto-autocomplete"></div>
         <button class="lto-invoker"></button>
+        <select name="language" id="language" class="lto-language">
+            <option value="tr">Turco</option>
+            <option value="en">English</option>
+            <option value="es">Espanol</option>
+            <option value="de">Deutsch</option>
+            <option value="it">Italiano</option>
+        </select>
     </div>
 </div>
 
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const identityId = "identityId"
+        const identityId = "64c9a32a-9864-4686-a902-e31f1f21c859"
         const header = new GaiaConvey.QueueHeader(identityId, "channelId")
 
         const listener = new GaiaConvey.DefaultListener();
 
         let gaia = new GaiaConvey.Gaia(listener);
-        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "heimdall", "admin"))
+        gaia.connect(new GaiaConvey.QueueOptions('ws://api.aios.local/mqtt', '80', "default", "default"))
             .then(connection => {
-                const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer());
+                const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer(), new LanguageInteractionInterceptor("en"));
                 connection.subscribeNotification(header, (payload) => console.log('Notification:', payload));
                 connection.subscribeLogging(header, (payload) => console.log('Logging:', payload))
                 connection.subscribeContext(header, (payload) => console.log('context:', payload))
