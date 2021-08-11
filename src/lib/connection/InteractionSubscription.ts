@@ -8,7 +8,7 @@ import {KeyboardBehaviour} from "../behaviour/KeyboardBehaviour";
 import {MouseBehaviour} from "../behaviour/MouseBehaviour";
 import {MessageType} from "../support/MessageType";
 import {InteractionInterceptor} from "./interceptor/InteractionInterceptor";
-import {DefaultConvInteractionInterceptor} from "./interceptor/DefaultConvInteractionInterceptor";
+import {DefaultInteractionInterceptor} from "./interceptor/DefaultInteractionInterceptor";
 import {ConvInteraction} from "@leftshiftone/gaia-sdk/dist/mqtt/MqttSensorQueue";
 
 export class InteractionSubscription extends Subscription {
@@ -16,7 +16,7 @@ export class InteractionSubscription extends Subscription {
     public renderer: IRenderer;
     private interactionInterceptor: InteractionInterceptor;
 
-    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue, renderer: IRenderer, interactionInterceptor: InteractionInterceptor = new DefaultConvInteractionInterceptor()) {
+    constructor(header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue, renderer: IRenderer, interactionInterceptor: InteractionInterceptor = new DefaultInteractionInterceptor()) {
         super(ConversationQueueType.INTERACTION, header, callback, mqttSensorQueue);
         this.renderer = renderer;
         this.renderer.init(header.channelId);

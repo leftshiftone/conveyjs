@@ -2,7 +2,7 @@ import {LanguageProvider} from "./LanguageProvider";
 
 export class HTMLLanguageElementProvider implements LanguageProvider {
 
-    readonly LANGUAGE_CLASS = "lto-language";
+    public readonly LANGUAGE_CLASS = "lto-language";
 
     /**
      * Obtains the default language of the browser

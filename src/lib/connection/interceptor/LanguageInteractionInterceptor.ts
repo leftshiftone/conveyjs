@@ -9,10 +9,6 @@ export class LanguageInteractionInterceptor implements InteractionInterceptor{
         this.language = language;
     }
 
-    public name(): string {
-        return "languageInterceptor";
-    }
-
     public execute(interaction : ConvInteraction): ConvInteraction {
         if (interaction["attributes"]["language"] !== undefined) {
             console.log("Conversation Language set in attributes: " + interaction["attributes"]["language"]);

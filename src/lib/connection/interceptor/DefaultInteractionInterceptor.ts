@@ -2,18 +2,13 @@ import {ConversationLanguageResolver} from "../language/ConversationLanguageReso
 import {InteractionInterceptor} from "./InteractionInterceptor";
 import {ConvInteraction} from "@leftshiftone/gaia-sdk/dist/mqtt/MqttSensorQueue";
 
-export class DefaultConvInteractionInterceptor implements InteractionInterceptor{
+export class DefaultInteractionInterceptor implements InteractionInterceptor{
 
     private languageResolver: ConversationLanguageResolver;
 
     constructor() {
         this.languageResolver = new ConversationLanguageResolver();
     }
-
-    public name(): string {
-        return "defaultInterceptor";
-    }
-
 
         /**
      * It goes through all language providers to extract the converation language
