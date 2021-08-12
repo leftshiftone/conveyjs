@@ -1,5 +1,6 @@
 import {LanguageProvider} from "./LanguageProvider";
-export class LanguageEnvVariableProvider implements LanguageProvider{
+
+export class LanguageEnvVariableProvider implements LanguageProvider {
 
     /**
      * Obtains the conversation language from the property 'CONVERSATION_LANGUAGE'

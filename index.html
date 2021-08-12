@@ -21,10 +21,9 @@
         <div class="lto-autocomplete"></div>
         <button class="lto-invoker"></button>
         <select name="language" id="language" class="lto-language">
-            <option value="tr">Turco</option>
+            <option value="de">Deutsch</option>
             <option value="en">English</option>
             <option value="es">Espanol</option>
-            <option value="de">Deutsch</option>
             <option value="it">Italiano</option>
         </select>
     </div>
@@ -33,11 +32,9 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const identityId = "64c9a32a-9864-4686-a902-e31f1f21c859"
+        const identityId = "IdentityId"
         const header = new GaiaConvey.QueueHeader(identityId, "channelId")
-
         const listener = new GaiaConvey.DefaultListener();
-        const language=  new GaiaConvey.LanguageInteractionInterceptor("en")
         let gaia = new GaiaConvey.Gaia(listener);
         gaia.connect(new GaiaConvey.QueueOptions('ws://api.aios.local/mqtt', '80', "default", "default"))
             .then(connection => {

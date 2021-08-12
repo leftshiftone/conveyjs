@@ -23,7 +23,7 @@ export class InteractionSubscription extends Subscription {
         this.interactionInterceptor = interactionInterceptor;
 
         const ev = EventType.withChannelId(EventType.PUBLISH, this.header.channelId);
-        EventStream.addListener(ev, (e:IEventPayload) => this.publish((this.interactionInterceptor.execute(new ConvInteractionAdapter(e[0])) as ConvInteractionAdapter).toIPayloadEvent()));
+        EventStream.addListener(ev, (e: IEventPayload) => this.publish((this.interactionInterceptor.execute(new ConvInteractionAdapter(e[0])) as ConvInteractionAdapter).toIPayloadEvent()));
 
     }
 
@@ -35,7 +35,11 @@ export class InteractionSubscription extends Subscription {
             this.bind(new KeyboardBehaviour(this.renderer));
             this.bind(new MouseBehaviour(this.renderer));
         }
-        this.mqttSensorQueue.publishConvInteraction(this.header, this.interactionInterceptor.execute({attributes, payload: {}, type: MessageType.RECEPTION}));
+        this.mqttSensorQueue.publishConvInteraction(this.header, this.interactionInterceptor.execute({
+            attributes,
+            payload: {},
+            type: MessageType.RECEPTION
+        }));
     }
 
     public onMessage(message: object) {
@@ -51,7 +55,7 @@ export class InteractionSubscription extends Subscription {
 
 }
 
-export class ConvInteractionAdapter implements ConvInteraction{
+export class ConvInteractionAdapter implements ConvInteraction {
     private eventPayload: IEventPayload;
     attributes: object;
     payload: object;

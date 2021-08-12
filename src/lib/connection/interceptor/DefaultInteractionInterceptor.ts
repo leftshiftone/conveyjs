@@ -2,20 +2,22 @@ import {ConversationLanguageResolver} from "../language/ConversationLanguageReso
 import {InteractionInterceptor} from "./InteractionInterceptor";
 import {ConvInteraction} from "@leftshiftone/gaia-sdk/dist/mqtt/MqttSensorQueue";
 
-export class DefaultInteractionInterceptor implements InteractionInterceptor{
+/**
+ * Intercepts all messages from convey before they are sent and enrich the attributes with the conversation language
+ */
+export class DefaultInteractionInterceptor implements InteractionInterceptor {
 
-    private languageResolver: ConversationLanguageResolver;
+    private languageResolver = new ConversationLanguageResolver();
 
-    constructor() {
-        this.languageResolver = new ConversationLanguageResolver();
-    }
-
-        /**
-     * It goes through all language providers to extract the converation language
+    /**
+     * It goes through all language providers to extract the conversation language and enrich the attributes of the interaction with it.
+     * Should the attributes contain the language, this will not be modified.
+     *
+     * @param interaction ConveyInteraction
      */
-    public execute(interaction : ConvInteraction): ConvInteraction {
+    public execute(interaction: ConvInteraction): ConvInteraction {
         if (interaction["attributes"]["language"] !== undefined) {
-            console.log("Conversation Language set in attributes: " + interaction["attributes"]["language"]);
+            console.log("Conversation language already in attributes with value: " + interaction["attributes"]["language"]);
             return interaction;
         }
         const conversationLanguage = this.languageResolver.get();
