@@ -32,7 +32,6 @@ export class Subscription {
      * @param payload the payload
      */
     public publish = (payload: IEventPayload) => {
-        console.log("LANGUAGE Msg " + payload.attributes["language"]);
         this.mqttSensorQueue.publish(this.type, this.header, payload.payload, payload.attributes, payload.type);
     }
 
