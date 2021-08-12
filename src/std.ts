@@ -63,6 +63,8 @@ import {FlexSearchIndex} from './lib/behaviour/autocomplete/index/FlexSearchInde
 import {Connection} from "./lib/connection/Connection";
 import {InteractionSubscription} from "./lib/connection/InteractionSubscription";
 import {Subscription} from "./lib/connection/Subscription";
+import {InteractionInterceptor} from './lib/connection/interceptor/InteractionInterceptor';
+import {LanguageInteractionInterceptor} from './lib/connection/interceptor/LanguageInteractionInterceptor';
 import {EventFactory} from "./lib/event/EventFactory";
 import { EventType } from './lib/event/EventType';
 
@@ -71,6 +73,8 @@ export {
     Connection,
     Subscription,
     InteractionSubscription,
+    LanguageInteractionInterceptor,
+    InteractionInterceptor,
     ConversationQueueType, MqttSensorQueue, QueueOptions, QueueHeader, QueueCallback,
     ClassicRenderer,
     ContentCentricRenderer,

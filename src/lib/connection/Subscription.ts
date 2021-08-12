@@ -31,8 +31,9 @@ export class Subscription {
      *
      * @param payload the payload
      */
-    public publish = (payload: IEventPayload) =>
-        this.mqttSensorQueue.publish(this.type, this.header, payload.payload, payload.attributes, payload.type)
+    public publish = (payload: IEventPayload) => {
+        this.mqttSensorQueue.publish(this.type, this.header, payload.payload, payload.attributes, payload.type);
+    }
 
     /**
      * Binds the given IBehaviour to the Subscription.

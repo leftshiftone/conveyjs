@@ -213,6 +213,39 @@ Required html structure:
             });
 ```
 
+## Interaction language
+A language code must be present in all convey interactions in order for AIOS to be able to reply in the proper language.
+
+### Language code
+
+* ISO 639-1 (e.g. de => german, en => english)
+* Locale (e.g. de_DE, de_AT, en_US)
+
+### How to enrich the interactions with the language code
+The languages can be provided in 3 different ways:
+1. By setting the environment variable CONVERSATION_LANGUAGE
+2. By defining a HTML element with the class "lto-language" containing the language code as its value
+3. By the browser. The default language browser or rather its locale will be sent to AIOS.
+
+```
+Please note that the language providers will be executed in the described order.
+In other words, if the variable CONVERSATION_LANGUAGE is set, the language code defined in the HTML element or the browser will be ignored.
+```
+NOTE: Programmatically it is also possible to hardcode the language. See example below (LanguageInteractionInterceptor):
+
+```javascript
+const header = new QueueHeader("anyIdentityId", "optionalChannelId")
+
+new Gaia(new OffSwitchListener())
+    .connect(new QueueOptions('wss://URL/', 8080, "USERNAME", "PASSWORD"))
+    .then(connection => {
+        const interactionSubscription = connection.subscribeInteraction(header, payload => console.debug(`Interaction:`, payload), new ContentCentricRenderer(), new LanguageInteractionInterceptor("en"));
+        connection.subscribeNotification(header, payload => console.debug('Notification:', payload));
+        connection.subscribeLogging(header, payload => console.debug('Logging:', payload))
+        connection.subscribeContext(header, payload => console.debug('context:', payload))
+        interactionSubscription.reception({initialMessage: "value"});
+    });
+```
 
 ## Modules
 
