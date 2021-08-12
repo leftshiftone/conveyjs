@@ -2,7 +2,7 @@ import {Image, ClassicRenderer} from "../../../../std";
 import Renderables from "../../Renderables";
 
 describe("ImageTest", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("img", Image);
     });
 

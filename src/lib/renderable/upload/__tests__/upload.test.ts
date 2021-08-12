@@ -4,7 +4,7 @@ import {fireEvent} from "@testing-library/dom"
 import * as fs from "fs";
 
 describe("Upload", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("text", Text);
         Renderables.register("upload", Upload);
         Renderables.register("submit", Submit);

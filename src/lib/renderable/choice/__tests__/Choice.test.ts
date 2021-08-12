@@ -7,7 +7,7 @@ import {Choice} from "../Choice";
 import {fireEvent} from "@testing-library/dom"
 
 describe("Choice", () => {
-    it("beforeAll", () => {
+    beforeAll(() => {
         Renderables.register("singleChoice", SingleChoice);
         Renderables.register("multipleChoice", MultipleChoice);
         Renderables.register("label", Label);

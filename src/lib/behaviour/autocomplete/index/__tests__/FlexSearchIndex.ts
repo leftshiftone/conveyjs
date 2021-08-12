@@ -12,6 +12,16 @@ describe("FlexSearchIndex test", () => {
                 .then(result => expect(new Set(result)).toEqual(new Set(["bc", "bcde"])));
         });
 
+        it("index overwrites duplicate entries", () => {
+            const index = new FlexSearchIndex();
+            index.add("a");
+            index.add("a");
+
+            return index.search("a")
+                .then(result => expect(result).toEqual(["a"]));
+        });
+
+
         // error case in flex search with different settings for encoding & tokenization
         it("index returns doesnt return multiples of elements", () => {
             const index = new FlexSearchIndex();
@@ -35,22 +45,22 @@ describe("FlexSearchIndex test", () => {
         });
 
 
-    it("configuration affects index", () => {
-        const index = new FlexSearchIndex({encode: "extra"});
-        index.add("test ok yes");
+        it("configuration affects index", () => {
+            const index = new FlexSearchIndex({encode: "extra"});
+            index.add("test ok yes");
 
-        return index.search("tst k yes", 5)
-            .then(result => expect(result.length).toEqual(1));
-    });
+            return index.search("tst k yes", 5)
+                .then(result => expect(result.length).toEqual(1));
+        });
 
-    it("clear removes all elements", () => {
-        const index = new FlexSearchIndex();
-        index.add("abc");
-        index.add("abcd");
-        index.clear();
+        it("clear removes all elements", () => {
+            const index = new FlexSearchIndex();
+            index.add("abc");
+            index.add("abcd");
+            index.clear();
 
-        return index.search("abc", 10)
-            .then(result => expect(result.length).toEqual(0));
-    });
+            return index.search("abc", 10)
+                .then(result => expect(result.length).toEqual(0));
+        });
     }
 );
