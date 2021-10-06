@@ -1,5 +1,6 @@
 import {HTMLLanguageElementProvider} from "../../language/HTMLLanguageElementProvider";
 import {LanguageInteractionInterceptor} from "../LanguageInteractionInterceptor";
+import {INTERNAL_LANGUAGE} from "../InteractionInterceptor";
 
 
 describe("Converstaion language in env variables", () => {
@@ -42,7 +43,7 @@ describe("Converstaion language in env variables", () => {
         const typ = "type";
         const interaction = {attributes: att, payload: pay, type: typ };
         const interceptedInteraction = new LanguageInteractionInterceptor("de").execute(interaction);
-        expect(interceptedInteraction.attributes["language"]).toEqual("de");
+        expect(interceptedInteraction.attributes[INTERNAL_LANGUAGE]).toEqual("de");
         expect(interceptedInteraction.payload).toEqual(pay);
         expect(interceptedInteraction.type).toEqual(typ);
     });
@@ -51,12 +52,12 @@ describe("Converstaion language in env variables", () => {
     it("Do not override language if the attributes already contained that property", () => {
         mockDocumentWithInput("es_ES", new HTMLLanguageElementProvider().LANGUAGE_CLASS);
         mockEnvVariableConversationLanguage("de_AT");
-        const att = {foo:"bar", language: "es_MX"};
+        const att = {foo:"bar", [INTERNAL_LANGUAGE]: "es_MX"};
         const pay = {text:"this is a message"};
         const typ = "type";
         const interaction = {attributes: att, payload: pay, type: typ };
         const interceptedInteraction = new LanguageInteractionInterceptor("es").execute(interaction);
-        expect(interceptedInteraction.attributes["language"]).toEqual("es_MX");
+        expect(interceptedInteraction.attributes[INTERNAL_LANGUAGE]).toEqual("es_MX");
         expect(interceptedInteraction.payload).toEqual(pay);
         expect(interceptedInteraction.type).toEqual(typ);
     });

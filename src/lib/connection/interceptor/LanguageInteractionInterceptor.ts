@@ -1,4 +1,4 @@
-import {InteractionInterceptor} from "./InteractionInterceptor";
+import {InteractionInterceptor, INTERNAL_LANGUAGE} from "./InteractionInterceptor";
 import {ConvInteraction} from "@leftshiftone/gaia-sdk/dist/mqtt/MqttSensorQueue";
 
 /**
@@ -14,11 +14,11 @@ export class LanguageInteractionInterceptor implements InteractionInterceptor {
     }
 
     public execute(interaction: ConvInteraction): ConvInteraction {
-        if (interaction["attributes"]["language"] !== undefined) {
-            console.log("Conversation Language already in attributes: " + interaction["attributes"]["language"]);
+        if (interaction["attributes"][INTERNAL_LANGUAGE] !== undefined) {
+            console.log("Conversation Language already in attributes: " + interaction["attributes"][INTERNAL_LANGUAGE]);
             return interaction;
         }
-        interaction["attributes"]["language"] = this.language;
+        interaction["attributes"][INTERNAL_LANGUAGE] = this.language;
         return interaction;
     }
 

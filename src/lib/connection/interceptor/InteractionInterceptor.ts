@@ -6,3 +6,5 @@ import {ConvInteraction} from "@leftshiftone/gaia-sdk/dist/mqtt/MqttSensorQueue"
 export interface InteractionInterceptor {
     execute(interaction : ConvInteraction): ConvInteraction;
 }
+
+export const INTERNAL_LANGUAGE = "_internal_lang";
