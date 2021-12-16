@@ -32,6 +32,7 @@ export class Button implements IRenderable {
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const button = node("button");
         new Specification(this.spec).initNode(button, "lto-button");
+        button.setAriaLabel(this.spec.ariaLabel);
         button.addAttributes({type: Button.TYPE});
 
         if (isNested) {

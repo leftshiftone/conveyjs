@@ -29,6 +29,7 @@ export class Basket implements IRenderable, IStackeable {
     private renderBasket(renderer: IRenderer): INode {
         const basket = node("div");
         this.spec.initNode(basket, "lto-basket");
+        basket.setAriaLabel(this.spec.raw.ariaLabel);
         basket.appendChild(this.renderAddButton(basket, renderer));
         return basket;
     }

@@ -105,6 +105,8 @@ export interface INode {
 
     setRequired(required?: boolean): INode;
 
+    setAriaLabel(label?: string): INode;
+
 }
 
 class Node implements INode {
@@ -272,6 +274,13 @@ class Node implements INode {
             return wrap(childWithId as HTMLElement);
         }
         return null;
+    }
+
+    public setAriaLabel(label?: string): INode {
+        if (label) {
+            this.node.setAttribute("aria-label", label);
+        }
+        return this;
     }
 
 }

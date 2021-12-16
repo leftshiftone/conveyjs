@@ -2,6 +2,7 @@ import {IRenderer, IRenderable, ISpecification} from '../../api';
 import node, {INode} from "../../support/node";
 import Renderables from "../Renderables";
 import {Overlay} from "../overlays/Overlay";
+import {Specification} from "../../support/Specification";
 
 /**
  * Implementation of the 'trigger' markup element.
@@ -25,18 +26,13 @@ export class Trigger implements IRenderable {
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const trigger = node("div");
-        trigger.addClasses("lto-trigger");
-        trigger.setId(this.spec.id);
-        trigger.setName(this.spec.name);
-        trigger.innerText(this.spec.text);
-
-        this.spec.class !== undefined ? trigger.addClasses(this.spec.class) : () => {};
+        new Specification(this.spec).initNode(trigger, "lto-trigger");
 
         trigger.onClick(() => {
             const overlay = this.getOverlayFromContainer(trigger.getParentByClass("lto-container"));
             if (!overlay) {
                 console.error(`No overlay with name ${this.spec.name} found`);
-                return
+                return;
             }
             Overlay.show(overlay);
         });

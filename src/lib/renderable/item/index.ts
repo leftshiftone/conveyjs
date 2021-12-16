@@ -1,6 +1,7 @@
 import {IRenderer, ISpecification, IRenderable} from '../../api';
 import Renderables from '../Renderables';
 import node from "../../support/node";
+import {Specification} from "../../support/Specification";
 
 /**
  * Implementation of the 'item' markup element.
@@ -23,14 +24,14 @@ export class Item implements IRenderable {
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const item = node("li");
-        item.setId(this.spec.id);
-        item.addClasses("lto-item", "lto-left");
-        this.spec.class !== undefined ? item.addClasses(this.spec.class) : () => {};
+
         (this.spec.elements || []).map(e => renderer.render(e, this))
             .forEach(e => e.forEach(x => item.appendChild(node(x as HTMLElement))));
-        item.unwrap().appendChild(document.createTextNode(this.spec.text || ""));
-        if (isNested)
-            item.addClasses("lto-nested");
+
+        new Specification(this.spec).initNode(item, "lto-item");
+
+        isNested && item.addClasses("lto-nested");
+
         return item.unwrap();
     }
 
