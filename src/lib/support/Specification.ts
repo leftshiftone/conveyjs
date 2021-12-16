@@ -1,5 +1,6 @@
 import {ISpecification} from "../api";
 import {INode} from "./node";
+import {InputContainer} from "./InputContainer";
 
 export class Specification {
 
@@ -19,7 +20,7 @@ export class Specification {
         if (className) node.addClasses(className);
         node.setId(this.raw.id);
         node.setName(this.raw.name);
-        node.setRequired(this.raw.required);
+        InputContainer.setRequiredAttribute(node.unwrap(), this.raw.required);
         node.innerText(this.raw.text);
         node.addClasses(`lto-${this.raw.position || 'left'}`);
         this.raw.class !== undefined ? node.addClasses(this.raw.class) : () => {};

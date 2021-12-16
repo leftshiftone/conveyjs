@@ -173,4 +173,11 @@ describe('NodeTest', () => {
         expect(outer.appendChild(childWithId).getChildWithId()).toEqual(childWithId);
     });
 
+    it('setAriaLabel()', () => {
+        const n = node("div");
+        n.setAriaLabel("My Label");
+        n.getAttribute("aria-label");
+        expect(n.getAttribute("aria-label")).toEqual("My Label");
+    });
+
 });

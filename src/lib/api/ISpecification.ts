@@ -56,4 +56,5 @@ export interface ISpecification {
     enabled?: boolean;
     enriched?: object;
     zoomByRadius?: number;
+    ariaLabel?: string;
 }

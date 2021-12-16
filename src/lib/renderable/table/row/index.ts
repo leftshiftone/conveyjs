@@ -24,7 +24,7 @@ export class Row implements IRenderable, IStackeable {
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const row = document.createElement('tr');
-        if(this.spec.class !== undefined) {
+        if (this.spec.class !== undefined) {
             this.spec.class.split(" ").forEach(e => row.classList.add(e));
         }
         row.classList.add('lto-row');

@@ -8,6 +8,7 @@ import {Overlay} from "../overlays/Overlay";
 import node from "../../support/node";
 import {EventType} from "../../event/EventType";
 import {MessageType} from "../../support/MessageType";
+import wrap from "../../support/node";
 
 /**
  * Implementation of the 'submit' markup element.
@@ -33,6 +34,7 @@ export class Submit implements IRenderable {
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const position = this.spec.position || 'left';
         const submit: HTMLButtonElement = document.createElement('button');
+        wrap(submit).setAriaLabel(this.spec.ariaLabel);
         submit.setAttribute(`type`, Submit.TYPE);
 
         submit.classList.add("lto-submit", "lto-" + position);

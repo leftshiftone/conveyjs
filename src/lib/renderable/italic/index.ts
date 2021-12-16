@@ -1,6 +1,7 @@
 import {IRenderer, ISpecification, IRenderable} from '../../api';
 import Renderables from '../Renderables';
 import node from "../../support/node";
+import {Specification} from "../../support/Specification";
 
 /**
  * Implementation of the 'italic' markup element.
@@ -23,10 +24,8 @@ export class Italic implements IRenderable {
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const italic = node("i");
-        italic.addClasses("lto-italic", "lto-left");
-        italic.setId(this.spec.id);
-        italic.innerText(this.spec.text);
-        this.spec.class !== undefined ? italic.addClasses(this.spec.class) : () => {};
+        new Specification(this.spec).initNode(italic, "lto-italic");
+        italic.setAriaLabel(this.spec.ariaLabel);
         return italic.unwrap();
     }
 

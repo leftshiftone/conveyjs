@@ -5,6 +5,7 @@ import {Scanner} from "./Scanner";
 import Result from "@zxing/library/esm5/core/Result";
 import {Navigator} from "../../support/Navigator";
 import {drawCanvas} from "../../support/Canvas";
+import {Specification} from "../../support/Specification";
 
 /**
  * Implementation of the 'codeReader' markup element.
@@ -36,17 +37,10 @@ export class CodeReader implements IRenderable {
         const resetButton = node("div");
         const successLabel = node("div");
 
-        wrapper.addAttributes({
-            id: this.spec.id || "",
-            name: this.spec.name || "",
-            class: "lto-code-reader"
-        });
+        new Specification(this.spec).initNode(wrapper, "lto-conde-reader");
 
         resetButton.addClasses("lto-reset-button", "lto-disabled");
         successLabel.addClasses("lto-read-success");
-
-        if (this.spec.class !== undefined)
-            this.spec.class.split(" ").forEach(e => wrapper.addClasses(e));
 
         controlWrapper.appendChild(resetButton);
         wrapper.appendChild(video);

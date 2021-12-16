@@ -1,6 +1,7 @@
 import {IRenderer, ISpecification, IRenderable} from '../../api';
 import Renderables from '../Renderables';
 import node from "../../support/node";
+import {Specification} from "../../support/Specification";
 
 /**
  * Implementation of the 'video' markup element.
@@ -23,11 +24,9 @@ export class Video implements IRenderable {
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const video = node("video");
-        video.setId(this.spec.id);
-        video.addClasses("lto-video", "lto-left");
+        new Specification(this.spec).initNode(video, "lto-video");
         video.addAttributes({controls: true, src: this.spec.src});
-        this.spec.class !== undefined ? video.addClasses(this.spec.class) : () => {};
-        if(isNested) video.addClasses("lto-nested");
+        if (isNested) video.addClasses("lto-nested");
         return video.unwrap();
     }
 }

@@ -10,7 +10,7 @@ describe("LinkTest", () => {
         const label = new Link({type: "Link"});
         const element = label.render(new ContentCentricRenderer(), true);
         expect(element.tagName).toBe("A");
-        expect(element.className).toBe("lto-link");
+        expect(element.className).toBe("lto-link lto-left");
         expect(element.getAttribute("href")).toBe("");
         expect(element.getAttribute("target")).toBe("_blank");
     });
@@ -20,7 +20,8 @@ describe("LinkTest", () => {
             id: "id",
             class: "lto-left lto-gaia",
             value: "https://www.leftshift.one",
-            type: "Link"
+            type: "Link",
+            position: "left"
         });
         const element = label.render(new ContentCentricRenderer(), true);
         expect(element.tagName).toBe("A");
