@@ -1,5 +1,7 @@
 import {IRenderer, ISpecification, IRenderable} from '../../api';
 import Renderables from '../Renderables';
+import node from "../../support/node";
+import {Specification} from "../../support/Specification";
 
 /**
  * Implementation of the 'bold' markup element. A
@@ -20,17 +22,10 @@ export class Bold implements IRenderable {
      * @inheritDoc
      */
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
-        const bold = document.createElement('b');
-        bold.classList.add('lto-bold');
-        if (this.spec.id !== undefined) {
-            bold.id = this.spec.id;
-        }
-        if (this.spec.class !== undefined) {
-            this.spec.class.split(" ").forEach(e => bold.classList.add(e));
-        }
-        bold.appendChild(document.createTextNode(this.spec.text || ""));
-
-        return bold;
+        const bold = node("b");
+        new Specification(this.spec).initNode(bold, "lto-bold");
+        bold.setAriaLabel(this.spec.ariaLabel);
+        return bold.unwrap();
     }
 
 }

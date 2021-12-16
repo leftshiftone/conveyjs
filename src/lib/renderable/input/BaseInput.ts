@@ -13,15 +13,14 @@ export class BaseInput {
     initInput(type: string, className: string, isNested: boolean): HTMLInputElement {
         const input = node("input");
         new Specification(this.spec).initNode(input, className);
+        input.setAriaLabel(this.spec.ariaLabel);
         input.addAttributes({
             type,
             placeholder: this.spec.placeholder || "",
             value: this.spec.value || "",
         });
 
-        if (isNested) {
-            input.addClasses("lto-nested");
-        }
+        isNested && input.addClasses("lto-nested");
 
         const element = input.unwrap() as HTMLInputElement;
         element.addEventListener("change", () =>

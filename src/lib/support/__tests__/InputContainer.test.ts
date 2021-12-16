@@ -19,44 +19,44 @@ describe("InputContainer test", () => {
         });
         const attributes: Attr = {} as Attr;
         InputContainer.addValuesToAttributes(input.unwrap() as HTMLInputElement, attributes);
-        expect(attributes).toEqual(expectedAttr)
+        expect(attributes).toEqual(expectedAttr);
     });
 
     it.each(InputContainer.ELEMENTS.map(element => {
         const tagAndClass = element.split(".");
-        const dataPrefix = tagAndClass[0] != "input" ? "data-" : "";
+        const dataPrefix = tagAndClass[0] !== "input" ? "data-" : "";
         const markup = `<${tagAndClass[0]} class="${tagAndClass[1]}" ${dataPrefix}value="bar" ${dataPrefix}name="foo"/>`;
-        return [markup, {foo: ["bar"]}]
+        return [markup, {foo: ["bar"]}];
     }))('values can be retrieved from %s', (html, expected) => {
         const submit = document.createElement("button") as HTMLButtonElement;
         const form = document.createElement("form") as HTMLFormElement;
         form.innerHTML = html.toString();
         form.appendChild(submit);
         return InputContainer.getAll(form, submit)
-            .then(attr => expect(attr).toEqual(expected))
+            .then(attr => expect(attr).toEqual(expected));
     });
 
     it.each(InputContainer.ELEMENTS.map(element => {
         const tagAndClass = element.split(".");
-        const dataPrefix = tagAndClass[0] != "input" ? "data-" : "";
-        const required = tagAndClass[0] != "input" ? `data-required="false"` : "";
+        const dataPrefix = tagAndClass[0] !== "input" ? "data-" : "";
+        const required = tagAndClass[0] !== "input" ? `data-required="false"` : "";
         const markup = `<${tagAndClass[0]} class="${tagAndClass[1]}" ${dataPrefix}value="" ${dataPrefix}name="foo" ${required}/>`;
-        return [markup, {}]
+        return [markup, {}];
     }))('no values given for not required inputs returns empty data for %s', (html, expected) => {
         const submit = document.createElement("button") as HTMLButtonElement;
         const form = document.createElement("form") as HTMLFormElement;
         form.innerHTML = html.toString();
         form.appendChild(submit);
         return InputContainer.getAll(form, submit)
-            .then(attr => expect(attr).toEqual(expected))
+            .then(attr => expect(attr).toEqual(expected));
     });
 
     it.each(InputContainer.ELEMENTS.map(element => {
         const tagAndClass = element.split(".");
-        const dataPrefix = tagAndClass[0] != "input" ? "data-" : "";
-        const required = tagAndClass[0] != "input" ? `data-required="true"` : "required=\"required\"";
+        const dataPrefix = tagAndClass[0] !== "input" ? "data-" : "";
+        const required = tagAndClass[0] !== "input" ? `data-required="true"` : "required=\"required\"";
         const markup = `<${tagAndClass[0]} class="${tagAndClass[1]}" ${dataPrefix}value="" ${dataPrefix}name="foo" ${required}/>`;
-        return [markup]
+        return [markup];
     }))('no values given for required inputs is not allowed for %s', (html) => {
         const submit = document.createElement("button") as HTMLButtonElement;
         const form = document.createElement("form") as HTMLFormElement;
@@ -64,7 +64,7 @@ describe("InputContainer test", () => {
         form.appendChild(submit);
         return InputContainer.getAll(form, submit)
             .then(() => fail("Expected to fail"))
-            .catch(reason => expect(reason).toEqual("not allowed"))
+            .catch(reason => expect(reason).toEqual("not allowed"));
     });
 
     it.each([
@@ -93,7 +93,7 @@ describe("InputContainer test", () => {
         const element = document.createElement(tagName);
         InputContainer.setRequiredAttribute(element, required);
 
-        if (tagName == "input" || tagName == "textarea") {
+        if (tagName === "input" || tagName === "textarea") {
             expect(element.getAttribute("required")).toEqual(expected);
         } else {
             expect(element.getAttribute("data-required")).toEqual(expected);

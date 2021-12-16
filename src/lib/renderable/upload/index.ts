@@ -66,11 +66,12 @@ export class Upload implements IRenderable {
         if (this.spec.id !== undefined) {
             uploadLabel.id = this.spec.id;
         }
-        if (this.spec.class !== undefined)
+        if (this.spec.class !== undefined) {
             this.spec.class.split(" ").forEach(e => {
                 uploadLabel.classList.add(e);
                 this.dropArea.classList.add(e);
             });
+        }
 
         this.dropArea.ondragover = (ev) => ev.preventDefault();
 
@@ -81,19 +82,21 @@ export class Upload implements IRenderable {
                 file = ev.dataTransfer.items ? ev.dataTransfer.items[0].getAsFile() : ev.dataTransfer.files[0];
             }
 
-            if (file !== null)
+            if (file !== null) {
                 this.doValidateAndGetBase64(file);
+            }
         };
 
         upload.onchange = () => {
             if (!upload.files || !upload.files[0]) {
-                return
+                return;
             }
 
             const file: File = upload.files[0];
 
-            if (!this.validateFile(file.size, getFileExtensionFromFile(file)))
+            if (!this.validateFile(file.size, getFileExtensionFromFile(file))) {
                 return;
+            }
 
             this.setFileNameToSpan(file.name).setErrorSpanTo("");
 
@@ -159,7 +162,7 @@ export class Upload implements IRenderable {
     private async compressImage(file: File): Promise<File> {
         console.info(`Attempt to compress file with max. compress size ${this.spec.maxCompressSize}`);
 
-        let imageCompression = typeof window !== "undefined" ? require("browser-image-compression/dist/browser-image-compression") : null;
+        const imageCompression = typeof window !== "undefined" ? require("browser-image-compression/dist/browser-image-compression") : null;
         if (!imageCompression) {
             console.error("Image compression is not available; returning uncompressed file");
             return file;
@@ -174,12 +177,12 @@ export class Upload implements IRenderable {
 
     public setFileNameToSpan(name: string) {
         this.fileSpan.innerText = name;
-        return this
+        return this;
     }
 
     public setErrorSpanTo(text: string) {
         this.errorSpan.innerText = text;
-        return this
+        return this;
     }
 
     public validateFile(size: number, extension?: string): boolean {
@@ -205,7 +208,7 @@ export class Upload implements IRenderable {
             sizeAllowed = false;
         }
 
-        return sizeAllowed && extensionAllowed
+        return sizeAllowed && extensionAllowed;
     }
 }
 

@@ -17,9 +17,9 @@ describe("Input", () => {
         const mock = document.createElement("div");
         const form = new Form({
             type: "form", name: "form", elements: [
-                {type: "text", name: "text", placeholder: "text placeholder", required: true},
-                {type: "email", name: "email", value: "email@example.com", placeholder: "email placeholder"},
-                {type: "phone", name: "phone", value: "phone value", placeholder: "phone placeholder"},
+                {type: "text", name: "text", placeholder: "text placeholder", required: true, ariaLabel: "Text Input Field"},
+                {type: "email", name: "email", value: "email@example.com", placeholder: "email placeholder", ariaLabel: "Email Input Field"},
+                {type: "phone", name: "phone", value: "phone value", placeholder: "phone placeholder", ariaLabel: "Phone Input Field"},
                 {type: "submit", name: "submit", text: "submit"},
             ]
         }).render(new ClassicRenderer(mock, mock), false);
@@ -30,8 +30,11 @@ describe("Input", () => {
         const submit = form.querySelector(".lto-submit") as HTMLElement;
 
         expect(email.type).toBe("email");
+        expect(email.getAttribute("aria-label")).toBe("Email Input Field");
         expect(phone.type).toBe("tel");
+        expect(phone.getAttribute("aria-label")).toBe("Phone Input Field");
         expect(text.type).toBe("text");
+        expect(text.getAttribute("aria-label")).toBe("Text Input Field");
 
         submit.click();
 

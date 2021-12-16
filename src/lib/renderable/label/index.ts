@@ -29,6 +29,7 @@ export class Label implements IRenderable {
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const label = node("div");
         new Specification(this.spec).initNode(label, "lto-label");
+        label.setAriaLabel(this.spec.ariaLabel);
 
         if (!isNested) {
             label.unwrap().appendChild(Timestamp.render());

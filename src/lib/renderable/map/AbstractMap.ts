@@ -66,6 +66,7 @@ export abstract class AbstractMap {
     public wrapper(className: string): INode {
         const wrapper = node("div");
         wrapper.addClasses(className, "lto-map", "lto-left");
+        wrapper.setAriaLabel(this.spec.ariaLabel);
         wrapper.setId(this.spec.id);
         wrapper.setName(this.spec.name);
         InputContainer.setRequiredAttribute(wrapper.unwrap(), this.spec.required);
