@@ -44,7 +44,7 @@
         const listener = new GaiaConvey.DefaultListener();
         const header = new GaiaConvey.QueueHeader(identityId, "channel1")
         let gaia = new GaiaConvey.Gaia(renderer, listener);
-        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "heimdall", "admin"))
+        gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '9001', "default", "secret"))
             .then(connection => {
                 const subscription = connection.subscribe(GaiaConvey.ConversationQueueType.INTERACTION, header, (payload) => console.log(`1 interaction:`, payload));
                 autocompleteBehaviour.bind(subscription);

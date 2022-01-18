@@ -21,7 +21,8 @@
         <div class="lto-autocomplete"></div>
         <button class="lto-invoker"></button>
         <select name="language" id="language" class="lto-language">
-            <option value="de">Deutsch</option>
+            <option value="de_AT">Deitsch</option>
+            <option value="de">Hochdeutsch</option>
             <option value="en">English</option>
             <option value="es">Espanol</option>
             <option value="it">Italiano</option>
@@ -32,7 +33,7 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        const identityId = "IdentityId"
+        const identityId = "f007f007-f007-f007-f007-f007f007f007"
         const header = new GaiaConvey.QueueHeader(identityId, "channelId")
         const listener = new GaiaConvey.DefaultListener();
         let gaia = new GaiaConvey.Gaia(listener);
