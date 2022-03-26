@@ -10,6 +10,7 @@ import {MessageType} from "../support/MessageType";
 import {InteractionInterceptor} from "./interceptor/InteractionInterceptor";
 import {DefaultInteractionInterceptor} from "./interceptor/DefaultInteractionInterceptor";
 import {ConvInteraction} from "@leftshiftone/gaia-sdk/dist/mqtt/MqttSensorQueue";
+import {ConversationHeaderBuilder} from "./header/ConversationHeaderBuilder";
 
 export class InteractionSubscription extends Subscription {
 
@@ -35,16 +36,9 @@ export class InteractionSubscription extends Subscription {
             this.bind(new KeyboardBehaviour(this.renderer));
             this.bind(new MouseBehaviour(this.renderer));
         }
-        const headerClone:any = Object.assign({}, this.header);
-        const enrichedHeader = Object.assign(headerClone, {
-            language: "de",
-            type: MessageType.RECEPTION
-        });
-        this.mqttSensorQueue.publishConvInteraction(enrichedHeader, this.interactionInterceptor.execute({
-            attributes,
-            payload: {},
-            type: MessageType.RECEPTION
-        }));
+        const payload ={ attributes, payload: {},type: MessageType.RECEPTION }
+        const conversationHeader = ConversationHeaderBuilder.build(this.header, this.userProperties, payload)
+        this.mqttSensorQueue.publishConvInteraction(conversationHeader, this.interactionInterceptor.execute(payload));
     }
 
     public onMessage(conversationHeader: Map<string,string>, message: object) {

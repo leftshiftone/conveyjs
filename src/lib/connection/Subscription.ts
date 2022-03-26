@@ -1,6 +1,7 @@
 import {ConversationQueueType, MqttSensorQueue, QueueCallback, QueueHeader} from "@leftshiftone/gaia-sdk/dist";
 import {IBehaviour} from "../api";
 import {IEventPayload} from "../api/IEvent";
+import {ConversationHeaderBuilder} from "./header/ConversationHeaderBuilder";
 
 export class Subscription {
     public type: ConversationQueueType;
@@ -33,14 +34,8 @@ export class Subscription {
      * @param payload the payload
      */
     public publish = (payload: IEventPayload) => {
-        const headerClone:any = Object.assign({}, this.header);
-        let conversationHeader = this.convertMapToObject(this.userProperties)
-        const mergedHeader = Object.assign(headerClone, conversationHeader);
-        const enrichedHeader = Object.assign(mergedHeader, {
-            language: "de",
-            type: "utterance"
-        });
-        this.mqttSensorQueue.publish(this.type, enrichedHeader, payload.payload, payload.attributes, payload.type);
+        const conversationHeader = ConversationHeaderBuilder.build(this.header, this.userProperties, payload)
+        this.mqttSensorQueue.publish(this.type, conversationHeader, payload.payload, payload.attributes, payload.type);
     }
 
     /**
@@ -61,11 +56,4 @@ export class Subscription {
 
     public getTopic = () => this.mqttSensorQueue.getTopic(this.type, this.header);
 
-    private convertMapToObject(map: Map<string,string>) {
-        return Array.from(map)
-            .filter(([k, v]) => v !== undefined)
-            .reduce((obj, [key, value]) => (
-            Object.assign(obj, { [key]: value })
-        ), {});
-    }
 }
