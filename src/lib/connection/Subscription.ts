@@ -7,6 +7,7 @@ export class Subscription {
     public header: QueueHeader;
     public callback: QueueCallback;
     public mqttSensorQueue: MqttSensorQueue;
+    public userProperties: Map<string,string> = new Map();
     public behaviourBind: Array<IBehaviour> = [];
 
     constructor(type: ConversationQueueType, header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
@@ -32,7 +33,14 @@ export class Subscription {
      * @param payload the payload
      */
     public publish = (payload: IEventPayload) => {
-        this.mqttSensorQueue.publish(this.type, this.header, payload.payload, payload.attributes, payload.type);
+        const headerClone:any = Object.assign({}, this.header);
+        let conversationHeader = this.convertMapToObject(this.userProperties)
+        const mergedHeader = Object.assign(headerClone, conversationHeader);
+        const enrichedHeader = Object.assign(mergedHeader, {
+            language: "de",
+            type: "utterance"
+        });
+        this.mqttSensorQueue.publish(this.type, enrichedHeader, payload.payload, payload.attributes, payload.type);
     }
 
     /**
@@ -46,9 +54,18 @@ export class Subscription {
         this.behaviourBind.push(behaviour);
     }
 
-    public onMessage(message: object) {
+    public onMessage(communicationHeader: Map<string,string>, message: object) {
+        this.userProperties= new Map(Array.from(communicationHeader.entries()))
         this.mqttSensorQueue.callback(this.getTopic(), message);
     }
 
     public getTopic = () => this.mqttSensorQueue.getTopic(this.type, this.header);
+
+    private convertMapToObject(map: Map<string,string>) {
+        return Array.from(map)
+            .filter(([k, v]) => v !== undefined)
+            .reduce((obj, [key, value]) => (
+            Object.assign(obj, { [key]: value })
+        ), {});
+    }
 }

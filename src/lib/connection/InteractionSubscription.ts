@@ -35,14 +35,19 @@ export class InteractionSubscription extends Subscription {
             this.bind(new KeyboardBehaviour(this.renderer));
             this.bind(new MouseBehaviour(this.renderer));
         }
-        this.mqttSensorQueue.publishConvInteraction(this.header, this.interactionInterceptor.execute({
+        const headerClone:any = Object.assign({}, this.header);
+        const enrichedHeader = Object.assign(headerClone, {
+            language: "de",
+            type: MessageType.RECEPTION
+        });
+        this.mqttSensorQueue.publishConvInteraction(enrichedHeader, this.interactionInterceptor.execute({
             attributes,
             payload: {},
             type: MessageType.RECEPTION
         }));
     }
 
-    public onMessage(message: object) {
+    public onMessage(conversationHeader: Map<string,string>, message: object) {
         let spec = message as ISpecification;
         if (spec.type !== "reception" && spec.elements) {
             spec = Object.assign(spec, {position: 'left', channelId: this.header.channelId});
@@ -50,26 +55,26 @@ export class InteractionSubscription extends Subscription {
                 this.renderer.appendContent(element);
             });
         }
-        super.onMessage(message);
+        super.onMessage(conversationHeader, message);
     }
 
 }
 
 export class ConvInteractionAdapter implements ConvInteraction {
-    private eventPayload: IEventPayload;
+    private eventMessage: IEventPayload;
     attributes: object;
     payload: object;
     type: string;
 
     constructor(eventPayload: IEventPayload) {
-        this.eventPayload = eventPayload;
-        this.attributes = this.eventPayload.attributes;
-        this.payload = this.eventPayload.payload;
-        this.type = MessageType[this.eventPayload.type];
+        this.eventMessage = eventPayload;
+        this.attributes = this.eventMessage.attributes;
+        this.payload = this.eventMessage.payload;
+        this.type = MessageType[this.eventMessage.type];
     }
 
     public toIPayloadEvent(): IEventPayload {
-        return this.eventPayload;
+        return this.eventMessage;
     }
 
 }

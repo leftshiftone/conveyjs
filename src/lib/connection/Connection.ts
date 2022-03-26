@@ -110,16 +110,38 @@ export class Connection {
     private initMqttSensorQueue(options: QueueOptions): MqttSensorQueue {
         const mqttSensorQueue = new MqttSensorQueue(options);
         mqttSensorQueue.on('packetsend', (packet: IPacket) => this.listener.onPacketSend(packet));
-        mqttSensorQueue.on('message', (topic: string, message: any) => this.onMessage(topic, message));
+        mqttSensorQueue.on('message', (topic: string, message: any, packet: any) => this.onMessage(topic, message, packet));
         mqttSensorQueue.on('connect', () => this.listener.onConnected());
         mqttSensorQueue.on('offline', () => this.listener.onConnectionLost());
         return mqttSensorQueue;
     }
 
-    private onMessage(topic: string, message: any) {
+    private onMessage(topic: string, message: any, packet: any) {
+        const conversationHeader = this.buildConversationHeader(packet)
         const payload = JSON.parse(message) as ISpecification;
         this.listener.onMessage(payload);
-        this.subscriptions.get(topic)!.onMessage(payload);
+        this.subscriptions.get(topic)!.onMessage(conversationHeader, payload);
     }
 
+    private addUserPropertyToConversationHeader(userProperty: any, propertyName: string, conversationHeader: Map<string, string>){
+        if(userProperty!==undefined){
+            const property = userProperty[propertyName]
+            if(property!==undefined){
+                conversationHeader.set(propertyName,property)
+            }
+        }
+    }
+
+    private buildConversationHeader(packet: any){
+        const map = new Map()
+        if (packet !== undefined && packet.properties !== undefined && packet.properties.userProperties !== undefined) {
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "nodeId", map)
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "previousPromptId", map)
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "behaviourInstanceId", map)
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "nodeInstanceId", map)
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "previousPromptId", map)
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "behaviourId", map)
+        }
+        return map
+    }
 }
