@@ -9,26 +9,25 @@
  *   <li>behaviourId</li>
  * </ul>
  */
-//TODO @AGP UnitTest
 export class UserPropertiesExtractor {
 
-    public static execute(packet: any){
-        const map = new Map()
+    public static execute(packet: any) {
+        const map = new Map();
         if (packet !== undefined && packet.properties !== undefined && packet.properties.userProperties !== undefined) {
-            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "nodeId", map)
-            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "previousPromptId", map)
-            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "behaviourInstanceId", map)
-            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "nodeInstanceId", map)
-            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "behaviourId", map)
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "nodeId", map);
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "previousPromptId", map);
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "behaviourInstanceId", map);
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "nodeInstanceId", map);
+            this.addUserPropertyToConversationHeader(packet.properties.userProperties, "behaviourId", map);
         }
-        return map
+        return map;
     }
 
     private static addUserPropertyToConversationHeader(userProperty: any, propertyName: string, conversationHeader: Map<string, string>){
-        if(userProperty!==undefined){
-            const property = userProperty[propertyName]
-            if(property!==undefined){
-                conversationHeader.set(propertyName,property)
+        if (userProperty !== undefined) {
+            const property = userProperty[propertyName];
+            if (property !== undefined) {
+                conversationHeader.set(propertyName, property);
             }
         }
     }

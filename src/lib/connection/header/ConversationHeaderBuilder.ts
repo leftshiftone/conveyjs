@@ -16,15 +16,13 @@ import {IQueueHeader} from "@leftshiftone/gaia-sdk/dist/mqtt/QueueHeader";
  *      "nodeId": "1233-ztuj7a", .....
  *
  */
-
-//TODO @AGP UnitTest
 export class ConversationHeaderBuilder {
 
     private static languageResolver = new ConversationLanguageResolver();
 
-    public static build(queueHeader: QueueHeader, userProperties: Map<string,string>, payload: IEventPayload): IQueueHeader {
-        const headerClone:any = Object.assign({}, queueHeader);
-        let conversationHeader = this.convertMapToObject(userProperties)
+    public static build(queueHeader: QueueHeader, userProperties: Map<string, string>, payload: IEventPayload): IQueueHeader {
+        const headerClone: any = Object.assign({}, queueHeader);
+        const conversationHeader = this.convertMapToObject(userProperties);
         const mergedHeader = Object.assign(headerClone, conversationHeader);
         return Object.assign(mergedHeader, {
             language: this.languageResolver.get(),
@@ -32,11 +30,11 @@ export class ConversationHeaderBuilder {
         });
     }
 
-    private static convertMapToObject(map: Map<string,string>) {
+    private static convertMapToObject(map: Map<string, string>) {
         return Array.from(map)
             .filter(([k, v]) => v !== undefined)
             .reduce((obj, [key, value]) => (
-                Object.assign(obj, { [key]: value })
+                Object.assign(obj, {[key]: value})
             ), {});
     }
 
