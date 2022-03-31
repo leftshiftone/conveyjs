@@ -34,7 +34,7 @@ export class Textarea implements IRenderable {
 
         if (this.spec.value) {
             (textarea.unwrap() as HTMLTextAreaElement).value = this.spec.value;
-            textarea.addAttributes({value: this.spec.value});
+            textarea.unwrap().setAttribute("data-value", this.spec.value);
         }
 
         textarea.addClasses(isNested ? "lto-nested" : "");
