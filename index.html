@@ -33,15 +33,13 @@
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
-        // const identityId = "634eb234-e41d-4b46-b264-6985bc54ba72"
         const identityId = "a48ad4e3-51a9-3518-b1d4-79ffc5923b0c"
         const header = new GaiaConvey.QueueHeader(identityId, "channelId")
         const listener = new GaiaConvey.DefaultListener();
         let gaia = new GaiaConvey.Gaia(listener);
-        // gaia.connect(new GaiaConvey.QueueOptions('wss://api.azure-cloud.aios.dev/mqtt', 443, "default", "ehUphvDYqXyJ6L468qmF"))
         gaia.connect(new GaiaConvey.QueueOptions('ws://localhost', '61616', "default", "test"))
             .then(connection => {
-                const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction11:`, payload), new GaiaConvey.ContentCentricRenderer());
+                const subscription = connection.subscribeInteraction(header, (payload) => console.log(`Interaction:`, payload), new GaiaConvey.ContentCentricRenderer());
                 connection.subscribeNotification(header, (payload) => console.log('Notification:', payload));
                 connection.subscribeLogging(header, (payload) => console.log('Logging:', payload))
                 connection.subscribeContext(header, (payload) => console.log('context:', payload))
