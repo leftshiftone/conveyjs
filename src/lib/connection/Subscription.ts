@@ -8,7 +8,7 @@ export class Subscription {
     public header: QueueHeader;
     public callback: QueueCallback;
     public mqttSensorQueue: MqttSensorQueue;
-    public userProperties: Map<string,string> = new Map();
+    public conversationHeader: Map<string, string> = new Map();
     public behaviourBind: Array<IBehaviour> = [];
 
     constructor(type: ConversationQueueType, header: QueueHeader, callback: QueueCallback, mqttSensorQueue: MqttSensorQueue) {
@@ -34,7 +34,7 @@ export class Subscription {
      * @param payload the payload
      */
     public publish = (payload: IEventPayload) => {
-        const conversationHeader = ConversationHeaderBuilder.build(this.header, this.userProperties, payload)
+        const conversationHeader = ConversationHeaderBuilder.build(this.header, this.conversationHeader, payload);
         this.mqttSensorQueue.publish(this.type, conversationHeader, payload.payload, payload.attributes, payload.type);
     }
 
@@ -49,8 +49,8 @@ export class Subscription {
         this.behaviourBind.push(behaviour);
     }
 
-    public onMessage(communicationHeader: Map<string,string>, message: object) {
-        this.userProperties= new Map(Array.from(communicationHeader.entries()))
+    public onMessage(conversationHeader: Map<string, string>, message: object) {
+        this.conversationHeader = new Map(Array.from(conversationHeader.entries()));
         this.mqttSensorQueue.callback(this.getTopic(), message);
     }
 

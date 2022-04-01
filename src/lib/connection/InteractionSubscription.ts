@@ -36,12 +36,12 @@ export class InteractionSubscription extends Subscription {
             this.bind(new KeyboardBehaviour(this.renderer));
             this.bind(new MouseBehaviour(this.renderer));
         }
-        const payload ={ attributes, payload: {},type: MessageType.RECEPTION }
-        const conversationHeader = ConversationHeaderBuilder.build(this.header, this.userProperties, payload)
+        const payload = { attributes, payload: {}, type: MessageType.RECEPTION };
+        const conversationHeader = ConversationHeaderBuilder.build(this.header, this.conversationHeader, payload);
         this.mqttSensorQueue.publishConvInteraction(conversationHeader, this.interactionInterceptor.execute(payload));
     }
 
-    public onMessage(conversationHeader: Map<string,string>, message: object) {
+    public onMessage(conversationHeader: Map<string, string>, message: object) {
         let spec = message as ISpecification;
         if (spec.type !== "reception" && spec.elements) {
             spec = Object.assign(spec, {position: 'left', channelId: this.header.channelId});

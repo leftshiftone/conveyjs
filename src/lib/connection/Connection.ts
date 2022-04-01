@@ -118,7 +118,7 @@ export class Connection {
     }
 
     private onMessage(topic: string, message: any, packet: any) {
-        const conversationHeader = UserPropertiesExtractor.execute(packet)
+        const conversationHeader = UserPropertiesExtractor.execute(packet);
         const payload = JSON.parse(message) as ISpecification;
         this.listener.onMessage(payload);
         this.subscriptions.get(topic)!.onMessage(conversationHeader, payload);
