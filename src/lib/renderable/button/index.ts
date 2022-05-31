@@ -33,7 +33,7 @@ export class Button implements IRenderable {
         const button = node("button");
         new Specification(this.spec).initNode(button, "lto-button");
         button.setAriaLabel(this.spec.ariaLabel);
-        button.addAttributes({type: Button.TYPE});
+        button.addAttributes({type: Button.TYPE, name: this.spec.name, value: this.spec.value});
 
         if (isNested) {
             button.addClasses("lto-nested");
