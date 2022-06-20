@@ -10,6 +10,15 @@ webhook-failed: &webhook-failed
 
 version: 2.1
 jobs:
+  filesystem-scan:
+    docker:
+      - image: python:3.7-stretch
+    steps:
+      - run: curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.29.0
+      - checkout
+      - run: trivy rootfs -s "HIGH,CRITICAL" -f json -o dep-report.json ./package.json
+      - run: |
+          curl --insecure -u $DEPENDENCY_REPORT_TOKEN -H "Content-Type: application/json" -X POST --data-binary '{"project": "conveyjs", "report": '"$(cat dep-report.json)"'}' https://trivy-collector.aios.dev/report
   webhook-completed:
     docker:
       - image: curlimages/curl:7.70.0
@@ -228,6 +237,14 @@ workflows:
               ignore: /.*/
           requires:
             - build
+      - filesystem-scan:
+          context:
+            - dependency-scan
+          filters:
+            tags:
+              ignore: /.*/
+          requires:
+            - build
   release-major:
     jobs:
       - release-major:
@@ -324,6 +341,9 @@ workflows:
     jobs:
       - code-analytics:
           context: leftshiftone-sonar
+      - filesystem-scan:
+          context:
+            - dependency-scan
       - webhook-completed:
           requires:
             - code-analytics
