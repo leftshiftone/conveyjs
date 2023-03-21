@@ -29,6 +29,9 @@ export class Form implements IRenderable, IStackeable {
         new Specification(this.spec).initNode(form, "lto-form");
         form.setAriaLabel(this.spec.ariaLabel);
 
+        // this prevents a page reload when pressing "enter" and thus submitting the form
+        form.unwrap().onsubmit = () => false;
+
         form.unwrap().appendChild(Timestamp.render());
 
         const elements = (this.spec.elements || []).map(e => renderer.render(e, this));
