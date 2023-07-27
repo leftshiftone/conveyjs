@@ -257,6 +257,14 @@ The following modules are available:
 * vis: Contains modules for rendering data as charts
 * all: Contains all modules
 
+## Accessibility
+
+Convey provides very basic [WAI-ARIA](https://www.w3.org/TR/wai-aria-1.1/) features. This includes corresponding `roles`.
+The main chat area is defined as a `aria-role: log` with `aria-live: polite` enabled. Chatbot outputs and inputs can be navigated
+using the keyboard (`<TAB> && <S-TAB>`).
+
+Accessbility features are currently available when using the `ContentCentricRenderer` (default renderer implementation) and
+can **NOT** be disabled as we see accessibility as an important and necessary concept.
 
 ## Development
 
