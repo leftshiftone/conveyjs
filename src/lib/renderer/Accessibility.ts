@@ -1,4 +1,6 @@
 /**
+ * Enables WAI-ARIA accessibility features by marking the main chat window
+ * as aria-role: log.
  *
  * see: https://www.w3.org/TR/wai-aria-1.1/
  */
