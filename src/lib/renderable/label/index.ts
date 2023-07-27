@@ -4,6 +4,7 @@ import {IRenderable, IRenderer, ISpecification} from '../../api';
 import Renderables from '../Renderables';
 import {Specification} from "../../support/Specification";
 import node from "../../support/node";
+import {ACCESSIBILITY_DEFAULT_TAB_INDEX} from "../../renderer/Accessibility";
 
 /**
  * Implementation of the 'label' markup element.
@@ -32,17 +33,20 @@ export class Label implements IRenderable {
         label.setAriaLabel(this.spec.ariaLabel);
 
         if (!isNested) {
+            // if not nested means that this thing must be a user sent message
+            // good thing that isn't complicated...
             label.unwrap().appendChild(Timestamp.render());
             const container = node("div");
             container.unwrap().appendChild(new Icon(this.spec.position || "left").render());
             container.appendChild(label);
-            return container.unwrap();
+            const unwrapped = container.unwrap();
+            unwrapped.tabIndex = ACCESSIBILITY_DEFAULT_TAB_INDEX;
+            return unwrapped;
         }
 
         label.addClasses("lto-nested");
         return label.unwrap();
     }
-
 }
 
 Renderables.register(Label.TYPE, Label);
