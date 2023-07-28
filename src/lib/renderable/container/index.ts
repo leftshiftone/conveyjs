@@ -1,5 +1,6 @@
 import {IRenderer, ISpecification, IRenderable} from '../../api';
 import Renderables from '../Renderables';
+import {ACCESSIBILITY_DEFAULT_TAB_INDEX} from "../../renderer/Accessibility";
 
 /**
  * Implementation of the 'container' type markup element.
@@ -28,7 +29,7 @@ export class Container implements IRenderable {
     public render(renderer: IRenderer, isNested: boolean): HTMLElement {
         const div = document.createElement("div");
         div.classList.add("lto-container");
-
+        div.tabIndex = ACCESSIBILITY_DEFAULT_TAB_INDEX;
         const elements = (this.spec.elements || []).map(e => renderer.render(e));
         elements.forEach(e => e.forEach(x => div.appendChild(x)));
 

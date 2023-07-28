@@ -6,6 +6,7 @@ import {Block} from '../renderable/block';
 import {Container} from '../renderable/container';
 import {EventType} from "../event/EventType";
 import {Suggestion} from "../renderable/suggestion";
+import {enableAccessibilityFeatures} from "./Accessibility";
 
 /**
  * The content centric renderer tries to maximize the time a content is visible by updating
@@ -27,6 +28,7 @@ export class ContentCentricRenderer extends ClassicRenderer {
                 this.behaviour = this.suggestionBehaviour(this.qualifier || "");
             }
         });
+        enableAccessibilityFeatures();
     }
 
     /**
