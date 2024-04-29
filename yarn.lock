@@ -331,10 +331,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@leftshiftone/gaia-sdk@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@leftshiftone/gaia-sdk/-/gaia-sdk-4.2.0.tgz#b6c8bae2d28834b2267c60cf9c2d739a3b93f679"
-  integrity sha512-PdrYdPdSv2M1QvRmnjWFFml0uzzKvUJWfpuH6K1zUVsIjOKA4gwUyclbsCM6ZffodDZjFEfwKIq3Vj//J/yL/w==
+"@leftshiftone/gaia-sdk@4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@leftshiftone/gaia-sdk/-/gaia-sdk-4.5.0.tgz#cd1d0ede45986a080b0e5dcb58cfbbce14843336"
+  integrity sha512-xphD5Ia3xOaIVY9psBaqYCNvPMI8wfnUf/KloBlLuQvW14uPM8ldzvD2DvY4HOhMT0AZ529B1ISH8sFxYUrUlw==
   dependencies:
     axios "^0.21.4"
     bytebuffer "^5.0.1"
